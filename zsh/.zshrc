@@ -5,6 +5,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# Add this line to suppress the warning
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
+
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
 # Path to your Oh My Zsh installation.
@@ -31,7 +34,7 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 # DISABLE_MAGIC_FUNCTIONS="true"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # You can also set it to another string to have that shown instead of the default red dots.
@@ -44,11 +47,24 @@ ENABLE_CORRECTION="true"
 # much, much faster.
 # DISABLE_UNTRACKED_FILES_DIRTY="true"
 
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting kubectl)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting kubectl zsh-completions)
 
+# Enable completions BEFORE sourcing oh-my-zsh
+autoload -Uz compinit bashcompinit
+compinit
+bashcompinit
+
+# Then source oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 
-source ~/.cache/wal/colors.sh
+# Fix history file if corrupt
+if [[ ! -s ~/.zsh_history || -z $(tail -c 1 ~/.zsh_history) ]]; then
+  mv ~/.zsh_history ~/.zsh_history.backup.$(date +%Y%m%d_%H%M%S) 2>/dev/null
+  touch ~/.zsh_history
+fi
+
+# These might produce output - moved after instant prompt
+source ~/.cache/wal/colors.sh 2>/dev/null
 
 eval "$(zoxide init zsh)"
 
@@ -239,31 +255,30 @@ vf() {
 # Created by `pipx` on 2025-11-08 22:28:34
 export PATH="$PATH:/home/gabriel/.local/bin"
 
-# --- START SSH AGENT PERSISTENCE BLOCK (Simplified, Silent Version) ---
+# --- START SSH AGENT PERSISTENCE BLOCK (Fixed, Silent Version) ---
 export SSH_ASKPASS=/usr/bin/qt4-ssh-askpass
 
 # Path for the saved agent environment variables
 AGENT_ENV_FILE="${HOME}/.ssh/ssh-agent-env"
 
-# Use the old method (check file existence) but ensure silence on startup
-
-# 1. Check for running agent
+# Silent SSH agent setup
 if [ -f "$AGENT_ENV_FILE" ]; then
-    . "$AGENT_ENV_FILE" > /dev/null 2>&1
+    source "$AGENT_ENV_FILE" > /dev/null 2>&1
     if ! kill -0 "$SSH_AGENT_PID" 2>/dev/null; then
-        rm "$AGENT_ENV_FILE"
+        rm -f "$AGENT_ENV_FILE"
         unset SSH_AGENT_PID
     fi
 fi
 
 if [ -z "$SSH_AGENT_PID" ]; then
-    ssh-agent -s 2>/dev/null > "$AGENT_ENV_FILE"
-    . "$AGENT_ENV_FILE" > /dev/null 2>&1
+    eval "$(ssh-agent -s)" > /dev/null 2>&1
+    echo "SSH_AGENT_PID=$SSH_AGENT_PID" > "$AGENT_ENV_FILE"
+    echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$AGENT_ENV_FILE"
 fi
 
 SSH_KEY_FILE="$HOME/.ssh/id_ed25519"
 
-if [ -f "$SSH_KEY_FILE" ] && ! ssh-add -l | grep -q "$(ssh-keygen -lf "$SSH_KEY_FILE" | awk '{print $2}')"; then
+if [ -f "$SSH_KEY_FILE" ] && ! ssh-add -l 2>/dev/null | grep -q "$(ssh-keygen -lf "$SSH_KEY_FILE" 2>/dev/null | awk '{print $2}')"; then
     ssh-add -q "$SSH_KEY_FILE" 2>/dev/null
 fi
 # --- END SSH AGENT PERSISTENCE BLOCK ---
@@ -272,12 +287,16 @@ fi
 export GOPATH=$HOME/.local/go
 export PATH=$PATH:$GOPATH/bin
 
-# Auto-run onefetch when entering a git repository
-function chpwd() {
-    # Check if we are inside a git work tree (suppressing errors)
-    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-        # Add a newline for spacing
-        echo ""
-        onefetch
-    fi
-}
+# COMMENTED OUT: Auto-run onefetch when entering a git repository
+# This produces significant output and triggers the Powerlevel10k warning
+# function chpwd() {
+#     # Check if we are inside a git work tree (suppressing errors)
+#     if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+#         # Add a newline for spacing
+#         echo ""
+#         onefetch
+#     fi
+# }
+
+# Alternative: Create an alias for onefetch that you can run manually
+alias of="onefetch"
