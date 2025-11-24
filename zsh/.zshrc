@@ -100,6 +100,7 @@ alias linalg="cd OneDrive/Desktop/ETH/1S/LinAlg/"
 alias lice="cd OneDrive/Desktop/lice"
 alias ideas="cd Documents/ideas" 
 alias gith="cd /home/gabriel/programming/gith"
+alias vis="cd /home/gabriel/programming/vis/"
 
 # Replacements (Modern Tools)
 # Note: 'eza' is the maintained version of 'exa'
@@ -173,6 +174,14 @@ fsearch() {
     fzf --ansi --delimiter : --preview "bat --style=numbers --color=always --highlight-line {2} {1}"
 }
 
+# Refresh mrconfig automatically
+function mr-refresh() {
+    rm -f ~/.mrconfig
+    # We use ( ) to run this in a subshell so we don't change your current directory
+    (cd ~/programming/gith && find . -mindepth 1 -maxdepth 1 -type d -exec mr register {} \;)
+    echo "✅ mr configuration refreshed!"
+}
+
 # Magic Enter
 magic-enter () {
   if [[ -z $BUFFER ]]; then
@@ -199,6 +208,22 @@ function yy() {
 		cd -- "$cwd"
 	fi
 	rm -f -- "$tmp"
+}
+
+# Tuxagotchi Switcher
+function tux() {
+    if [ -z "$1" ]; then
+        echo "❌ Error: Please provide a repository name."
+        echo "Usage: tux <repo-name>"
+        return 1
+    fi
+
+    # Update the repo line in the config file
+    # This looks for 'repo = "something"' and replaces it
+    sed -i "s/^repo\s*=\s*.*/repo = \"$1\"/" ~/.config/tuxagotchi/config.toml
+
+    echo "🐧 Loading Tuxagotchi for repo: $1 ..."
+    tuxagotchi
 }
 
 # fshow - git commit browser
