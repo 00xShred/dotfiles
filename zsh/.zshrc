@@ -93,6 +93,7 @@ alias lt="eza --tree --icons --level=2"
 alias cat="bat"
 alias vim="nvim"
 alias v="nvim"
+alias grep="rg"
 
 # Pacman / Arch
 alias install="sudo pacman -S"
