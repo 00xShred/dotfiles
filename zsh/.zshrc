@@ -1,267 +1,181 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
+# --- 1. INSTANT PROMPT (Must be at the very top) ---
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-
-# Add this line to suppress the warning
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
-# export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
-
-# Path to your Oh My Zsh installation.
+# --- 2. OH-MY-ZSH CONFIG ---
 export ZSH="$HOME/.oh-my-zsh"
-
 ZSH_THEME="powerlevel10k/powerlevel10k"
 
-# Uncomment the following line to use case-sensitive completion.
-# CASE_SENSITIVE="true"
+# Update behavior
+zstyle ':omz:update' mode auto
 
-# Uncomment the following line to use hyphen-insensitive completion.
-# Case-sensitive completion must be off. _ and - will be interchangeable.
-# HYPHEN_INSENSITIVE="true"
+# plugins: 
+# - git: standard git aliases
+# - zsh-autosuggestions: the "ghost text" based on history
+# - fzf-tab: REPLACES standard tab completion with a fuzzy finder (The "Pro" feature)
+# - zsh-syntax-highlighting: MUST be last. Colors commands red/green.
+plugins=(
+    git 
+    kubectl 
+    zsh-autosuggestions 
+    fzf-tab 
+    zsh-syntax-highlighting
+)
 
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
-
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
-
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
-# COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting kubectl zsh-completions)
-
-# Enable completions BEFORE sourcing oh-my-zsh
-autoload -Uz compinit bashcompinit
-compinit
-bashcompinit
-
-# Then source oh-my-zsh
+# Source OMZ
 source $ZSH/oh-my-zsh.sh
 
-# Fix history file if corrupt
-if [[ ! -s ~/.zsh_history || -z $(tail -c 1 ~/.zsh_history) ]]; then
-  mv ~/.zsh_history ~/.zsh_history.backup.$(date +%Y%m%d_%H%M%S) 2>/dev/null
-  touch ~/.zsh_history
-fi
+# --- 3. "PRO" COMPLETION SETTINGS (FZF-TAB) ---
 
-# These might produce output - moved after instant prompt
-source ~/.cache/wal/colors.sh 2>/dev/null
+# Disable the default OMZ ls colors in favor of fzf-tab specific ones
+zstyle ':completion:*:*' list-colors "${(s.:.)LS_COLORS}"
 
-eval "$(zoxide init zsh)"
+# Use fzf-tab for completion (The magic part)
+# This creates a preview window when you tab-complete files or directories
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:__git_checkout:*' fzf-preview 'git log --color=always --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $word'
+zstyle ':fzf-tab:*' switch-group ',' '.' # Use comma and dot to switch groups in completion
 
-# Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-  export EDITOR='nvim'
-  fi
+# Autosuggestions configuration
+# Suggest from history first, but only matches.
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_USE_ASYNC=1
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# --- 4. HISTORY MANAGEMENT (Fixes "Weird Suggestions") ---
+# This makes your history smart. It ignores duplicates and doesn't save failed commands.
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=50000
+setopt EXTENDED_HISTORY          # Write timestamps to history
+setopt HIST_EXPIRE_DUPS_FIRST    # Expire duplicates first when trimming history
+setopt HIST_IGNORE_DUPS          # Do not record an event that was just recorded again
+setopt HIST_IGNORE_ALL_DUPS      # Delete old recorded entry if new entry is a duplicate
+setopt HIST_FIND_NO_DUPS         # Do not display a line previously found
+setopt HIST_IGNORE_SPACE         # Don't record lines starting with a space
+setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history file
+setopt SHARE_HISTORY             # Share history between all sessions
 
-export PATH="$HOME/.npm-global/bin:$PATH"
+# --- 5. KEYBINDINGS ---
+# Initialize FZF keybindings (Ctrl+R for history, Ctrl+T for files)
+[ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
+[ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
 
-export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+# Use vim keys in command line (optional, if you like Vi mode, uncomment below)
+bindkey -v 
 
-# Quick directory navigation
+# --- 6. ENVIRONMENT & PATHS ---
+export EDITOR='nvim'
+export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.npm-global/bin:${KREW_ROOT:-$HOME/.krew}/bin:$HOME/.local/go/bin:$PATH"
+
+# Initialize tools
+eval "$(zoxide init zsh)" # Replaces 'cd' with smarter navigation
+
+# Import Colors (wal)
+[ -f ~/.cache/wal/colors.sh ] && source ~/.cache/wal/colors.sh
+
+# --- 7. ALIASES ---
+
+# Navigation (Using zoxide 'z' is better, but these are classic)
 alias ..="cd .."
 alias ...="cd ../.."
-alias ....="cd ../../.."
 alias ~="cd ~"
-alias code="cd ~/code"
+alias c="clear"
+alias j="z" 
 
-# Common directories
-alias docs="cd ~/Documents"
-alias down="cd ~/Downloads"
-alias config="cd ~/.config"
-alias hypr="cd ~/.config/hypr"
-alias dm="cd OneDrive/Desktop/ETH/1S/DiskMath/"
-alias and="cd OneDrive/Desktop/ETH/1S/AnD/"
-alias eprog="cd OneDrive/Desktop/ETH/1S/Eprog/"
-alias epprog="cd programming/IdeaProjects/gduarte/"
-alias linalg="cd OneDrive/Desktop/ETH/1S/LinAlg/"
-alias lice="cd OneDrive/Desktop/lice"
-alias ideas="cd Documents/ideas"
-alias install="sudo pacman -S"
-alias gith="cd programming/gith"
-alias lg="lazygit"
+# Replacements (Modern Tools)
+# Note: 'eza' is the maintained version of 'exa'
+alias ls="eza --icons --group-directories-first"
+alias ll="eza -l --icons --group-directories-first --git"
+alias la="eza -la --icons --group-directories-first --git"
+alias lt="eza --tree --icons --level=2"
+alias cat="bat"
+alias vim="nvim"
+alias v="nvim"
 
-
-
-
-# Quick config edits
-alias hyprc="$EDITOR ~/.config/hypr/hyprland.conf"
-alias kittyc="$EDITOR ~/.config/kitty/kitty.conf"
-alias nvimc="$EDITOR ~/.config/nvim/init.lua"
-alias zshc="$EDITOR ~/.zshrc && source ~/.zshrc"
-
-# Hyprland control
-alias hlog="journalctl -u hyprland -f"
-alias hreload="hyprctl reload"
-alias hkill="hyprctl kill"
-alias hclients="hyprctl clients"
-alias hworkspaces="hyprctl workspaces"
-alias hmonitors="hyprctl monitors"
-alias hactive="hyprctl activewindow"
-alias hbinds="hyprctl binds"
-
-# Session management
-alias reboot="systemctl reboot"
-alias poweroff="systemctl poweroff"
-alias suspend="systemctl suspend"
-
-# Pacman shortcuts
-alias update="sudo pacman -Syu && yay && flatpak update"
+# Pacman / Arch
 alias install="sudo pacman -S"
 alias remove="sudo pacman -Rs"
 alias search="pacman -Ss"
-alias local-search="pacman -Qs"
-alias clean-cache="sudo pacman -Sc"
-alias orphaned="pacman -Qtdq"
-alias remove-orphaned="sudo pacman -Rns \$(pacman -Qtdq)"
-
-# AUR helper (if using yay)
+alias update="sudo pacman -Syu"
+alias cleanup="sudo pacman -Rns \$(pacman -Qtdq)" # Remove orphans
 alias yays="yay -S"
-alias yaysyu="yay -Syu"
-alias yayr="yay -Rs"
-alias yayq="yay -Qs"
 
-# Modern replacements for classic commands
-alias ls="exa --icons --group-directories-first"
-alias ll="exa -l --icons --group-directories-first"
-alias la="exa -la --icons --group-directories-first"
-alias lt="exa --tree --icons --group-directories-first"
-alias l="exa -l --icons --group-directories-first"
-
-# bat for cat with syntax highlighting
-alias cat="bat"
-
-# Quick directory jumping with zoxide (if installed)
-alias j="z"
-
-# File operations
-alias cp="cp -i"
-alias mv="mv -i"
-alias rm="rm -i"
-alias mkdir="mkdir -p"
-
-# Quick edits
-alias vim="nvim"
-alias v="$EDITOR"
-
-# Process management
-alias psa="ps aux"
-alias psg="ps aux | grep"
-alias killg="killall -9"
-
-# System info
-alias df="df -h"
-alias free="free -h"
-alias du="du -h"
-alias dus="du -h -d 1 | sort -hr"
-
-# Hardware monitoring
-alias temp="sensors"
-alias gpu="nvidia-smi"  # if you have NVIDIA
-alias disks="lsblk"
-
-# Network
-alias ip="ip -c"
-alias ports="ss -tulpn"
-alias wifi="nmcli dev wifi"
-
-# Git shortcuts
+# Git
 alias gs="git status"
 alias ga="git add"
-alias gc="git commit"
+alias gc="git commit -m"
 alias gp="git push"
 alias gl="git log --oneline --graph --decorate"
 alias gd="git diff"
 alias gco="git checkout"
-alias gb="git branch"
 
-# Docker (if used)
-alias dps="docker ps"
-alias dcu="docker-compose up"
-alias dcd="docker-compose down"
+# Hyprland / Configs
+alias hyprc="$EDITOR ~/.config/hypr/hyprland.conf"
+alias zshc="$EDITOR ~/.zshrc && source ~/.zshrc"
+alias hreload="hyprctl reload"
 
-# Common applications
-alias fm="thunar ."  # or thunar, pcmanfm, etc.
-alias browser="zen-browser"  # or your preferred browser
-alias music="spotify"  # or your music player
-alias mail="thunderbird"
-alias yy="yazi"  # terminal file manager
-alias c="clear"
+# System
+alias reboot="systemctl reboot"
+alias shutdown="systemctl poweroff"
 
-# Quick config reload
-reloadzsh() {
-    source ~/.zshrc
-    echo "Zsh config reloaded!"
+# Utils
+alias extract='dtrx' # Highly recommend installing 'dtrx' (Do The Right Extraction) for archives
+alias ip="ip -c"
+alias open="xdg-open"
+
+# global 
+alias -g G='| grep'
+alias -g L='| less'
+alias -g C='| wc -l'  # Count lines
+alias -g N='> /dev/null 2>&1' # Silence output
+
+# --- 8. FUNCTIONS ---
+
+# fshow - git commit browser
+alias fshow="git log --graph --color=always \
+    --format='%C(auto)%h%d %s %C(black)%C(bold)%cr' | \
+    fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
+    --bind 'ctrl-m:execute:
+                (grep -o \"[a-f0-9]\{7\}\" | head -1 |
+                xargs -I % sh -c \"git show --color=always %\") <<FZF-EOF
+                {}
+FZF-EOF'"
+
+# Fuzzy find and open in nvim
+vf() {
+  local file
+  file=$(fzf --preview 'bat --style=numbers --color=always --line-range :500 {}')
+  [ -n "$file" ] && nvim "$file"
 }
 
-# Create and cd into directory
+# Create directory and enter it
 mkcd() {
     mkdir -p "$1" && cd "$1"
 }
 
-# Quick archive extraction
-extract() {
-    if [ -f "$1" ] ; then
-        case $1 in
-            *.tar.bz2)   tar xjf "$1"     ;;
-            *.tar.gz)    tar xzf "$1"     ;;
-            *.bz2)       bunzip2 "$1"     ;;
-            *.rar)       unrar x "$1"     ;;
-            *.gz)        gunzip "$1"      ;;
-            *.tar)       tar xf "$1"      ;;
-            *.tbz2)      tar xjf "$1"     ;;
-            *.tgz)       tar xzf "$1"     ;;
-            *.zip)       unzip "$1"       ;;
-            *.Z)         uncompress "$1"  ;;
-            *.7z)        7z x "$1"        ;;
-            *)           echo "'$1' cannot be extracted via extract()" ;;
-        esac
-    else
-        echo "'$1' is not a valid file"
+# System Maintenance 
+sysmaintain() {
+    echo -e "\n\033[1;34m[1/4] 📦 Updating System...\033[0m"
+    yay -Syu # yay handles both repo and AUR updates
+
+    echo -e "\n\033[1;34m[2/4] 🧹 Cleaning Orphans & Cache...\033[0m"
+    if [[ -n $(pacman -Qtdq) ]]; then
+        sudo pacman -Rns $(pacman -Qtdq)
     fi
+    sudo paccache -rk2
+
+    echo -e "\n\033[1;34m[3/4] 🚑 Checking Errors...\033[0m"
+    systemctl --failed
+
+    echo -e "\n\033[1;32m✅ Maintenance Complete.\033[0m"
 }
 
-# Find files with fzf and open in nvim
-vf() {
-    local file
-    file=$(fzf --query="$1" --select-1 --exit-0)
-    [ -n "$file" ] && nvim "$file"
-}
-
-# Created by `pipx` on 2025-11-08 22:28:34
-export PATH="$PATH:/home/gabriel/.local/bin"
-
-# --- START SSH AGENT PERSISTENCE BLOCK (Fixed, Silent Version) ---
+# --- 9. SSH AGENT  ---
 export SSH_ASKPASS=/usr/bin/qt4-ssh-askpass
-
-# Path for the saved agent environment variables
 AGENT_ENV_FILE="${HOME}/.ssh/ssh-agent-env"
 
-# Silent SSH agent setup
 if [ -f "$AGENT_ENV_FILE" ]; then
     source "$AGENT_ENV_FILE" > /dev/null 2>&1
     if ! kill -0 "$SSH_AGENT_PID" 2>/dev/null; then
@@ -276,27 +190,11 @@ if [ -z "$SSH_AGENT_PID" ]; then
     echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$AGENT_ENV_FILE"
 fi
 
-SSH_KEY_FILE="$HOME/.ssh/id_ed25519"
+# --- 10. P10K CONFIG ---
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-if [ -f "$SSH_KEY_FILE" ] && ! ssh-add -l 2>/dev/null | grep -q "$(ssh-keygen -lf "$SSH_KEY_FILE" 2>/dev/null | awk '{print $2}')"; then
-    ssh-add -q "$SSH_KEY_FILE" 2>/dev/null
-fi
-# --- END SSH AGENT PERSISTENCE BLOCK ---
+# nave 
+eval "$(navi widget zsh)"
 
-# GO Configuration
-export GOPATH=$HOME/.local/go
-export PATH=$PATH:$GOPATH/bin
-
-# COMMENTED OUT: Auto-run onefetch when entering a git repository
-# This produces significant output and triggers the Powerlevel10k warning
-# function chpwd() {
-#     # Check if we are inside a git work tree (suppressing errors)
-#     if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-#         # Add a newline for spacing
-#         echo ""
-#         onefetch
-#     fi
-# }
-
-# Alternative: Create an alias for onefetch that you can run manually
-alias of="onefetch"
+# man 
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
