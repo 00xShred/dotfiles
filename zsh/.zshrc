@@ -77,7 +77,8 @@ eval "$(zoxide init zsh)" # Replaces 'cd' with smarter navigation
 
 # --- 7. ALIASES ---
 
-# Navigation (Using zoxide 'z' is better, but these are classic)
+# Navigation 
+alias cdc="cd && clear"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ~="cd ~"
@@ -126,6 +127,9 @@ alias extract='dtrx' # Highly recommend installing 'dtrx' (Do The Right Extracti
 alias ip="ip -c"
 alias open="xdg-open"
 
+# Clipboard History
+alias cl="cliphist list | fzf | cliphist decode | wl-copy"
+
 # global 
 alias -g G='| grep'
 alias -g L='| less'
@@ -133,6 +137,25 @@ alias -g C='| wc -l'  # Count lines
 alias -g N='> /dev/null 2>&1' # Silence output
 
 # --- 8. FUNCTIONS ---
+
+# Magic Enter
+magic-enter () {
+  if [[ -z $BUFFER ]]; then
+    echo ""
+    # Use 'ls' (aliased to eza)
+    eza --icons --group-directories-first
+    # If inside git, show status
+    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        echo ""
+        git status -sb
+    fi
+    zle redisplay
+  else
+    zle accept-line
+  fi
+}
+zle -N magic-enter
+bindkey "^M" magic-enter
 
 function yy() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
