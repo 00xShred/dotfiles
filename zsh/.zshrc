@@ -152,6 +152,16 @@ alias -g L='| less'
 alias -g C='| wc -l'  # Count lines
 alias -g N='> /dev/null 2>&1' # Silence output
 
+# Text files -> Open in nvim
+alias -s {md,txt,json,toml,yaml,yml,ini,conf,zsh}=nvim
+
+# Images/Documents -> Open in default viewer (xdg-open)
+alias -s {png,jpg,jpeg,gif,pdf,mp4,mkv}=xdg-open
+
+# Code -> Run automatically
+alias -s py=python
+alias -s js=node
+
 # --- 8. FUNCTIONS ---
 
 # Magic Enter
