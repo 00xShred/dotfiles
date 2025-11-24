@@ -162,6 +162,9 @@ alias -s {png,jpg,jpeg,gif,pdf,mp4,mkv}=xdg-open
 alias -s py=python
 alias -s js=node
 
+# Zellij (Auto-attach or Create)
+alias zlj='zellij attach --index 0 || zellij'
+
 # --- 8. FUNCTIONS ---
 
 # Search text in files and display results in Bat
