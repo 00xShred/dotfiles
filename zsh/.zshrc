@@ -85,6 +85,22 @@ alias ~="cd ~"
 alias c="clear"
 alias j="z" 
 
+ # Common directories
+
+alias docs="cd ~/Documents"
+alias idocs="cd OneDrive/Documents/DocsImportantes"
+alias down="cd ~/Downloads"
+alias config="cd ~/.config"
+alias hypr="cd ~/.config/hypr"
+alias dm="cd OneDrive/Desktop/ETH/1S/DiskMath/"
+alias and="cd OneDrive/Desktop/ETH/1S/AnD/"
+alias eprog="cd OneDrive/Desktop/ETH/1S/Eprog/"
+alias epprog="cd programming/IdeaProjects/gduarte/"
+alias linalg="cd OneDrive/Desktop/ETH/1S/LinAlg/"
+alias lice="cd OneDrive/Desktop/lice"
+alias ideas="cd Documents/ideas" 
+alias gith="cd /home/gabriel/programming/gith"
+
 # Replacements (Modern Tools)
 # Note: 'eza' is the maintained version of 'exa'
 alias ls="eza --icons --group-directories-first"
