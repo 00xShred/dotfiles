@@ -164,6 +164,12 @@ alias -s js=node
 
 # --- 8. FUNCTIONS ---
 
+# Search text in files and display results in Bat
+fsearch() {
+    rg --line-number --no-heading --color=always "$1" | \
+    fzf --ansi --delimiter : --preview "bat --style=numbers --color=always --highlight-line {2} {1}"
+}
+
 # Magic Enter
 magic-enter () {
   if [[ -z $BUFFER ]]; then
