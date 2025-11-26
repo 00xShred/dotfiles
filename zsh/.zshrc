@@ -270,6 +270,22 @@ mkcd() {
     mkdir -p "$1" && cd "$1"
 }
 
+
+# Clone a repo AND refresh mr automatically
+function gclone() {
+    # 1. Go to your git folder
+    cd ~/programming/gith || return
+    
+    # 2. Clone the repo (passing whatever argument you typed)
+    gh repo clone "$1"
+    
+    # 3. Refresh mr (using the function we made earlier)
+    # Note: This assumes you added the mr-refresh function from my previous reply
+    mr-refresh
+    
+    echo "🚀 Repo cloned and registered!"
+}
+
 # System Maintenance 
 sysmaintain() {
     echo -e "\n\033[1;34m[1/4] 📦 Updating System...\033[0m"
