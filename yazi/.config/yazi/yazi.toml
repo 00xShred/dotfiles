@@ -25,12 +25,23 @@ preloaders = [
     { mime = "application/x-xz", run = "ouch" },
 ]
 previewers = [
+    { name = "*/", run = "folder", sync = true },
+    { mime = "text/*", run = "code" },
+    { mime = "*/xml", run = "code" },
+    { mime = "*/javascript", run = "code" },
+    { mime = "*/x-wine-extension-ini", run = "code" },
+    { mime = "application/json", run = "json" },
+    { mime = "image/*", run = "image" },
+    { mime = "video/*", run = "video" },
+    { mime = "application/pdf", run = "pdf" },
     { mime = "application/*zip", run = "ouch" },
     { mime = "application/x-tar", run = "ouch" },
     { mime = "application/x-bzip2", run = "ouch" },
     { mime = "application/x-7z-compressed", run = "ouch" },
     { mime = "application/x-rar", run = "ouch" },
     { mime = "application/x-xz", run = "ouch" },
+    # -- Fallback (Everything else is text) --
+    { mime = "*", run = "code" },
 ]
 
 [git]
