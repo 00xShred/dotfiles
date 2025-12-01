@@ -1,6 +1,7 @@
 <div align="center">
 
 # ⚡ .files
+
 ### A minimal, keyboard-centric Hyprland experience.
 
 [![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793d1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://archlinux.org)
@@ -50,10 +51,12 @@ The system uses **Pywal** to generate a consistent color scheme across the entir
 **Full documentation, gallery, and detailed setup guide are available on the [Website](https://gab-dev-7.github.io/dotfiles).**
 
 ### Prerequisites
+
 - A fresh install of **Arch Linux**.
 - `git` installed.
 
 ### Installation
+
 The included script will handle package installation and linking config files.
 
 ```bash
@@ -77,16 +80,16 @@ chmod +x install.sh
 
 The workflow is heavily reliant on the `Super` (Windows) key. Here are the essentials:
 
-| Key Combination | Action |
-| :--- | :--- |
-| `Super` + `Enter` | Open Terminal (Kitty) |
-| `Super` + `Q` | Kill active window |
-| `Super` + `Space` | Open App Launcher |
-| `Super` + `E` | Open File Manager |
-| `Super` + `F` | Toggle Fullscreen |
-| `Super` + `Shift` + `F` | Toggle Floating |
-| `Super` + `Left/Right` | Move focus |
-| `Super` + `1-9` | Switch Workspace |
+| Key Combination         | Action                |
+| :---------------------- | :-------------------- |
+| `Super` + `Enter`       | Open Terminal (Kitty) |
+| `Super` + `Q`           | Kill active window    |
+| `Super` + `Space`       | Open App Launcher     |
+| `Super` + `E`           | Open File Manager     |
+| `Super` + `F`           | Toggle Fullscreen     |
+| `Super` + `Shift` + `F` | Toggle Floating       |
+| `Super` + `Left/Right`  | Move focus            |
+| `Super` + `1-9`         | Switch Workspace      |
 
 ---
 
@@ -110,6 +113,7 @@ $HOME/dotfiles
 ## 🎨 Customization
 
 ### Changing the Wallpaper & Theme
+
 To change the wallpaper and update the system color scheme:
 
 1. Place your image in `~/Pictures/Wallpapers/`.
