@@ -166,6 +166,8 @@ alias -s js=node
 # Zellij (Auto-attach or Create)
 alias zlj='zellij attach --index 0 || zellij'
 
+alias cleanroot='sudo pacman -Scc && sudo journalctl --vacuum-size=100M && sudo timeshift --check'
+
 # --- 8. FUNCTIONS ---
 
 # Search text in files and display results in Bat
