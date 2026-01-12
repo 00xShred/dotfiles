@@ -332,8 +332,5 @@ eval "$(navi widget zsh)"
 # man 
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
-# fuck! sudo
-eval $(thefuck --alias)
-
 # direnev
 eval "$(direnv hook zsh)"
