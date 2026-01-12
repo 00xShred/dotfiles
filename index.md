@@ -96,7 +96,6 @@ The workflow is designed to be entirely keyboard-driven using the `Super` key (W
 | `Super + E`      | **File Manager** (Thunar) |
 | `Super + B`      | **Browser** (Zen Browser) |
 | `Super + D`      | **App Launcher** (Wofi)   |
-| `Super + Space`  | **Alternative Launcher**  |
 
 ### ⚙️ System Controls
 

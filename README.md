@@ -97,14 +97,16 @@ The workflow is heavily reliant on the `Super` (Windows) key. Here are the essen
 
 ```graphql
 $HOME/dotfiles
-├── config/
-│   ├── hypr/          # Window Manager Config
-│   ├── kitty/         # Terminal Config
-│   ├── nvim/          # Neovim Config
-│   ├── waybar/        # Status Bar
-│   └── zsh/           # Shell settings
-├── scripts/           # Automation scripts
-├── install.sh         # Main installation script
+├── hypr/          # Window Manager
+├── kitty/         # Terminal
+├── nvim/          # Editor (LazyVim)
+├── waybar/        # Status Bar
+├── zsh/           # Shell
+├── zellij/        # Terminal Multiplexer  <-- NEW
+├── kanshi/        # Display Management    <-- NEW
+├── yazi/          # Terminal File Manager <-- NEW
+├── wpg/           # Color Theming (Wpgtk)
+├── install.sh     # Setup Script
 └── README.md
 ```
 
