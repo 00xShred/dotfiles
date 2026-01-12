@@ -1,44 +1,57 @@
-/* * Wofi CSS for pywal
- * ~/.config/wofi/style.css
- */
-
 /* Import pywal colors */
 @import "/home/gabriel/.cache/wal/colors.css";
 
 * {
-    /* Use the same Nerd Font as your Waybar */
-    font-family: "JetBrains Mono Nerd Font";
-    font-size: 15px;
+  font-family: "JetBrains Mono Nerd Font", monospace;
+  font-weight: 500; /* Slightly lighter font weight */
+  font-size: 14px;
 }
 
 #window {
-    background-color: rgba(20, 20, 20, 0.85);
-
-    border: 2px solid @color1;
-    border-radius: 8px;
+  background-color: rgba(10, 10, 10, 0.95); /* Darker, more solid background */
+  border: 1px solid @color1; /* Thinner 1px border instead of thick 3px */
+  border-radius: 10px;
 }
 
 #input {
-    background-color: @color0;
-    color: @foreground;
-    border-radius: 4px;
-    border: none;
-    padding: 8px;
-    margin: 8px;
+  /* REMOVED: background-color and border */
+  background-color: transparent;
+  border: none;
+  color: @foreground;
+  padding: 10px 15px; /* Add side padding for text breathing room */
+  margin: 5px;
 }
 
+#outer-box {
+  margin: 0px;
+  padding: 10px;
+}
+
+#scroll {
+  margin: 5px 0px;
+}
+
+#text {
+  margin: 2px;
+  color: @foreground;
+}
+
+/* Unselected entries */
 #entry {
-    color: @foreground;
-    padding: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background-color: transparent;
 }
 
+/* Selected Entry: Minimal Approach */
+/* Instead of a full color block, we use a subtle highlight */
 #entry:selected {
-    background-color: @color1;
-    color: @background;
-    border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.08); /* Very subtle white tint */
+  color: @color1; /* Highlight text color instead of background */
+  font-weight: bold;
 }
 
-#prompt {
-    padding-left: 8px;
-    color: @color1;
+#img {
+  margin-right: 12px;
+  background-color: transparent;
 }
