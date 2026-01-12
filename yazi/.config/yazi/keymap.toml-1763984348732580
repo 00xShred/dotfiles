@@ -1,6 +1,0 @@
-[[manager.prepend_keymap]]
-on   = [ "Z" ]
-run  = "plugin zoxide"
-desc = "Jump to a directory using zoxide"
-
-
