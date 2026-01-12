@@ -7,7 +7,7 @@ LOG_FILE="$HOME/install_log.txt"
 
 # Folders to be stowed (Linked to your Home Directory)
 # Added 'zsh' here to ensure your .zshrc is linked
-STOW_FOLDERS="btop dunst hypr kitty nvim rofi tmux waybar wofi gtk thunar yazi wal wpg zsh"
+STOW_FOLDERS="btop dunst hypr kitty nvim rofi tmux waybar wofi gtk thunar yazi wal wpg zsh kanshi zellij"
 
 # 1. Official Arch Packages
 # Removed '*-git' packages from here (as they are AUR/Custom Repo packages)
@@ -52,14 +52,19 @@ if [ -d "$DOTFILES_DIR" ]; then
   cd "$DOTFILES_DIR"
   for folder in $STOW_FOLDERS; do
     echo "   Linking $folder..."
-    # Conflict resolution: backup existing folders if they are not symlinks
+
+    # 1. Handle standard .config folders
     if [ -d "$HOME/.config/$folder" ] && [ ! -L "$HOME/.config/$folder" ]; then
-      echo "   ! Backup existing config: $HOME/.config/$folder to $HOME/.config/$folder.bak"
+      echo "   ! Backup existing dir: $HOME/.config/$folder"
       mv "$HOME/.config/$folder" "$HOME/.config/$folder.bak"
     fi
 
-    # Handle .zshrc specifically if it's not in .config (standard stow maps to parent dir)
-    # Assuming standard stow behavior (stow package-name -> target directory)
+    # 2. Handle Zsh specifically (since it lives in Home, not .config)
+    if [ "$folder" == "zsh" ] && [ -f "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ]; then
+      echo "   ! Backup existing file: $HOME/.zshrc"
+      mv "$HOME/.zshrc" "$HOME/.zshrc.bak"
+    fi
+
     stow -v $folder
   done
 else
