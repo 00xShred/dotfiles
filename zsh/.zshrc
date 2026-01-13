@@ -111,6 +111,7 @@ alias lt="eza --tree --icons --level=2"
 alias cat="bat"
 alias vim="nvim"
 alias v="nvim"
+alias nano="nvim"
 alias grep="rg"
 
 # Pacman / Arch
@@ -184,6 +185,7 @@ function mr-refresh() {
     echo "✅ mr configuration refreshed!"
 }
 
+# magic-enter
 magic-enter () {
   if [[ -z $BUFFER ]]; then
     zle -I
