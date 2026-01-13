@@ -326,7 +326,7 @@ fi
 # --- 10. P10K CONFIG ---
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# nave 
+# navi
 eval "$(navi widget zsh)"
 
 # man 
