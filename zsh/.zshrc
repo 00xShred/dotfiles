@@ -184,13 +184,10 @@ function mr-refresh() {
     echo "✅ mr configuration refreshed!"
 }
 
-# Magic Enter
 magic-enter () {
   if [[ -z $BUFFER ]]; then
-    echo ""
-    # Use 'ls' (aliased to eza)
+    zle -I
     eza --icons --group-directories-first
-    # If inside git, show status
     if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
         echo ""
         git status -sb
@@ -200,6 +197,7 @@ magic-enter () {
     zle accept-line
   fi
 }
+
 zle -N magic-enter
 bindkey "^M" magic-enter
 
@@ -210,22 +208,6 @@ function yy() {
 		cd -- "$cwd"
 	fi
 	rm -f -- "$tmp"
-}
-
-# Tuxagotchi Switcher
-function tux() {
-    if [ -z "$1" ]; then
-        echo "❌ Error: Please provide a repository name."
-        echo "Usage: tux <repo-name>"
-        return 1
-    fi
-
-    # Update the repo line in the config file
-    # This looks for 'repo = "something"' and replaces it
-    sed -i "s/^repo\s*=\s*.*/repo = \"$1\"/" ~/.config/tuxagotchi/config.toml
-
-    echo "🐧 Loading Tuxagotchi for repo: $1 ..."
-    tuxagotchi
 }
 
 # fshow - git commit browser
