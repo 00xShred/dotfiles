@@ -7,7 +7,6 @@ hyprctl dispatch centerwindow
 DIR="$HOME/Pictures/Wallpapers"
 
 # 2. SELECT WALLPAPER (Using fzf with Kitty image preview)
-# We change directory to DIR so fzf lists just filenames, but we keep the full path for the logic
 cd "$DIR" || exit
 
 SELECTED=$(find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) |
@@ -27,36 +26,30 @@ fi
 WALLPAPER="$DIR/${SELECTED#./}"
 #!/bin/bash
 
-# ... (keep your existing fzf selection code at the top) ...
-
 # 3. APPLY SETTINGS
 echo "Applying: $WALLPAPER"
 swww img "$WALLPAPER" --transition-fps 60 --transition-step 90 --transition-type wipe --transition-angle 100
 
 # Generate colors
-# Added '|| true' so the script continues even if pywalfox throws a minor error
 wal -i "$WALLPAPER" || true
 
 # 4. RELOAD EVERYTHING
 hyprctl reload
 
-# Restart background services
-# We sleep to give them time to close properly before restarting
+# Restart background services using nohup
+# nohup = "No Hang Up" (keeps them alive after script exits)
 
 killall kanshi &>/dev/null
-sleep 0.5
-kanshi >/dev/null 2>&1 &
-disown
+sleep 0.2
+nohup kanshi >/dev/null 2>&1 &
 
 killall waybar &>/dev/null
-sleep 0.5 # <--- THIS IS CRITICAL
-waybar >/dev/null 2>&1 &
-disown
+sleep 0.5
+nohup waybar >/dev/null 2>&1 &
 
 killall dunst &>/dev/null
-sleep 0.5
-dunst >/dev/null 2>&1 &
-disown
+sleep 0.2
+nohup dunst >/dev/null 2>&1 &
 
 # Update Apps
 nvr --remote-send ":colorscheme neopywal<CR>" &>/dev/null
