@@ -85,7 +85,7 @@ alias ~="cd ~"
 alias c="clear"
 alias j="z" 
 
- # Common directories
+# Common directories
 
 alias docs="cd ~/Documents"
 alias idocs="cd OneDrive/Documents/DocsImportantes"
@@ -111,7 +111,6 @@ alias lt="eza --tree --icons --level=2"
 alias cat="bat"
 alias vim="nvim"
 alias v="nvim"
-alias nano="nvim"
 alias grep="rg"
 
 # Pacman / Arch
