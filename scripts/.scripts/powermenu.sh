@@ -24,7 +24,6 @@ case "$choice" in
   systemctl reboot
   ;;
 "$suspend")
-  # This is your custom logic from GEMINI.md:
   # Lock the screen *before* suspending.
   hyprlock &
   sleep 0.1
