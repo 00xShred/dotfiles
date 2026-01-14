@@ -150,7 +150,36 @@ return {
         "yaml",
         "c",
         "cpp",
+        "astro",
+        "css",
+        "dockerfile",
+        "toml",
       })
+    end,
+  },
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = function(_, opts)
+      opts.formatters_by_ft = opts.formatters_by_ft or {}
+
+      -- Web Stack
+      opts.formatters_by_ft.astro = { "prettier" }
+      opts.formatters_by_ft.javascript = { "prettier" }
+      opts.formatters_by_ft.typescript = { "prettier" }
+      opts.formatters_by_ft.html = { "prettier" }
+      opts.formatters_by_ft.css = { "prettier" }
+      opts.formatters_by_ft.json = { "prettier" }
+      opts.formatters_by_ft.markdown = { "prettier" }
+
+      -- Systems Stack
+      opts.formatters_by_ft.c = { "clang-format" }
+      opts.formatters_by_ft.cpp = { "clang-format" }
+      opts.formatters_by_ft.sh = { "shfmt" }
+
+      -- Scripting
+      opts.formatters_by_ft.lua = { "stylua" }
+      opts.formatters_by_ft.python = { "black" }
     end,
   },
 
@@ -158,12 +187,27 @@ return {
     "mason-org/mason.nvim",
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {
-        "stylua",
-        "shellcheck",
-        "shfmt",
-        "flake8",
-        "codelldb",
-        "jdtls", -- Ensure Java Language Server is actually installed
+        -- LSPs (Intelligence)
+        "astro-language-server", -- Astro
+        "clangd", -- C/C++
+        "pyright", -- Python
+        "jdtls", -- Java
+        "dockerfile-language-server",
+        "yaml-language-server",
+
+        -- Formatters (Prettifiers)
+        "prettier", -- Web (HTML, CSS, JS, Astro, MD)
+        "stylua", -- Lua
+        "clang-format", -- C/C++
+        "black", -- Python
+        "shfmt", -- Shell/Bash
+
+        -- Linters (Error Checkers)
+        "shellcheck", -- Bash
+        "eslint_d", -- JavaScript/TypeScript
+        "markdownlint", -- Markdown
+        "hadolint", -- Docker
+        "codelldb", -- Debugger
       })
     end,
   },
