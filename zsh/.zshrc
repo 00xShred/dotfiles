@@ -68,6 +68,7 @@ bindkey -v
 # --- 6. ENVIRONMENT & PATHS ---
 export EDITOR='nvim'
 export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.npm-global/bin:${KREW_ROOT:-$HOME/.krew}/bin:$HOME/.local/go/bin:$PATH"
+export PATH="$HOME/.scripts:$PATH"
 
 # Initialize tools
 eval "$(zoxide init zsh)" # Replaces 'cd' with smarter navigation
