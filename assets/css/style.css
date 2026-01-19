@@ -78,7 +78,7 @@ header {
 /* Grid for Tools */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
   gap: 1.5rem;
   margin: 2rem 0;
 }
@@ -190,4 +190,10 @@ tr:hover {
   height: auto;
   display: block;
   box-sizing: border-box;
+}
+
+@media (min-width: 850px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
