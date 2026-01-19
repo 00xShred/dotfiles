@@ -5,7 +5,7 @@ title: Home
 
 <header>
     <h1>gab's .files</h1>
-    <p class="subtitle">Arch Linux // Hyprland // Zsh // Pywal</p>
+    <p class="subtitle">Arch Linux // Hyprland // Zsh // Wpgtk // Zellij</p>
     <div style="margin-top: 1.5rem;">
         <a href="https://github.com/gab-dev-7/dotfiles" class="btn">View Source</a>
     </div>
@@ -24,27 +24,27 @@ If you are coming from Windows or macOS, this setup replaces the "floating windo
 <div class="grid">
     <div class="card">
         <h3>Hyprland</h3>
-        <p><strong>The Engine.</strong> A modern Wayland compositor. Unlike older X11 window managers, Hyprland offers buttery smooth animations, rounded corners, and blur effects, making the terminal feel futuristic.</p>
+        <p><strong>The Engine.</strong> A modern Wayland compositor. Offers buttery smooth animations, rounded corners, and blur effects that make the desktop feel alive.</p>
     </div>
     <div class="card">
-        <h3>Zsh + Starship</h3>
-        <p><strong>The Shell.</strong> Optimized for speed. It is paired with the <em>Starship</em> prompt, which gives you instant contextual info (Git branch, package versions, execution time) right in your command line.</p>
+        <h3>Zellij</h3>
+        <p><strong>The Multiplexer.</strong> Beyond just a terminal; it's a workspace manager. It handles panes and tabs with a built-in UI, allowing persistent sessions and complex layouts.</p>
     </div>
     <div class="card">
         <h3>Neovim</h3>
-        <p><strong>The Editor.</strong> Configured with Lua to behave like a full IDE. It includes <strong>LSP</strong> for auto-completion, <strong>Treesitter</strong> for highlighting, and <strong>Telescope</strong> for fuzzy-finding files.</p>
+        <p><strong>The Editor.</strong> A Lua-based IDE experience using LazyVim. Features LSP for smart completions, Treesitter for syntax, and Telescope for fuzzy finding.</p>
     </div>
     <div class="card">
-        <h3>Pywal</h3>
-        <p><strong>The Aesthetic.</strong> Extracts colors from your wallpaper and applies them system-wide. Change your background, and your terminal, borders, and text colors automatically update to match.</p>
+        <h3>Wpgtk</h3>
+        <p><strong>The Aesthetic.</strong> A powerful wrapper for Pywal. It extracts colors from wallpapers and applies them to templates system-wide, ensuring Waybar, Kitty, and your WM stay in sync.</p>
     </div>
     <div class="card">
-        <h3>Kitty</h3>
-        <p><strong>The Terminal.</strong> A GPU-accelerated terminal emulator. It offloads rendering to the graphics card for zero latency and supports displaying images directly in the command line.</p>
+        <h3>Yazi</h3>
+        <p><strong>The Navigator.</strong> A blazingly fast terminal file manager written in Rust. It features asynchronous image previews and a Vim-like intuitive control scheme.</p>
     </div>
     <div class="card">
         <h3>Waybar</h3>
-        <p><strong>The Status Bar.</strong> A highly customizable bar that sits at the top of the screen. It displays workspaces, media controls, volume, and battery status, styled dynamically by Pywal.</p>
+        <p><strong>The Status Bar.</strong> A highly customizable status bar styled dynamically. It monitors system resources, media, and workspaces in real-time.</p>
     </div>
 </div>
 
@@ -52,7 +52,7 @@ If you are coming from Windows or macOS, this setup replaces the "floating windo
 
 ## Installation Guide
 
-> **Warning:** This script assumes a fresh Arch Linux install. It uses `stow` to manage symlinks. Back up your data before running this.
+> **Warning:** This script assumes a fresh Arch Linux install. It uses `GNU Stow` to manage symlinks. Back up your existing `~/.config` before proceeding.
 
 ### 1. Update & Prep
 
@@ -64,54 +64,56 @@ sudo pacman -Syu git
 
 ### 2. Download the Configs
 
-Clone this repository to your home folder. The folder name _must_ be `dotfiles` for the symlinks to work automatically.
+Clone this repository to your home folder. The folder name _must_ be `dotfiles` for the symlinks to work correctly.
 
 ```bash
-git clone https://github.com/gab-dev-7/dotfiles.git "$HOME/dotfiles"
+git clone [https://github.com/gab-dev-7/dotfiles.git](https://github.com/gab-dev-7/dotfiles.git) "$HOME/dotfiles"
 cd "$HOME/dotfiles"
+
 ```
 
 ### 3. Automated Install
 
-Run the script. This will install the required packages (Hyprland, Neovim, etc.) and link the config files to `~/.config/`.
+Run the included installer. This will install all native and AUR packages,move existing configs to `.bak`, and stow the new files.
 
 ```bash
 chmod +x install.sh
 ./install.sh
-```
 
-**After Install:** Reboot your machine. On the login screen (SDDM), click the gear icon and select **Hyprland** before logging in.
+```
 
 ---
 
 ## Cheat Sheet
 
-The workflow is designed to be entirely keyboard-driven using the `Super` key (Windows Key).
+The workflow is keyboard-centric, utilizing the `Super` (Windows) key for almost everything.
 
 ### 🚀 Applications
 
 | Key Combo        | Action                    |
-| :--------------- | :------------------------ |
+| ---------------- | ------------------------- |
 | `Super + Return` | **Terminal** (Kitty)      |
-| `Super + E`      | **File Manager** (Thunar) |
 | `Super + B`      | **Browser** (Zen Browser) |
+| `Super + E`      | **GUI Files** (Thunar)    |
+| `Super + Y`      | **CLI Files** (Yazi)      |
 | `Super + D`      | **App Launcher** (Wofi)   |
 
 ### ⚙️ System Controls
 
-| Key Combo           | Action                                |
-| :------------------ | :------------------------------------ |
-| `Super + W`         | **Change Wallpaper** (Random + Pywal) |
-| `Super + Shift + S` | **Screenshot** (Grimblast)            |
-| `Super + P`         | **Power Menu** (Shutdown/Reboot)      |
-| `Super + L`         | **Lock Screen**                       |
-| `Super + Shift + C` | **Clipboard History**                 |
-| `Super + Shift + B` | **Toggle Blue Light** (Gammastep)     |
+Custom scripts are stored in `~/.scripts/` and linked via Stow for easy access.
+
+| Key Combo           | Action                               |
+| ------------------- | ------------------------------------ |
+| `Super + W`         | **Change Wallpaper** (Wpgtk / Pywal) |
+| `Super + Shift + S` | **Screenshot** (Grimblast)           |
+| `Super + P`         | **Power Menu** (Wlogout)             |
+| `Super + L`         | **Lock Screen** (Hyprlock)           |
+| `Super + Shift + C` | **Clipboard History** (Cliphist)     |
 
 ### 🪟 Window Management
 
 | Key Combo         | Action                    |
-| :---------------- | :------------------------ |
+| ----------------- | ------------------------- |
 | `Super + Q`       | **Close Active Window**   |
 | `Super + F`       | **Toggle Fullscreen**     |
 | `Super + V`       | **Toggle Floating Mode**  |
@@ -120,21 +122,10 @@ The workflow is designed to be entirely keyboard-driven using the `Super` key (W
 
 ---
 
-## Resources & Documentation
-
-If you are new to this ecosystem, these are the essential guides to keep bookmarked:
-
-- [📖 Arch Linux Installation Guide](https://wiki.archlinux.org/title/Installation_guide) - The bible of Linux.
-- [🐉 Hyprland Wiki](https://wiki.hyprland.org/) - Documentation for the window manager animations and variables.
-- [🐚 Oh My Zsh](https://ohmyz.sh/) - How to configure the shell further.
-- [🎨 Pywal](https://github.com/dylanaraps/pywal) - Understanding the color generation backend.
-
----
-
 ## Gallery
 
 <div class="grid">
-    <img src="assets/images/h2.jpg" alt="Screenshot 2" style="border-radius: 8px; border: 1px solid #1e293b;">
-    <img src="assets/images/h3.jpg" alt="Screenshot 3" style="border-radius: 8px; border: 1px solid #1e293b;">
-    <img src="assets/images/h4.jpg" alt="Screenshot 4" style="border-radius: 8px; border: 1px solid #1e293b;">
+<img src="assets/images/h2.jpg" alt="Screenshot 2" style="border-radius: 8px; border: 1px solid #1e293b;">
+<img src="assets/images/h3.jpg" alt="Screenshot 3" style="border-radius: 8px; border: 1px solid #1e293b;">
+<img src="assets/images/h4.jpg" alt="Screenshot 4" style="border-radius: 8px; border: 1px solid #1e293b;">
 </div>
