@@ -1,23 +1,24 @@
 #!/bin/bash
 
-# This script changes the brightness and sends a notification.
-# Usage: ./brightness.sh up
-#        ./brightness.sh down
+# Increment/Decrement
+STEP=5
 
-# Use brightnessctl to change brightness
 case $1 in
 up)
-  brightnessctl set 5%+
+  brightnessctl set ${STEP}%+
   ;;
 down)
-  brightnessctl set 5%-
+  brightnessctl set ${STEP}%-
   ;;
 esac
 
-# Get current brightness percentage
+# Calculate percentage
 CURRENT=$(brightnessctl g)
 MAX=$(brightnessctl m)
 PERCENT=$((CURRENT * 100 / MAX))
 
-# Send notification with a progress bar
-dunstify -a "brightness" -h string:x-dunst-stack-tag:brightness -h int:value:"$PERCENT" -i display-brightness -u low "Brightness: ${PERCENT}%"
+dunstify -a "brightness" \
+  -h string:x-dunst-stack-tag:brightness \
+  -h int:value:"$PERCENT" \
+  -i display-brightness-symbolic \
+  -u low "Brightness: ${PERCENT}%"
