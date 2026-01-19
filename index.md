@@ -122,6 +122,25 @@ Custom scripts are stored in `~/.scripts/` and linked via Stow for easy access.
 
 ---
 
+### 🛠️ Custom Tooling (The Script Collection)
+
+My workflow is powered by a collection of custom shell scripts located in `~/.scripts/`. These bridge the gap between various tools to create a seamless experience.
+
+- **Aesthetic & Dynamic Theming**
+- `wallpaper.sh`: An interactive wallpaper selector using `fzf` and Kitty's `icat`. It updates the desktop background via `swww`, generates system-wide colors with `Pywal`, and reloads `Waybar`, `Dunst`, and `Kanshi` automatically.
+
+- **System Hardware Controls**
+- `volume.sh`: Manages audio levels using `pamixer` and sends visual feedback via `Dunst` progress bars.
+- `brightness.sh`: Adjusts screen backlight using `brightnessctl` with synchronized OSD notifications.
+- `toggle_power.sh` & `power_profile_waybar.sh`: Cycles through "Performance," "Balanced," and "Power Saver" profiles, displaying the current mode with custom icons in Waybar.
+
+- **Utility & Workflow**
+- `clipmenu.sh`: A clipboard manager frontend for `cliphist`. Uses `Wofi` to let you fuzzy-search and paste from your clipboard history.
+- `powermenu.sh`: A clean, `Wofi`-based exit menu for Shutdown, Reboot, Suspend, and Locking.
+- `disk_monitor.sh`: A background daemon that monitors root partition usage and sends a critical alert if space drops below 15%.
+
+---
+
 ## Gallery
 
 <div class="grid">
