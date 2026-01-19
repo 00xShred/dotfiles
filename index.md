@@ -112,32 +112,58 @@ Custom scripts are stored in `~/.scripts/` and linked via Stow for easy access.
 
 ### 🪟 Window Management
 
-| Key Combo         | Action                    |
-| ----------------- | ------------------------- |
-| `Super + Q`       | **Close Active Window**   |
-| `Super + F`       | **Toggle Fullscreen**     |
-| `Super + V`       | **Toggle Floating Mode**  |
-| `Super + H/J/K/L` | **Move Focus** (Vim keys) |
-| `Alt + Tab`       | **Cycle Windows**         |
+| Key Combo                | Action                      |
+| ------------------------ | --------------------------- |
+| `Super + Q`              | **Close Active Window**     |
+| `Super + F`              | **Toggle Fullscreen**       |
+| `Super + V`              | **Toggle Floating Mode**    |
+| `Super + Shift  H/J/K/L` | **Move Windows** (Vim keys) |
+| `Alt + Tab`              | **Cycle Windows**           |
 
 ---
 
-### 🛠️ Custom Tooling (The Script Collection)
+### 🛠️ Custom Scripts
 
-My workflow is powered by a collection of custom shell scripts located in `~/.scripts/`. These bridge the gap between various tools to create a seamless experience.
+My workflow is powered by a collection of custom shell scripts located in `~/.scripts/`.
 
-- **Aesthetic & Dynamic Theming**
-- `wallpaper.sh`: An interactive wallpaper selector using `fzf` and Kitty's `icat`. It updates the desktop background via `swww`, generates system-wide colors with `Pywal`, and reloads `Waybar`, `Dunst`, and `Kanshi` automatically.
+<div class="grid">
+    <div class="card">
+        <small>Aesthetic & Theming</small>
+        <h3>wallpaper.sh</h3>
+        <p>Interactive selector using <code>fzf</code> and <code>swww</code>. Updates system-wide colors via Pywal and reloads Waybar/Dunst.</p>
+    </div>
 
-- **System Hardware Controls**
-- `volume.sh`: Manages audio levels using `pamixer` and sends visual feedback via `Dunst` progress bars.
-- `brightness.sh`: Adjusts screen backlight using `brightnessctl` with synchronized OSD notifications.
-- `toggle_power.sh` & `power_profile_waybar.sh`: Cycles through "Performance," "Balanced," and "Power Saver" profiles, displaying the current mode with custom icons in Waybar.
+    <div class="card">
+        <small>Hardware</small>
+        <h3>volume.sh & brightness.sh</h3>
+        <p>Controls audio and backlight with <code>pamixer</code> and <code>brightnessctl</code>, providing visual OSD feedback via Dunst.</p>
+    </div>
 
-- **Utility & Workflow**
-- `clipmenu.sh`: A clipboard manager frontend for `cliphist`. Uses `Wofi` to let you fuzzy-search and paste from your clipboard history.
-- `powermenu.sh`: A clean, `Wofi`-based exit menu for Shutdown, Reboot, Suspend, and Locking.
-- `disk_monitor.sh`: A background daemon that monitors root partition usage and sends a critical alert if space drops below 15%.
+    <div class="card">
+        <small>Hardware</small>
+        <h3>power_profile.sh</h3>
+        <p>Cycles between Performance, Balanced, and Power Saver modes with custom Waybar icon integration.</p>
+    </div>
+
+    <div class="card">
+        <small>Utility</small>
+        <h3>clipmenu.sh</h3>
+        <p>A <code>Wofi</code> frontend for <code>cliphist</code>, allowing fuzzy-searchable clipboard history.</p>
+    </div>
+
+    <div class="card">
+        <small>Utility</small>
+        <h3>powermenu.sh</h3>
+        <p>Clean, Wofi-based exit menu for Shutdown, Reboot, Suspend, and Locking.</p>
+    </div>
+
+    <div class="card">
+        <small>Utility</small>
+        <h3>disk_monitor.sh</h3>
+        <p>Background daemon that sends critical desktop notifications if disk space drops below 15%.</p>
+    </div>
+
+</div>
 
 ---
 

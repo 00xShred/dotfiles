@@ -78,7 +78,7 @@ header {
 /* Grid for Tools */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300, 1fr));
   gap: 1.5rem;
   margin: 2rem 0;
 }
@@ -93,9 +93,26 @@ header {
   transform: translateY(-5px);
   border-color: var(--accent-cyan);
 }
+.card small {
+  display: block;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--accent-cyan);
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
 .card h3 {
-  margin-top: 0;
-  color: var(--accent-pink);
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  margin-bottom: 0.75rem;
+}
+
+.card p code {
+  background: #050a14;
+  color: #fff;
+  border: 1px solid rgba(0, 240, 255, 0.2);
 }
 
 /* Code Blocks */
@@ -133,44 +150,44 @@ pre code {
 
 /* Table Styling - Added for Cheat Sheet */
 table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin: 2rem 0;
-    background: var(--card-bg);
-    border-radius: 12px;
-    border: 1px solid #1e293b;
-    overflow: hidden;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 2rem 0;
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+  overflow: hidden;
 }
 
-th, td {
-    padding: 12px 20px;
-    text-align: left;
-    border-bottom: 1px solid #1e293b;
+th,
+td {
+  padding: 12px 20px;
+  text-align: left;
+  border-bottom: 1px solid #1e293b;
 }
 
 th {
-    background: #151e2e;
-    color: var(--accent-pink);
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.85rem;
-    letter-spacing: 0.05em;
+  background: #151e2e;
+  color: var(--accent-pink);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
 }
 
 tr:last-child td {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 tr:hover {
-    background: rgba(0, 240, 255, 0.05); /* Subtle cyan glow on hover */
+  background: rgba(0, 240, 255, 0.05);
 }
 
-/* --- Gallery Fix --- */
-/* Ensures screenshots fit perfectly in their grid cells */
+/* --- Gallery --- */
 .grid img {
-    width: 100%;        /* Force image to fit container width */
-    height: auto;       /* Maintain aspect ratio */
-    display: block;     /* Remove extra space below image */
-    box-sizing: border-box; /* Keep borders inside the box */
+  width: 100%;
+  height: auto;
+  display: block;
+  box-sizing: border-box;
 }
