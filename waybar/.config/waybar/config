@@ -60,9 +60,9 @@
     },
  
     "custom/power": {
-        "exec": "bash ~/scripts/power_profile_waybar.sh",
-        "return-type": "json",  /* <-- THIS IS THE FIX */
-        "on-click": "bash ~/scripts/toggle_power.sh",
+        "exec": "bash ~/.scripts/power_profile_waybar.sh",
+        "return-type": "json",
+        "on-click": "bash ~/.scripts/toggle_power.sh",
         "interval": 5,
         "format": "{text}",
         "tooltip": true
