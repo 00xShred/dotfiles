@@ -154,6 +154,8 @@ return {
         "css",
         "dockerfile",
         "toml",
+        "rust",
+        "ron",
       })
     end,
   },
@@ -176,6 +178,7 @@ return {
       opts.formatters_by_ft.c = { "clang-format" }
       opts.formatters_by_ft.cpp = { "clang-format" }
       opts.formatters_by_ft.sh = { "shfmt" }
+      opts.formatters_by_ft.rust = { "rustfmt" }
 
       -- Scripting
       opts.formatters_by_ft.lua = { "stylua" }
@@ -187,22 +190,23 @@ return {
     "mason-org/mason.nvim",
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {
-        -- LSPs (Intelligence)
+        -- LSPs
         "astro-language-server", -- Astro
         "clangd", -- C/C++
         "pyright", -- Python
         "jdtls", -- Java
         "dockerfile-language-server",
         "yaml-language-server",
+        "rust-analyzer",
 
-        -- Formatters (Prettifiers)
+        -- Formatters
         "prettier", -- Web (HTML, CSS, JS, Astro, MD)
         "stylua", -- Lua
         "clang-format", -- C/C++
         "black", -- Python
         "shfmt", -- Shell/Bash
 
-        -- Linters (Error Checkers)
+        -- Linters
         "shellcheck", -- Bash
         "eslint_d", -- JavaScript/TypeScript
         "markdownlint", -- Markdown
