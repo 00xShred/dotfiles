@@ -11,8 +11,9 @@
   "cpu": {
     "format": " {usage}%",
     "on-click": "kitty -e btop",
-    "warning-threshold": 50,
-    "critical-threshold": 80
+    "warning-threshold": 15,
+    "critical-threshold": 25,
+    "tooltip": true
 },
   "memory": {
     "format": " {used:0.1f}G",
