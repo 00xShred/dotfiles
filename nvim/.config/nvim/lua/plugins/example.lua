@@ -62,59 +62,55 @@ return {
   },
 
   -- ==========================================
-  -- 📝 MARKDOWN PREVIEW
+  -- 🤖 AI CODING ASSISTANT (Avante)
   -- ==========================================
   {
-    "ellisonleao/glow.nvim",
-    config = function()
-      require("glow").setup({
-        style = "dark",
-        width = 100,
-        height = 30,
-        width_ratio = 0.7,
-        height_ratio = 0.6,
-        border = "shadow",
-      })
-    end,
-    cmd = "Glow",
-    init = function()
-      vim.api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
-        pattern = "*.md",
-        callback = function()
-          vim.bo.filetype = "markdown"
-        end,
-      })
+    "yetone/avante.nvim",
+    event = "VeryLazy",
+    lazy = false,
+    version = false,
+    opts = {
+      provider = "openai",
+      auto_suggestions_provider = "openai",
+      openai = {
+        endpoint = "https://litellm.sph-prod.ethz.ch/v1",
+        model = "anthropic/claude-3-5-sonnet",
+        temperature = 0,
+        max_tokens = 4096,
+      },
+    },
+    config = function(_, opts)
+      local key = os.getenv("SPH_API_KEY")
 
-      vim.keymap.set("n", "<leader>mp", function()
-        if vim.fn.expand("%:e") == "md" then
-          vim.cmd("Glow")
-        else
-          print("Not a .md file - current extension: " .. vim.fn.expand("%:e"))
-        end
-      end, { desc = "Markdown Preview" })
+      if not key then
+        vim.notify("SPH_API_KEY not found in environment!", vim.log.levels.WARN)
+      else
+        vim.env.OPENAI_API_KEY = key
+      end
+
+      require("avante").setup(opts)
     end,
+    build = "make",
+    dependencies = {
+      "stevearc/dressing.nvim",
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+    },
   },
 
   -- ==========================================
   -- 🧠 CODING & PARSING
   -- ==========================================
 
-  -- ⚠️ NEW: Fix for Java "Non-Project File" Warning
-  -- This tells the LSP to look for .iml or .git to determine the root
   {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
         jdtls = {
           root_dir = function(fname)
-            return require("lspconfig.util").root_pattern(
-              ".git", -- Look for Git root (Best for GitLab projects)
-              "*.iml", -- Look for IntelliJ idea files (Uni projects)
-              "mvnw", -- Maven
-              "gradlew", -- Gradle
-              "pom.xml",
-              "build.gradle"
-            )(fname) or vim.fn.getcwd()
+            return require("lspconfig.util").root_pattern(".git", "*.iml", "mvnw", "gradlew", "pom.xml", "build.gradle")(
+              fname
+            ) or vim.fn.getcwd()
           end,
         },
       },
@@ -191,27 +187,27 @@ return {
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {
         -- LSPs
-        "astro-language-server", -- Astro
-        "clangd", -- C/C++
-        "pyright", -- Python
-        "jdtls", -- Java
+        "astro-language-server",
+        "clangd",
+        "pyright",
+        "jdtls",
         "dockerfile-language-server",
         "yaml-language-server",
         "rust-analyzer",
 
         -- Formatters
-        "prettier", -- Web (HTML, CSS, JS, Astro, MD)
-        "stylua", -- Lua
-        "clang-format", -- C/C++
-        "black", -- Python
-        "shfmt", -- Shell/Bash
+        "prettier",
+        "stylua",
+        "clang-format",
+        "black",
+        "shfmt",
 
         -- Linters
-        "shellcheck", -- Bash
-        "eslint_d", -- JavaScript/TypeScript
-        "markdownlint", -- Markdown
-        "hadolint", -- Docker
-        "codelldb", -- Debugger
+        "shellcheck",
+        "eslint_d",
+        "markdownlint",
+        "hadolint",
+        "codelldb",
       })
     end,
   },
