@@ -320,3 +320,4 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # direnev
 eval "$(direnv hook zsh)"
+export PATH="$HOME/.cargo/bin:$PATH"
