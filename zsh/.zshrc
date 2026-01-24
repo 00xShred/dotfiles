@@ -320,4 +320,8 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # direnev
 eval "$(direnv hook zsh)"
+
+# exports
 export PATH="$HOME/.cargo/bin:$PATH"
+
+[ -f ~/.zsh_secrets ] && source ~/.zsh_secrets
