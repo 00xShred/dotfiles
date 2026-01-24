@@ -3,15 +3,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     opts = {
-      servers = {
-        jdtls = {
-          root_dir = function(fname)
-            return require("lspconfig.util").root_pattern(".git", "*.iml", "mvnw", "gradlew", "pom.xml", "build.gradle")(
-              fname
-            ) or vim.fn.getcwd()
-          end,
-        },
-      },
+      servers = {},
     },
   },
 
@@ -24,7 +16,6 @@ return {
         "astro-language-server",
         "clangd",
         "pyright",
-        "jdtls",
         "dockerfile-language-server",
         "yaml-language-server",
         "rust-analyzer",
