@@ -144,6 +144,7 @@ alias shutdown="systemctl poweroff"
 alias extract='dtrx' # Highly recommend installing 'dtrx' (Do The Right Extraction) for archives
 alias ip="ip -c"
 alias open="xdg-open"
+alias kiri="kiroku"
 
 # Clipboard History
 alias cl="cliphist list | fzf | cliphist decode | wl-copy"
