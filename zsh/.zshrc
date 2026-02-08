@@ -145,6 +145,7 @@ alias extract='dtrx' # Highly recommend installing 'dtrx' (Do The Right Extracti
 alias ip="ip -c"
 alias open="xdg-open"
 alias kiri="kiroku"
+alias homelab="ssh gabriel@100.65.145.50"
 
 # Clipboard History
 alias cl="cliphist list | fzf | cliphist decode | wl-copy"
