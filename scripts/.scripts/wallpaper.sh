@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x # Enable command tracing
 
 hyprctl dispatch setfloating address:$(hyprctl activewindow -j | jq -r .address)
 hyprctl dispatch centerwindow
@@ -10,21 +11,20 @@ DIR="$HOME/Pictures/Wallpapers"
 cd "$DIR" || exit
 
 SELECTED=$(find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) |
-  sort |
-  fzf --preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0 {}' \
-    --preview-window=right:60% \
-    --prompt="Choose Wallpaper > " \
-    --border=rounded \
-    --margin=5%)
+    sort |
+    fzf --preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0 {}' \
+        --preview-window=right:60% \
+        --prompt="Choose Wallpaper > " \
+        --border=rounded \
+        --margin=5%)
 
 # Exit if cancelled
 if [ -z "$SELECTED" ]; then
-  exit 0
+    exit 0
 fi
 
 # Construct full path (remove ./ prefix if present)
 WALLPAPER="$DIR/${SELECTED#./}"
-#!/bin/bash
 
 # 3. APPLY SETTINGS
 echo "Applying: $WALLPAPER"
@@ -37,8 +37,6 @@ wal -i "$WALLPAPER" || true
 hyprctl reload
 
 # Restart background services using nohup
-# nohup = "No Hang Up" (keeps them alive after script exits)
-
 killall kanshi &>/dev/null
 sleep 0.2
 nohup kanshi >/dev/null 2>&1 &
@@ -52,7 +50,7 @@ sleep 0.2
 nohup dunst >/dev/null 2>&1 &
 
 # Update Apps
-nvr --remote-send ":colorscheme neopywal<CR>" &>/dev/null
+nvr --remote-send ":colorscheme neopywal<CR>" &>/dev/null & # Run nvr in background
 pywalfox update &>/dev/null
 
 echo "Done!"
