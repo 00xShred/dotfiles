@@ -327,3 +327,5 @@ eval "$(direnv hook zsh)"
 export PATH="$HOME/.cargo/bin:$PATH"
 
 [ -f ~/.zsh_secrets ] && source ~/.zsh_secrets
+
+export GROFF_NO_SGR=1
