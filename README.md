@@ -1,33 +1,33 @@
 <div align="center">
 
-# ⚡ .files
+    # ⚡ .files
 
-### A minimal, keyboard-centric Hyprland experience.
+    ### A minimal, keyboard-centric Hyprland experience.
 
 [![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793d1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://archlinux.org)
 [![Hyprland](https://img.shields.io/badge/Hyprland-WM-00f0ff?style=for-the-badge&logo=linux&logoColor=black)](https://hyprland.org)
 [![Zsh](https://img.shields.io/badge/Shell-Zsh-orange?style=for-the-badge&logo=zsh&logoColor=white)](https://zsh.org)
 [![Pywal](https://img.shields.io/badge/Theme-Pywal-ff0055?style=for-the-badge&logo=python&logoColor=white)](https://github.com/dylanaraps/pywal)
 
-<br />
+    <br />
 
 [![Website](https://img.shields.io/badge/VIEW_DOCUMENTATION_SITE-ff0055?style=for-the-badge&logo=github&logoColor=white)](https://gab-dev-7.github.io/dotfiles)
 
-<p align="center">
-  <img src="assets/images/h4.jpg" alt="Hyprland Screenshot" width="90%" style="border-radius: 10px; box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);">
-</p>
+    <p align="center">
+    <img src="assets/images/h4.jpg" alt="Hyprland Screenshot" width="90%" style="border-radius: 10px; box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);">
+    </p>
 
 </div>
 
 ---
 
-## 📖 About
+## About
 
 Welcome to my personal configuration files (dotfiles). This setup is built around **Hyprland** on **Arch Linux**, focusing on aesthetics, performance, and a keyboard-driven workflow.
 
 The system uses **Pywal** to generate a consistent color scheme across the entire system (Waybar, Kitty, Rofi, Hyprland borders) based on your current wallpaper.
 
-## 🚀 Features
+## Features
 
 - **WM:** [Hyprland](https://hyprland.org/) (Wayland) - Smooth animations & tiling.
 - **Terminal:** [Kitty](https://sw.kovidgoyal.net/kitty/) - GPU accelerated.
@@ -40,13 +40,13 @@ The system uses **Pywal** to generate a consistent color scheme across the entir
 
 ---
 
-## 📸 Gallery
+## Gallery
 
 | <img src="assets/images/h2.jpg" width="400"> | <img src="assets/images/h3.jpg" width="400"> |
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 **Full documentation, gallery, and detailed setup guide are available on the [Website](https://gab-dev-7.github.io/dotfiles).**
 
@@ -72,24 +72,24 @@ chmod +x install.sh
 ./install.sh
 ```
 
-> **⚠️ Warning:** Back up your existing configurations (`~/.config`) before running the script!
+> **Warning:** Back up your existing configurations (`~/.config`) before running the script!
 
 ---
 
-## ⌨️ Keybindings
+## Keybindings
 
 The workflow is heavily reliant on the `Super` (Windows) key. Here are the essentials:
 
-| Key Combination         | Action                |
-| :---------------------- | :-------------------- |
-| `Super` + `Enter`       | Open Terminal (Kitty) |
-| `Super` + `Q`           | Kill active window    |
-| `Super` + `Space`       | Open App Launcher     |
-| `Super` + `E`           | Open File Manager     |
-| `Super` + `F`           | Toggle Fullscreen     |
-| `Super` + `Shift` + `F` | Toggle Floating       |
-| `Super` + `Left/Right`  | Move focus            |
-| `Super` + `1-9`         | Switch Workspace      |
+| Key Combination   | Action                |
+| :---------------- | :-------------------- |
+| `Super` + `Enter` | Open Terminal (Kitty) |
+| `Super` + `Q`     | Kill active window    |
+| `Super` + `Space` | Open App Launcher     |
+| `Super` + `E`     | Open File Manager     |
+| `Super` + `F`     | Toggle Fullscreen     |
+| `Super` + `V`     | Toggle Floating       |
+| `Super` + `j/k`   | Move focus            |
+| `Super` + `1-9`   | Switch Workspace      |
 
 ---
 
@@ -102,9 +102,9 @@ $HOME/dotfiles
 ├── nvim/          # Editor (LazyVim)
 ├── waybar/        # Status Bar
 ├── zsh/           # Shell
-├── zellij/        # Terminal Multiplexer  <-- NEW
-├── kanshi/        # Display Management    <-- NEW
-├── yazi/          # Terminal File Manager <-- NEW
+├── zellij/        # Terminal Multiplexer
+├── kanshi/        # Display Management
+├── yazi/          # Terminal File Manager
 ├── wpg/           # Color Theming (Wpgtk)
 ├── install.sh     # Setup Script
 └── README.md
