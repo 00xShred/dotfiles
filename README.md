@@ -1,21 +1,21 @@
 <div align="center">
 
-    # ⚡ .files
+# ⚡ .files
 
-    ### A minimal, keyboard-centric Hyprland experience.
+### A minimal, keyboard-centric Hyprland experience.
 
 [![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793d1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://archlinux.org)
 [![Hyprland](https://img.shields.io/badge/Hyprland-WM-00f0ff?style=for-the-badge&logo=linux&logoColor=black)](https://hyprland.org)
 [![Zsh](https://img.shields.io/badge/Shell-Zsh-orange?style=for-the-badge&logo=zsh&logoColor=white)](https://zsh.org)
 [![Pywal](https://img.shields.io/badge/Theme-Pywal-ff0055?style=for-the-badge&logo=python&logoColor=white)](https://github.com/dylanaraps/pywal)
 
-    <br />
+<br />
 
 [![Website](https://img.shields.io/badge/VIEW_DOCUMENTATION_SITE-ff0055?style=for-the-badge&logo=github&logoColor=white)](https://gab-dev-7.github.io/dotfiles)
 
-    <p align="center">
+<p align="center">
     <img src="assets/images/h4.jpg" alt="Hyprland Screenshot" width="90%" style="border-radius: 10px; box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);">
-    </p>
+</p>
 
 </div>
 
