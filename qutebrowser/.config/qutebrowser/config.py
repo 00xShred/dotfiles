@@ -95,6 +95,8 @@ c.url.searchengines = {
 # --- Aliases ---
 c.aliases = {
     "w": "session-save",
+    "wl": "session-load",
+    "wd": "session-delete",
     "q": "close",
     "qa": "quit",
     "hist": "history",
