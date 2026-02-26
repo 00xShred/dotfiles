@@ -45,7 +45,7 @@ c.tabs.show = "multiple"
 c.tabs.position = "top"
 c.tabs.width = 150
 c.tabs.favicons.show = "always"  # Show favicons on tabs
-c.tabs.title.format = "{audio}{index}: {title}"  # Include audio indicator
+c.tabs.title.format = "{audio}{index}: {current_title}"  # Include audio indicator
 c.tabs.background = True  # Open new tabs in background
 c.tabs.pinned.frozen = True  # Prevent pinned tabs from unloading
 
@@ -139,5 +139,5 @@ config.bind("<Ctrl-Shift-v>", "insert-text -- {clipboard}", mode="insert")  # pa
 
 # 7. Performance
 c.content.cache.size = 512 * 1024 * 1024  # 512 MB
-c.content.prefetch = True
+c.content.dns_prefetch = True
 c.qt.args = ["enable-gpu-rasterization", "enable-native-gpu-memory-buffers"]

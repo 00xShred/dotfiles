@@ -53,5 +53,7 @@ nohup dunst >/dev/null 2>&1 &
 nvr --remote-send ":colorscheme neopywal<CR>" &>/dev/null & # Run nvr in background
 pywalfox update &>/dev/null
 
+qutebrowser ':config-source' &>/dev/null &
+
 echo "Done!"
 exit 0
