@@ -6,6 +6,8 @@
 
 config_version: 2
 settings:
+  content.pdfjs:
+    global: false
   statusbar.show:
     global: never
   tabs.show:

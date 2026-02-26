@@ -65,7 +65,7 @@ c.hints.scatter = True  # Better positioning for hints
 c.content.blocking.enabled = True
 c.content.blocking.method = "adblock"
 c.content.javascript.clipboard = "access"
-c.content.pdfjs = True
+c.content.pdfjs = False
 c.content.cookies.accept = "no-3rdparty"
 c.content.headers.user_agent = (
     "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"
@@ -101,7 +101,8 @@ c.aliases = {
     "qa": "quit",
     "hist": "history",
     "bm": "bookmark-list",
-    "r": "config-source",
+    "r": "reload",
+    "cr": "config-source",
 }
 
 # --- Keybindings ---
