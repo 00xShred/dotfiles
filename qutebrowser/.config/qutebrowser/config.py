@@ -99,6 +99,7 @@ c.aliases = {
     "qa": "quit",
     "hist": "history",
     "bm": "bookmark-list",
+    "r": "config-source",
 }
 
 # --- Keybindings ---
