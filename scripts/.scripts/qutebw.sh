@@ -1,9 +1,26 @@
 #!/bin/bash
-# Check if session is already set and valid
-if ! bw status | grep -q "unlocked"; then
-    # If not, unlock and capture the session key
-    BW_SESSION=$(bw unlock --raw)
+
+# 1. Get the current status from Bitwarden as JSON
+STATUS_JSON=$(bw status)
+STATUS=$(echo "$STATUS_JSON" | jq -r '.status')
+
+# 2. Logic Check
+if [ "$STATUS" == "unauthenticated" ]; then
+    EMAIL=$(wofi --dmenu -p "Bitwarden Email:")
+    [ -z "$EMAIL" ] && exit 1
+    BW_SESSION=$(wofi --dmenu -p "Master Password:" --password | bw login "$EMAIL" --raw)
     export BW_SESSION
+
+elif [ "$STATUS" == "locked" ]; then
+    BW_PASS=$(wofi --dmenu -p "Vault Locked. Master Password:" --password)
+    [ -z "$BW_PASS" ] && exit 1
+
+    BW_SESSION=$(echo "$BW_PASS" | bw unlock --raw)
+    export BW_SESSION
+
+else
+    echo "Bitwarden is already unlocked. Launching qutebrowser..."
 fi
-# Launch qutebrowser with the environment variable set
+
+# 3. Launch qutebrowser
 exec qutebrowser "$@"

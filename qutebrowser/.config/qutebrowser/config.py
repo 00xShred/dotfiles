@@ -44,22 +44,22 @@ c.colors.webpage.darkmode.policy.images = "never"
 c.tabs.show = "multiple"
 c.tabs.position = "top"
 c.tabs.width = 150
-c.tabs.favicons.show = "always"  # Show favicons on tabs
-c.tabs.title.format = "{audio}{index}: {current_title}"  # Include audio indicator
-c.tabs.background = True  # Open new tabs in background
-c.tabs.pinned.frozen = True  # Prevent pinned tabs from unloading
+c.tabs.favicons.show = "always"
+c.tabs.title.format = "{index}: {current_title}"
+c.tabs.background = True
+c.tabs.pinned.frozen = True
 
 # Status bar
 c.statusbar.show = "always"
 c.statusbar.widgets = ["keypress", "url", "scroll", "history", "tabs", "progress"]
 
 # Download bar
-c.downloads.position = "top"  # Show downloads at top
-c.downloads.remove_finished = 1000  # Remove finished downloads after 1 sec
+c.downloads.position = "top"
+c.downloads.remove_finished = 2000
 
 # hints
-c.hints.leave_on_load = True  # Leave hint mode after clicking
-c.hints.scatter = True  # Better positioning for hints
+c.hints.leave_on_load = True
+c.hints.scatter = True
 
 # --- Content & Privacy ---
 c.content.blocking.enabled = True
@@ -108,7 +108,11 @@ c.aliases = {
 # --- Keybindings ---
 
 # 1. Bitwarden
-config.bind("<Ctrl-p>", "spawn --userscript qute-bitwarden")
+config.bind(
+    "<Ctrl-p>",
+    'spawn --userscript qute-bitwarden --password-prompt "wofi --dmenu -p Password:"',
+)
+config.bind("<Ctrl-Alt-p>", "spawn --userscript qute-bitwarden --totp-only")
 config.bind("<Ctrl-Shift-p>", "spawn --userscript qute-bitwarden --totp")
 
 # 2. Media (MPV)
@@ -133,13 +137,13 @@ config.bind("alt-2", "tab-focus 2")
 config.bind("alt-3", "tab-focus 3")
 
 # 6. Additional useful bindings
-config.bind("<Ctrl-t>", "open -t")  # New tab
-config.bind("<Ctrl-h>", "open qute://history")  # history
-config.bind("<Ctrl-b>", "open qute://bookmarks")  # bookmarks
-config.bind("<Ctrl-Shift-r>", "reload -f")  # force reload
-config.bind("<F11>", "fullscreen")  # toggle fullscreen
-config.bind("<Ctrl-n>", "open -w")  # new window
-config.bind("<Ctrl-Shift-v>", "insert-text -- {clipboard}", mode="insert")  # paste
+config.bind("<Ctrl-t>", "open -t")
+config.bind("<Ctrl-h>", "open qute://history")
+config.bind("<Ctrl-b>", "open qute://bookmarks")
+config.bind("<Ctrl-Shift-r>", "reload -f")
+config.bind("<F11>", "fullscreen")
+config.bind("<Ctrl-n>", "open -w")
+config.bind("<Ctrl-Shift-v>", "insert-text -- {clipboard}", mode="insert")
 
 # 7. Performance
 c.content.cache.size = 512 * 1024 * 1024  # 512 MB
