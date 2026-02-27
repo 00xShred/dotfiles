@@ -1,6 +1,4 @@
 web https://web.whatsapp.com/
-moodle https://moodle-app2.let.ethz.ch/my/
-exams https://exams.vis.ethz.ch/
 deep https://chat.deepseek.com/
 qwen https://chat.qwen.ai/
 gpt https://chatgpt.com/
@@ -10,7 +8,6 @@ zai https://chat.z.ai/
 yt https://www.youtube.com/
 visgit https://gitlab.ethz.ch/groups/vseth/1100-fv/1116-vis
 over https://www.overleaf.com/project
-mail https://mail.google.com/mail/u/0/#inbox
 cal https://calendar.google.com/calendar/u/0/r
 gctf https://capturetheflag.withgoogle.com/beginners-quest
 pwn https://pwnable.kr/play.php
@@ -20,7 +17,6 @@ pico https://play.picoctf.org/playlists
 vulnhub https://www.vulnhub.com/
 owasp https://juice-shop.herokuapp.com/#/
 intern https://web.virtualinternships.com/intern/application/resume-profile
-homepage https://dashboard.lab.gawindlin.com/
 monitor https://monitor.lab.gawindlin.com/dashboard
 lice https://vestuarioaxel.my.canva.site/c-pia-de-canva-01-virtual-gift-4-you/gifts
 gitpv https://gitlab.provida.net/dashboard/home
@@ -28,3 +24,4 @@ epson http://localhost:631/jobs/
 git https://github.com/gab-dev-7
 render https://dashboard.render.com/web/srv-d5jm196mcj7s738ett30/deploys/dep-d5jm19umcj7s738ettqg?r=2026-01-14%4009%3A22%3A53%7E2026-01-14%4009%3A28%3A48
 ctf_swiss_hacking_challenge https://www.swiss-hacking-challenge.ch/ctf/
+gmail https://mail.google.com/mail/u/0/#inbox
