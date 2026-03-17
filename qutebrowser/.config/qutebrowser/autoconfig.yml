@@ -11,9 +11,12 @@ settings:
   content.blocking.enabled:
     global: false
   content.notifications.enabled:
+    https://calendar.google.com: true
     https://web.whatsapp.com: true
   content.pdfjs:
     global: false
+  statusbar.position:
+    global: bottom
   statusbar.show:
     global: never
   tabs.show:
