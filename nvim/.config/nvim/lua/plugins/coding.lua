@@ -64,6 +64,8 @@ return {
       -- Scripting
       opts.formatters_by_ft.lua = { "stylua" }
       opts.formatters_by_ft.python = { "black" }
+
+      opts.format_on_save = nil
     end,
   },
 }

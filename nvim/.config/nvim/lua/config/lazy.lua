@@ -19,8 +19,7 @@ require("lazy").setup({
     -- 1. Load LazyVim Core
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
 
-    -- 2. IMPORT LANGUAGE EXTRAS (The IDE parts)
-    -- These do the heavy lifting for Java, Python, C, and JS
+    -- 2. IMPORT LANGUAGE EXTRAS
     { import = "lazyvim.plugins.extras.lang.java" },
     { import = "lazyvim.plugins.extras.lang.python" },
     { import = "lazyvim.plugins.extras.lang.typescript" }, -- Covers JS/TS
@@ -30,7 +29,6 @@ require("lazy").setup({
     -- Optional: Formatting & UI
     { import = "lazyvim.plugins.extras.formatting.prettier" },
     { import = "lazyvim.plugins.extras.linting.eslint" },
-    -- { import = "lazyvim.plugins.extras.ui.mini-starter" }, -- Uncomment if you like the Mini starter
 
     -- 3. Import your custom plugins folder
     { import = "plugins" },
