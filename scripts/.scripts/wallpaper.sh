@@ -26,9 +26,10 @@ fi
 # Construct full path (remove ./ prefix if present)
 WALLPAPER="$DIR/${SELECTED#./}"
 
-# 3. APPLY SETTINGS
+# 3. APPLY WALLPAPER
 echo "Applying: $WALLPAPER"
-swww img "$WALLPAPER" --transition-fps 60 --transition-step 90 --transition-type wipe --transition-angle 100
+killall swaybg &>/dev/null
+nohup swaybg -i "$WALLPAPER" -m fill >/dev/null 2>&1 &
 
 # Generate colors
 wal -i "$WALLPAPER" || true
