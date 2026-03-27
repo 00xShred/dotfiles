@@ -67,9 +67,7 @@ c.content.blocking.method = "adblock"
 c.content.javascript.clipboard = "access"
 c.content.pdfjs = False
 c.content.cookies.accept = "no-3rdparty"
-c.content.headers.user_agent = (
-    "Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0"
-)
+c.content.headers.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
 c.content.blocking.adblock.lists = [
     "https://easylist.to/easylist/easylist.txt",
     "https://easylist.to/easylist/easyprivacy.txt",
@@ -116,8 +114,9 @@ config.bind("<Ctrl-Alt-p>", "spawn --userscript qute-bitwarden --totp-only")
 config.bind("<Ctrl-Shift-p>", "spawn --userscript qute-bitwarden --totp")
 
 # 2. Media (MPV)
-config.bind("M", "hint links spawn mpv {hint-url}")
-config.bind(";M", "spawn mpv {url}")
+config.bind(";m", "spawn mpv --force-window=immediate {url}")
+config.bind("M", "hint links spawn mpv --force-window=immediate {hint-url}")
+config.bind("v", "spawn mpv --force-window=immediate {url}")
 
 # 3. Toggles
 config.bind("td", "config-cycle colors.webpage.darkmode.enabled true false")
@@ -148,4 +147,9 @@ config.bind("<Ctrl-Shift-v>", "insert-text -- {clipboard}", mode="insert")
 # 7. Performance
 c.content.cache.size = 512 * 1024 * 1024  # 512 MB
 c.content.dns_prefetch = True
-c.qt.args = ["enable-gpu-rasterization", "enable-native-gpu-memory-buffers"]
+c.qt.args = [
+    "enable-gpu-rasterization",
+    "disable-gpu-driver-bug-workarounds",
+    "ignore-gpu-blocklist",
+    "num-raster-threads=4",
+]
