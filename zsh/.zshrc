@@ -168,6 +168,10 @@ alias -s js=node
 # Zellij (Auto-attach or Create)
 alias zlj='zellij attach --index 0 || zellij'
 
+# conect to headphones
+alias headphones="wpctl set-default $(wpctl status | grep 'Nothing Ear' | head -n 1 | awk '{print $2}' | tr -d '.')"
+
+# clean logs 
 alias cleanroot='sudo pacman -Scc && sudo journalctl --vacuum-size=100M && sudo timeshift --check'
 
 # --- 8. FUNCTIONS ---
