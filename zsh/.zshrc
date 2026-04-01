@@ -110,7 +110,6 @@ alias ll="eza -l --icons --group-directories-first --git"
 alias la="eza -la --icons --group-directories-first --git"
 alias lt="eza --tree --icons --level=2"
 alias cat="bat"
-alias vim="nvim"
 alias v="nvim"
 alias grep="rg"
 
@@ -119,7 +118,7 @@ alias install="sudo pacman -S"
 alias remove="sudo pacman -Rs"
 alias search="pacman -Ss"
 alias update="sudo pacman -Syu"
-alias cleanup="sudo pacman -Rns \$(pacman -Qtdq)" # Remove orphans
+alias cleanup="sudo pacman -Rns \$(pacman -Qtdq)"
 alias yays="yay -S"
 
 # Git
@@ -141,7 +140,7 @@ alias reboot="systemctl reboot"
 alias shutdown="systemctl poweroff"
 
 # Utils
-alias extract='dtrx' # Highly recommend installing 'dtrx' (Do The Right Extraction) for archives
+alias extract='dtrx'
 alias ip="ip -c"
 alias open="xdg-open"
 alias kiri="kiroku"
