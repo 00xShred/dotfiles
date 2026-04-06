@@ -111,7 +111,6 @@ alias la="eza -la --icons --group-directories-first --git"
 alias lt="eza --tree --icons --level=2"
 alias cat="bat"
 alias v="nvim"
-alias grep="rg"
 
 # Pacman / Arch
 alias install="sudo pacman -S"
@@ -332,3 +331,4 @@ export PATH="$HOME/.cargo/bin:$PATH"
 [ -f ~/.zsh_secrets ] && source ~/.zsh_secrets
 
 export GROFF_NO_SGR=1
+export PATH="$HOME/.local/share/gem/ruby/3.4.0/bin:$PATH"
