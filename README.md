@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ .files
+# .files
 
 ### A minimal, keyboard-centric Hyprland experience.
 
@@ -19,52 +19,37 @@
 
 </div>
 
----
-
 ## About
 
-Welcome to my personal configuration files (dotfiles). This setup is built around **Hyprland** on **Arch Linux**, focusing on aesthetics, performance, and a keyboard-driven workflow.
+My daily driver on Arch + Hyprland. Everything is keyboard-driven, color-synced through Pywal, and managed with GNU Stow. Take what's useful.
 
-The system uses **Pywal** to generate a consistent color scheme across the entire system (Waybar, Kitty, Rofi, Hyprland borders) based on your current wallpaper.
+## Stack
 
-## Features
+- **WM:** [Hyprland](https://hyprland.org/) — Wayland compositor with tiling and smooth animations
+- **Terminal:** [Kitty](https://sw.kovidgoyal.net/kitty/) — GPU-accelerated, Pywal-themed
+- **Multiplexer:** [Zellij](https://zellij.dev/) — persistent sessions and layouts
+- **Shell:** Zsh + [Starship](https://starship.rs/) prompt
+- **Editor:** [Neovim](https://neovim.io/) — LazyVim config with LSP and Treesitter
+- **Files:** [Yazi](https://yazi-rs.github.io/) — terminal file manager with image previews
+- **Documents:** [Zathura](https://pwmt.org/projects/zathura/) — PDF viewer with SyncTeX + Neovim integration
+- **Browser:** [Zen Browser](https://zen-browser.app/) (daily) / [Qutebrowser](https://qutebrowser.org/) (keyboard-driven)
+- **Bar:** [Waybar](https://github.com/Alexays/Waybar) — Pywal-styled status bar
+- **Theming:** [Pywal](https://github.com/dylanaraps/pywal) — wallpaper-based system-wide color sync
+- **Display:** [Kanshi](https://git.sr.ht/~emersion/kanshi) — automatic monitor profile switching
+- **Notifications:** [Dunst](https://dunst-project.org/) — Pywal-themed notification daemon
+- **Launcher:** [Wofi](https://hg.sr.ht/~scoopta/wofi) — Wayland app launcher
+- **Office:** [OnlyOffice](https://www.onlyoffice.com/) — document, spreadsheet, and presentation editor
 
-- **WM:** [Hyprland](https://hyprland.org/) (Wayland) - Smooth animations & tiling.
-- **Terminal:** [Kitty](https://sw.kovidgoyal.net/kitty/) - GPU accelerated.
-- **Shell:** Zsh + [Starship](https://starship.rs/) prompt.
-- **Bar:** [Waybar](https://github.com/Alexays/Waybar) - Highly customizable status bar.
-- **Launcher:** Rofi (Wayland fork) or Wofi.
-- **Editor:** [Neovim](https://neovim.io/) (Lua configuration).
-- **Theming:** [Pywal](https://github.com/dylanaraps/pywal) - Automatic color generation from wallpapers.
-- **Notifications:** Dunst / Mako.
+## Installation
 
----
-
-## Gallery
-
-| <img src="assets/images/h2.jpg" width="400"> | <img src="assets/images/h3.jpg" width="400"> |
-
----
-
-## Quick Start
-
-**Full documentation, gallery, and detailed setup guide are available on the [Website](https://gab-dev-7.github.io/dotfiles).**
-
-### Prerequisites
-
-- A fresh install of **Arch Linux**.
-- `git` installed.
-
-### Installation
-
-The included script will handle package installation and linking config files.
+> **Warning:** This script assumes a fresh Arch Linux install. It uses `GNU Stow` to manage symlinks. Back up your existing `~/.config` before proceeding.
 
 ```bash
-# 1. Update & Install Git
+# 1. Update & install git
 sudo pacman -Syu git
 
-# 2. Clone the repository (Must be named 'dotfiles' for paths to work)
-git clone [https://github.com/gab-dev-7/dotfiles.git](https://github.com/gab-dev-7/dotfiles.git) "$HOME/dotfiles"
+# 2. Clone the repo (must be named 'dotfiles' for symlinks to work)
+git clone https://github.com/gab-dev-7/dotfiles.git "$HOME/dotfiles"
 cd "$HOME/dotfiles"
 
 # 3. Run the installer
@@ -72,61 +57,56 @@ chmod +x install.sh
 ./install.sh
 ```
 
-> **Warning:** Back up your existing configurations (`~/.config`) before running the script!
+## Key Bindings
 
----
+| Key Combo             | Action                          |
+| --------------------- | ------------------------------- |
+| `Super + Return`      | Terminal (Kitty)                |
+| `Super + B`           | Browser (Zen)                   |
+| `Super + Shift + B`   | Browser (Qutebrowser)           |
+| `Super + E`           | File Manager (Nemo)             |
+| `Super + Y`           | CLI Files (Yazi)                |
+| `Super + D`           | App Launcher (Wofi)             |
+| `Super + A`           | Email (aerc)                    |
+| `Super + T`           | Tasks (taskwarrior-tui)         |
+| `Super + N`           | New Note                        |
+| `Super + Shift + N`   | Search Notes                    |
+| `Super + C`           | Clip to Scrapbook               |
+| `Super + W`           | Change Wallpaper (Pywal)        |
+| `Super + S`           | Screenshot (Region)             |
+| `Super + Shift + S`   | Screenshot (Full Screen)        |
+| `Super + P`           | Power Menu                      |
+| `Super + Alt + L`     | Lock Screen (Hyprlock)          |
+| `Super + M`           | Toggle Mute                     |
+| `Super + Shift + C`   | Clipboard History               |
+| `Super + Q`           | Close Window                    |
+| `Super + F`           | Toggle Fullscreen               |
+| `Super + V`           | Toggle Floating                 |
+| `Super + H/J/K/L`     | Move Focus                      |
+| `Super + Shift + H/J/K/L` | Swap Windows               |
+| `Super + Ctrl + H/J/K/L`  | Resize Window              |
+| `Super + 1-9`         | Switch Workspace                |
+| `Super + Shift + 1-9` | Move to Workspace               |
+| `Super + Tab`         | Previous Workspace              |
 
-## Keybindings
+## Folder Structure
 
-The workflow is heavily reliant on the `Super` (Windows) key. Here are the essentials:
-
-| Key Combination   | Action                |
-| :---------------- | :-------------------- |
-| `Super` + `Enter` | Open Terminal (Kitty) |
-| `Super` + `Q`     | Kill active window    |
-| `Super` + `Space` | Open App Launcher     |
-| `Super` + `E`     | Open File Manager     |
-| `Super` + `F`     | Toggle Fullscreen     |
-| `Super` + `V`     | Toggle Floating       |
-| `Super` + `j/k`   | Move focus            |
-| `Super` + `1-9`   | Switch Workspace      |
-
----
-
-## 📂 Folder Structure
-
-```graphql
-$HOME/dotfiles
-├── hypr/          # Window Manager
-├── kitty/         # Terminal
-├── nvim/          # Editor (LazyVim)
-├── waybar/        # Status Bar
-├── zsh/           # Shell
-├── zellij/        # Terminal Multiplexer
-├── kanshi/        # Display Management
-├── yazi/          # Terminal File Manager
-├── wpg/           # Color Theming (Wpgtk)
-├── install.sh     # Setup Script
-└── README.md
 ```
-
----
-
-## 🎨 Customization
-
-### Changing the Wallpaper & Theme
-
-To change the wallpaper and update the system color scheme:
-
-1. Place your image in `~/Pictures/Wallpapers/`.
-2. Run the wallpaper script (or use the keybinding if configured):
-   ```bash
-   wal -i ~/Pictures/Wallpapers/your_image.jpg
-   ```
-3. Reload Hyprland (`Super` + `Shift` + `C` usually) to see changes.
-
----
-
-## 🤝 Credits
-
-- Inspired by the [Hyprland Community](https://github.com/hyprwm/Hyprland)
+$HOME/dotfiles
+├── hypr/          # Window manager
+├── kitty/         # Terminal
+├── zellij/        # Multiplexer
+├── nvim/          # Editor (LazyVim)
+├── waybar/        # Status bar
+├── zsh/           # Shell
+├── yazi/          # Terminal file manager
+├── zathura/       # Document viewer
+├── qutebrowser/   # Keyboard-driven browser
+├── zen-browser/   # Daily browser
+├── dunst/         # Notifications
+├── wofi/          # App launcher
+├── kanshi/        # Display profiles
+├── wal/           # Pywal templates
+├── scripts/       # Custom shell scripts
+└── install.sh     # Setup script
+```
