@@ -1,2 +1,6 @@
 .zsh_secrets
+
+# qutebrowser - runtime/auto-generated files
 qutebrowser/.config/qutebrowser/pywalQute/__pycache__/
+qutebrowser/.config/qutebrowser/qsettings/QtProject.conf
+qutebrowser/.config/qutebrowser/autoconfig.yml

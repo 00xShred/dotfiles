@@ -3,7 +3,7 @@
 /* --- Set Global Font --- */
 * {
   font-family: "JetBrains Mono Nerd Font";
-  font-size: 15px; /* <-- Increased font size */
+  font-size: 15px;
   font-weight: bold;
 }
 
@@ -12,7 +12,7 @@ window#waybar {
   background-color: alpha(@background, 0.1);
 }
 
-/* --- Module Backgrounds (Your Request) --- */
+/* --- Module Backgrounds --- */
 #cpu,
 #memory,
 #temperature,
