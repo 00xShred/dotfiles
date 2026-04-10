@@ -1,6 +1,22 @@
 .zsh_secrets
 
-# qutebrowser - runtime/auto-generated files
+# qutebrowser
 qutebrowser/.config/qutebrowser/pywalQute/__pycache__/
 qutebrowser/.config/qutebrowser/qsettings/QtProject.conf
 qutebrowser/.config/qutebrowser/autoconfig.yml
+qutebrowser/.config/qutebrowser/quickmarks
+qutebrowser/.config/qutebrowser/bookmarks/
+
+# OBS
+obs-studio/.config/obs-studio/plugin_config/obs-websocket/config.json
+obs-studio/.config/obs-studio/plugin_config/rtmp-services/
+obs-studio/.config/obs-studio/plugin_manager/modules.json
+obs-studio/.config/obs-studio/logs/
+obs-studio/.config/obs-studio/profiler_data/
+obs-studio/.config/obs-studio/basic/scenes/*.bak
+
+# Backup files
+*.bak
+
+# GTK bookmarks
+gtk/.config/gtk-3.0/bookmarks
