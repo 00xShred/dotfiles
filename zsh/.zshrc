@@ -168,7 +168,7 @@ alias -s js=node
 alias zlj='zellij attach --index 0 || zellij'
 
 # conect to headphones
-alias headphones="wpctl set-default $(wpctl status | grep 'Nothing Ear' | head -n 1 | awk '{print $2}' | tr -d '.')"
+alias headphones='wpctl set-default $(wpctl status | sed -n "/Sinks:/,/Sources:/p" | grep "Nothing Ear" | grep -Eo "[0-9]+" | head -n 1)'
 
 # clean logs 
 alias cleanroot='sudo pacman -Scc && sudo journalctl --vacuum-size=100M && sudo timeshift --check'
