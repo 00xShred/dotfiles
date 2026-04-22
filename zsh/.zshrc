@@ -160,9 +160,8 @@ alias -s {md,txt,json,toml,yaml,yml,ini,conf,zsh}=nvim
 # Images/Documents -> Open in default viewer (xdg-open)
 alias -s {png,jpg,jpeg,gif,pdf,mp4,mkv}=xdg-open
 
-# Code -> Run automatically
-alias -s py=python
-alias -s js=node
+# audio
+alias audio='wpctl'
 
 # Zellij (Auto-attach or Create)
 alias zlj='zellij attach --index 0 || zellij'
