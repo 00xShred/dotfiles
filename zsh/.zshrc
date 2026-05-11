@@ -331,3 +331,4 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 export GROFF_NO_SGR=1
 export PATH="$HOME/.local/share/gem/ruby/3.4.0/bin:$PATH"
+export KUBECONFIG=~/.kube/config-k3s

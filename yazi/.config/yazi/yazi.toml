@@ -25,7 +25,7 @@ preloaders = [
     { mime = "application/x-xz", run = "ouch" },
 ]
 previewers = [
-    { name = "*/", run = "folder", sync = true },
+    { mime = "*/", run = "folder", sync = true },
     { mime = "text/*", run = "code" },
     { mime = "*/xml", run = "code" },
     { mime = "*/javascript", run = "code" },
