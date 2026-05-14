@@ -332,3 +332,10 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export GROFF_NO_SGR=1
 export PATH="$HOME/.local/share/gem/ruby/3.4.0/bin:$PATH"
 export KUBECONFIG=~/.kube/config-k3s
+
+# bun completions
+[ -s "/home/gabriel/.bun/_bun" ] && source "/home/gabriel/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
