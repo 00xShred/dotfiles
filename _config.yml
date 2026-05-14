@@ -1,8 +1,0 @@
-title: "Dotfiles"
-description: "A high-performance Arch Linux + Hyprland environment."
-baseurl: "/dotfiles"
-url: "https://0xShred.codeberg.page"
-markdown: kramdown
-permalink: /:title/
-exclude: ["README.md", "LICENSE", "install.sh"]
-theme: null

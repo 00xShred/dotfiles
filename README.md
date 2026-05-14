@@ -11,12 +11,6 @@
 
 <br />
 
-[![Website](https://img.shields.io/badge/VIEW_DOCUMENTATION_SITE-ff0055?style=for-the-badge&logo=github&logoColor=white)](https://gab-dev-7.github.io/dotfiles)
-
-<p align="center">
-    <img src="assets/images/h4.jpg" alt="Hyprland Screenshot" width="90%" style="border-radius: 10px; box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);">
-</p>
-
 </div>
 
 ## About
