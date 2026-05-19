@@ -65,6 +65,11 @@ hl.config({
 	dwindle = {
 		preserve_split = false,
 	},
+	misc = {
+		disable_hyprland_logo = true,
+		force_default_wallpaper = 0,
+		focus_on_activate = true,
+	},
 	cursor = {
 		hide_on_key_press = true,
 		inactive_timeout = 3,
@@ -75,4 +80,11 @@ hl.gesture({
 	fingers = 3,
 	direction = "horizontal",
 	action = "workspace",
+})
+
+hl.monitor({
+	output = "eDP-1",
+	mode = "preferred",
+	position = "auto",
+	scale = 1,
 })

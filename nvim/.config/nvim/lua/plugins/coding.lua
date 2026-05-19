@@ -35,6 +35,10 @@ return {
         "toml",
         "rust",
         "ron",
+        "latex",
+        "scss",
+        "svelte",
+        "vue",
       })
     end,
   },

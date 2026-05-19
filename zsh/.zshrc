@@ -128,6 +128,19 @@ alias gp="git push"
 alias gl="git log --oneline --graph --decorate"
 alias gd="git diff"
 alias gco="git checkout"
+alias gsw="git switch"
+alias gswc="git switch -c"
+alias grom="git fetch origin && git rebase origin/main"
+alias gpf="git push --force-with-lease"
+alias gca="git commit --amend"
+alias gcan="git commit --amend --no-edit"
+alias grv="git remote -v"
+alias gst="git stash"
+alias gsta="git stash apply"
+alias gstd="git stash drop"
+alias gcl="git clone"
+alias gb="git branch"
+alias gba="git branch -a"
 
 # Hyprland / Configs
 alias hyprc="$EDITOR ~/.config/hypr/hyprland.conf"
@@ -261,6 +274,41 @@ mkcd() {
     mkdir -p "$1" && cd "$1"
 }
 
+
+# Run any file by extension
+run() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: run <file>"
+        return 1
+    fi
+    if [[ ! -f "$1" ]]; then
+        echo "File not found: $1"
+        return 1
+    fi
+    local ext="${1##*.}"
+    case "$ext" in
+        py)           python "$1" ;;
+        js)           node "$1" ;;
+        ts)           bun "$1" ;;
+        java)         javac "$1" && java "${1%.java}" ;;
+        c)            gcc -o "/tmp/${1%.c}" "$1" && "/tmp/${1%.c}" ;;
+        cpp|cc)       g++ -o "/tmp/${1%.*}" "$1" && "/tmp/${1%.*}" ;;
+        rs)           rustc -o "/tmp/${1%.rs}" "$1" && "/tmp/${1%.rs}" ;;
+        go)           go run "$1" ;;
+        rb)           ruby "$1" ;;
+        sh|bash)      bash "$1" ;;
+        zsh)          zsh "$1" ;;
+        lua)          lua "$1" ;;
+        php)          php "$1" ;;
+        pl)           perl "$1" ;;
+        r|R)          Rscript "$1" ;;
+        ex|exs)       elixir "$1" ;;
+        hs)           runhaskell "$1" ;;
+        swift)        swift "$1" ;;
+        kt)           kotlinc "$1" -include-runtime -d /tmp/out.jar && java -jar /tmp/out.jar ;;
+        *)            echo "Unknown extension: .$ext" ; return 1 ;;
+    esac
+}
 
 # Clone a repo AND refresh mr automatically
 function gclone() {

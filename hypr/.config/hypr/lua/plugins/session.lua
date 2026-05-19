@@ -3,8 +3,7 @@ local hl = _G.hl
 local M = {}
 
 function M.lock()
-    -- Use the new CSS style and daemonize
-    hl.exec_cmd("gtklock -d -s ~/.config/gtklock/style.css")
+    hl.exec_cmd("hyprlock")
 end
 
 -- Re-bind the lock key
