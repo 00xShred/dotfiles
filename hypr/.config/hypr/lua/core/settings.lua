@@ -15,6 +15,7 @@ hl.env("QT_QPA_PLATFORMTHEME", "qt5ct")
 hl.config({
 	input = {
 		kb_layout = "us",
+		kb_options = "caps:swapescape",
 		follow_mouse = 1,
 		touchpad = {
 			natural_scroll = true,

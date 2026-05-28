@@ -4,7 +4,7 @@ local mainMod = "SUPER"
 
 -- Basic bindings
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("kitty"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("nemo"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("index"))
 hl.bind(mainMod .. " + Y", hl.dsp.exec_cmd("kitty -e yazi"))
 hl.bind(mainMod .. " + A", hl.dsp.exec_cmd("kitty -e aerc"))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("kitty -e taskwarrior-tui"))
