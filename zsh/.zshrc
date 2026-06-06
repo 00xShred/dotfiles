@@ -1,8 +1,8 @@
 # --- 1. INSTANT PROMPT (Must be at the very top) ---
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 # --- 2. OH-MY-ZSH CONFIG ---
 export ZSH="$HOME/.oh-my-zsh"
