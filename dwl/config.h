@@ -17,7 +17,7 @@ static const unsigned int gappoh = 6; /* horizontal outer gap between windows an
 static const unsigned int gappov = 6; /* vertical outer gap between windows and screen edge */
 
 /* tagging - TAGCOUNT must be no greater than 31 */
-#define TAGCOUNT (9)
+#define TAGCOUNT (7)
 
 /* logging */
 static int log_level = WLR_ERROR;
@@ -37,6 +37,7 @@ static const Rule rules[] = {
 static const Layout layouts[] = {
     {"[]=", tile},
     {"TTT", bstack},
+    {"###", gaplessgrid},
     {"[M]", monocle},
     {"><>", NULL},
 };
@@ -206,6 +207,7 @@ static const Key keys[] = {
     {MODKEY, XKB_KEY_F2, setlayout, {.v = &layouts[1]}},
     {MODKEY, XKB_KEY_F3, setlayout, {.v = &layouts[2]}},
     {MODKEY, XKB_KEY_F4, setlayout, {.v = &layouts[3]}},
+    {MODKEY, XKB_KEY_F5, setlayout, {.v = &layouts[4]}},
 
     /* tags */
     {MODKEY, XKB_KEY_Tab, view, {0}},
@@ -215,8 +217,7 @@ static const Key keys[] = {
     TAGKEYS(XKB_KEY_1, XKB_KEY_exclam, 0) TAGKEYS(XKB_KEY_2, XKB_KEY_at, 1)
         TAGKEYS(XKB_KEY_3, XKB_KEY_numbersign, 2) TAGKEYS(XKB_KEY_4, XKB_KEY_dollar, 3)
             TAGKEYS(XKB_KEY_5, XKB_KEY_percent, 4) TAGKEYS(XKB_KEY_6, XKB_KEY_asciicircum, 5)
-                TAGKEYS(XKB_KEY_7, XKB_KEY_ampersand, 6) TAGKEYS(XKB_KEY_8, XKB_KEY_asterisk, 7)
-                    TAGKEYS(XKB_KEY_9, XKB_KEY_parenleft, 8)
+                TAGKEYS(XKB_KEY_7, XKB_KEY_ampersand, 6)
 
     /* monitor focus */
     {MODKEY, XKB_KEY_comma, focusmon, {.i = WLR_DIRECTION_LEFT}},
