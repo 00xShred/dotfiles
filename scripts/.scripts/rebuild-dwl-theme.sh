@@ -53,13 +53,12 @@ constexpr ColorScheme colorInactive = {$(hex_to_c "$foreground"), $(hex_to_c "$b
 constexpr ColorScheme colorActive = {$(hex_to_c "$foreground"), $(hex_to_c "$color8")};
 constexpr const char* termcmd[] = {"kitty", nullptr};
 
-static std::vector<std::string> tagNames = {
-	"1", "2", "3",
-	"4", "5", "6",
-	"7",
-};
-
 constexpr Button buttons[] = {
+	{ ClkTagBar,       BTN_LEFT,   view,       {0} },
+	{ ClkTagBar,       BTN_RIGHT,  tag,        {0} },
+	{ ClkTagBar,       BTN_MIDDLE, toggletag,  {0} },
+	{ ClkLayoutSymbol, BTN_LEFT,   setlayout,  {.ui = 0} },
+	{ ClkLayoutSymbol, BTN_RIGHT,  setlayout,  {.ui = 2} },
 	{ ClkStatusText,   BTN_RIGHT,  spawn,      {.v = termcmd} },
 };
 EOF
