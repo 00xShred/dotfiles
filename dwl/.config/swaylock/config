@@ -1,0 +1,25 @@
+# swaylock config — replaces hyprlock for dwl session
+daemonize
+show-failed-attempts
+ignore-empty-password
+
+# Solid black background
+color=000000ff
+
+# Colors
+inside-color=000000ff
+ring-color=33ccffee
+key-hl-color=33ccffff
+line-color=00000000
+text-color=ffffffff
+bs-hl-color=ff5555ff
+wrong-color=ff5555ff
+caps-lock-key-hl-color=ffcc00ff
+
+# Font
+font=JetBrains Mono Nerd Font
+font-size=14
+
+# Indicator
+indicator-radius=80
+indicator-thickness=8

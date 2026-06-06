@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=dwl
+Comment=dwl Wayland compositor
+Exec=/usr/local/bin/dwl -s /home/gabriel/.local/bin/dwl-start.sh
+Type=Application

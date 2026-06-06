@@ -389,5 +389,12 @@ export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 
+# Source all configuration snippets from zshrc.d
+if [ -d ~/.config/zshrc.d ]; then
+  for f in ~/.config/zshrc.d/*.{sh,zsh}(N); do
+    source "$f"
+  done
+fi
+
 # Added by Antigravity CLI installer
 export PATH="/home/gabriel/.local/bin:$PATH"

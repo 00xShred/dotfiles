@@ -10,7 +10,16 @@ shutdown="⏻  Shutdown"
 reboot="  Reboot"
 suspend="  Suspend"
 lock="  Lock"
-logout="SignOut  Logout"
+logout="󰗽  Logout"
+
+# Detect desktop environment
+if [ "$XDG_CURRENT_DESKTOP" = "dwl" ]; then
+  LOCK_CMD="swaylock -f"
+  LOGOUT_CMD="uwsm stop || pkill -x dwl"
+else
+  LOCK_CMD="hyprlock"
+  LOGOUT_CMD="hyprctl dispatch exit 0"
+fi
 
 # Pipe the options into wofi
 choice=$(printf "%s\n%s\n%s\n%s\n%s" "$shutdown" "$reboot" "$suspend" "$lock" "$logout" | $WOFI_CMD)
@@ -25,15 +34,14 @@ case "$choice" in
   ;;
 "$suspend")
   # Lock the screen *before* suspending.
-  hyprlock &
+  $LOCK_CMD &
   sleep 0.1
   systemctl suspend
   ;;
 "$lock")
-  hyprlock
+  $LOCK_CMD
   ;;
 "$logout")
-  # This is the proper command to exit Hyprland
-  hyprctl dispatch exit 0
+  eval "$LOGOUT_CMD"
   ;;
 esac
