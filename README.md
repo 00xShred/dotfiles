@@ -2,13 +2,11 @@
 
 # .files
 
-### A minimal, keyboard-centric dwl experience (with Hyprland fallback).
+### A minimal, keyboard-centric dwl experience.
 
 [![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793d1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://archlinux.org)
 [![dwl](https://img.shields.io/badge/dwl-WM-3a5aa7?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/djpohly/dwl)
-[![Hyprland](https://img.shields.io/badge/Hyprland-WM%20(Fallback)-00f0ff?style=for-the-badge&logo=linux&logoColor=black)](https://hyprland.org)
 [![Zsh](https://img.shields.io/badge/Shell-Zsh-orange?style=for-the-badge&logo=zsh&logoColor=white)](https://zsh.org)
-[![Pywal](https://img.shields.io/badge/Theme-Pywal-ff0055?style=for-the-badge&logo=python&logoColor=white)](https://github.com/dylanaraps/pywal)
 
 <br />
 
