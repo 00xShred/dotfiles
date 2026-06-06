@@ -1,5 +1,5 @@
 # Auto start window manager on tty1
-if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
+if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
   mkdir -p ~/.cache
   echo "Starting window manager..."
   echo "Press 'h' for Hyprland (fallback), otherwise dwl starts in 3 seconds..."
