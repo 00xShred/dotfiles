@@ -18,7 +18,7 @@ My daily driver on Arch + dwl (with Hyprland configured as a fallback). Everythi
 
 ## Stack
 
-- **WM:** [dwl](https://github.com/djpohly/dwl) (Primary) / [Hyprland](https://hyprland.org/) (Fallback)
+- **WM:** [dwl](https://codeberg.org/dwl/dwl) (Primary) / [Hyprland](https://hyprland.org/) (Fallback)
 - **Terminal:** [Kitty](https://sw.kovidgoyal.net/kitty/) — GPU-accelerated, Pywal-themed
 - **Multiplexer:** [Zellij](https://zellij.dev/) — persistent sessions and layouts
 - **Shell:** Zsh + [Starship](https://starship.rs/) prompt
@@ -53,35 +53,35 @@ chmod +x install.sh
 
 ## Key Bindings
 
-| Key Combo             | Action                          |
-| --------------------- | ------------------------------- |
-| `Super + Return`      | Terminal (Kitty)                |
-| `Super + B`           | Browser (Zen)                   |
-| `Super + Shift + B`   | Browser (Qutebrowser)           |
-| `Super + E`           | File Manager (Nemo)             |
-| `Super + Y`           | CLI Files (Yazi)                |
-| `Super + D`           | App Launcher (Fuzzel / Wofi)    |
-| `Super + A`           | Email (aerc)                    |
-| `Super + T`           | Tasks (taskwarrior-tui)         |
-| `Super + N`           | New Note                        |
-| `Super + Shift + N`   | Search Notes                    |
-| `Super + C`           | Clip to Scrapbook               |
-| `Super + W`           | Change Wallpaper (Pywal)        |
-| `Super + S`           | Screenshot (Region)             |
-| `Super + Shift + S`   | Screenshot (Full Screen)        |
-| `Super + P`           | Power Menu                      |
-| `Super + Alt + L`     | Lock Screen (Swaylock / Hyprlock) |
-| `Super + M`           | Toggle Mute                     |
-| `Super + Shift + C`   | Clipboard History               |
-| `Super + Q`           | Close Window                    |
-| `Super + F`           | Toggle Fullscreen               |
-| `Super + V`           | Toggle Floating                 |
-| `Super + H/J/K/L`     | Move Focus                      |
-| `Super + Shift + H/J/K/L` | Swap Windows               |
-| `Super + Ctrl + H/J/K/L`  | Resize Window              |
-| `Super + 1-9`         | Switch Workspace / Tag          |
-| `Super + Shift + 1-9` | Move to Workspace / Tag         |
-| `Super + Tab`         | Previous Workspace / Tag        |
+| Key Combo                 | Action                            |
+| ------------------------- | --------------------------------- |
+| `Super + Return`          | Terminal (Kitty)                  |
+| `Super + B`               | Browser (Zen)                     |
+| `Super + Shift + B`       | Browser (Qutebrowser)             |
+| `Super + E`               | File Manager (Nemo)               |
+| `Super + Y`               | CLI Files (Yazi)                  |
+| `Super + D`               | App Launcher (Fuzzel / Wofi)      |
+| `Super + A`               | Email (aerc)                      |
+| `Super + T`               | Tasks (taskwarrior-tui)           |
+| `Super + N`               | New Note                          |
+| `Super + Shift + N`       | Search Notes                      |
+| `Super + C`               | Clip to Scrapbook                 |
+| `Super + W`               | Change Wallpaper (Pywal)          |
+| `Super + S`               | Screenshot (Region)               |
+| `Super + Shift + S`       | Screenshot (Full Screen)          |
+| `Super + P`               | Power Menu                        |
+| `Super + Alt + L`         | Lock Screen (Swaylock / Hyprlock) |
+| `Super + M`               | Toggle Mute                       |
+| `Super + Shift + C`       | Clipboard History                 |
+| `Super + Q`               | Close Window                      |
+| `Super + F`               | Toggle Fullscreen                 |
+| `Super + V`               | Toggle Floating                   |
+| `Super + H/J/K/L`         | Move Focus                        |
+| `Super + Shift + H/J/K/L` | Swap Windows                      |
+| `Super + Ctrl + H/J/K/L`  | Resize Window                     |
+| `Super + 1-9`             | Switch Workspace / Tag            |
+| `Super + Shift + 1-9`     | Move to Workspace / Tag           |
+| `Super + Tab`             | Previous Workspace / Tag          |
 
 ## Folder Structure
 
