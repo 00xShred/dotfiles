@@ -5,7 +5,7 @@ set $term kitty
 
 include /home/gabriel/.cache/wal/colors-sway
 
-client.focused $color4 $color4 $foreground $color4 $color4
+client.focused $color4 $color4 $foreground $color1 $color4
 client.focused_inactive $color8 $background $foreground $color8 $color8
 client.unfocused $color8 $background $foreground $color8 $color8
 client.urgent $color1 $color1 $foreground $color1 $color1
@@ -14,6 +14,8 @@ default_border pixel 2
 default_floating_border pixel 3
 smart_gaps off
 smart_borders off
+workspace_auto_back_and_forth yes
+mouse_warping none
 gaps inner 5
 gaps outer 3
 for_window [all] border pixel 2
@@ -64,6 +66,7 @@ bindsym $mod+Mod1+l exec swaylock -f
 exec_always sh -c 'killall swaybg 2>/dev/null; exec swaybg -i "$1" -m fill' swaybg $wallpaper
 exec_always sh -c 'killall kanshi 2>/dev/null; exec kanshi'
 exec_always sh -c 'killall dunst 2>/dev/null; exec dunst'
+exec_always sh -c 'killall nm-applet 2>/dev/null; exec nm-applet --indicator'
 exec_always sh -c 'pkill -f "wl-paste --type text --watch cliphist store" 2>/dev/null; exec wl-paste --type text --watch cliphist store'
 exec_always sh -c 'pkill -f "wl-paste --type image --watch cliphist store" 2>/dev/null; exec wl-paste --type image --watch cliphist store'
 exec_always swaymsg "gaps inner all set 5"
@@ -133,13 +136,20 @@ for_window [app_id="org.qutebrowser.qutebrowser"] focus
 
 bar {
     position top
-    gaps 3 7 0 7
-    status_command while date +'%Y-%m-%d %H:%M'; do sleep 30; done
+    output DP-8
+    output eDP-1
+    font pango:JetBrainsMono Nerd Font 10
+    height 28
+    tray_padding 4
+    tray_output none
+    strip_workspace_numbers yes
+    status_command ~/.scripts/swaybar_status.sh
 
     colors {
         background $background
         statusline $foreground
-        focused_workspace $color4 $color4 $foreground
+        separator $color8
+        focused_workspace $color1 $color1 $foreground
         active_workspace $color8 $color8 $foreground
         inactive_workspace $background $background $foreground
         urgent_workspace $color1 $color1 $foreground
