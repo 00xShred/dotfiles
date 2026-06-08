@@ -1,0 +1,147 @@
+# Minimal personal Sway config.
+
+set $mod Mod4
+set $term kitty
+
+include /home/gabriel/.cache/wal/colors-sway
+
+client.focused $color4 $color4 $foreground $color4 $color4
+client.focused_inactive $color8 $background $foreground $color8 $color8
+client.unfocused $color8 $background $foreground $color8 $color8
+client.urgent $color1 $color1 $foreground $color1 $color1
+
+default_border pixel 2
+default_floating_border pixel 3
+smart_gaps off
+smart_borders off
+gaps inner 5
+gaps outer 3
+for_window [all] border pixel 2
+for_window [all] opacity 0.95
+
+seat * hide_cursor 3000
+seat * hide_cursor when-typing enable
+
+input type:keyboard {
+    xkb_layout us
+    xkb_options caps:escape
+}
+
+input type:touchpad {
+    tap enabled
+    natural_scroll enabled
+}
+
+# Applications
+bindsym $mod+Return exec $term
+bindsym $mod+b exec qutebrowser --target window --untrusted-args about:blank
+bindsym $mod+Shift+b exec zen-browser
+bindsym $mod+Mod1+b exec ~/.scripts/qutebw.sh --target window --untrusted-args about:blank
+bindsym $mod+d exec wmenu-run -i -f "JetBrains Mono Nerd Font 11" -N "$background" -n "$foreground" -M "$color8" -m "$foreground" -S "$color4" -s "$foreground"
+bindsym $mod+w exec kitty --class wallpaper_selector -e ~/.scripts/wallpaper.sh
+bindsym $mod+p exec ~/.scripts/powermenu.sh
+bindsym $mod+n exec ~/.scripts/quick_note.sh
+bindsym $mod+Shift+n exec kitty --class floating_note ~/.scripts/qn_search.sh
+bindsym $mod+Shift+c exec ~/.scripts/clipmenu.sh
+
+# Windows
+bindsym $mod+q kill
+bindsym $mod+f fullscreen toggle
+bindsym $mod+v floating toggle
+bindsym $mod+o exec ~/.scripts/toggle_sway_opacity.sh
+bindsym Mod1+Tab focus next
+bindsym Mod1+Shift+Tab focus prev
+floating_modifier $mod normal
+
+# Screenshots
+bindsym $mod+s exec ~/.scripts/screenshot.sh copy
+bindsym $mod+Shift+s exec ~/.scripts/screenshot.sh save
+
+# Sway
+bindsym $mod+r reload
+bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit Sway?' -B 'Exit' 'swaymsg exit'
+bindsym $mod+Mod1+l exec swaylock -f
+exec_always sh -c 'killall swaybg 2>/dev/null; exec swaybg -i "$1" -m fill' swaybg $wallpaper
+exec_always sh -c 'killall kanshi 2>/dev/null; exec kanshi'
+exec_always sh -c 'killall dunst 2>/dev/null; exec dunst'
+exec_always sh -c 'pkill -f "wl-paste --type text --watch cliphist store" 2>/dev/null; exec wl-paste --type text --watch cliphist store'
+exec_always sh -c 'pkill -f "wl-paste --type image --watch cliphist store" 2>/dev/null; exec wl-paste --type image --watch cliphist store'
+exec_always swaymsg "gaps inner all set 5"
+exec_always swaymsg "gaps outer all set 3"
+exec_always swaymsg "[all] border pixel 2"
+exec_always swaymsg "[all] opacity 0.95"
+
+# Workspaces
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+Tab workspace back_and_forth
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+
+# Focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# Move windows
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# Resize
+bindsym $mod+Control+h resize shrink width 20px
+bindsym $mod+Control+j resize grow height 20px
+bindsym $mod+Control+k resize shrink height 20px
+bindsym $mod+Control+l resize grow width 20px
+
+# Gestures
+bindgesture swipe:3:right workspace prev
+bindgesture swipe:3:left workspace next
+
+# Volume and brightness
+bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym --locked XF86AudioRaiseVolume exec ~/.scripts/volume.sh up
+bindsym --locked XF86AudioLowerVolume exec ~/.scripts/volume.sh down
+bindsym --locked XF86AudioMute exec ~/.scripts/volume.sh mute
+bindsym --locked XF86MonBrightnessUp exec ~/.scripts/brightness.sh up
+bindsym --locked XF86MonBrightnessDown exec ~/.scripts/brightness.sh down
+
+# Floating utility windows
+for_window [app_id="wallpaper_selector"] floating enable, resize set 800 500, move position center
+for_window [class="wallpaper_selector"] floating enable, resize set 800 500, move position center
+for_window [app_id="floating_note"] floating enable, resize set 900 600, move position center
+for_window [class="floating_note"] floating enable, resize set 900 600, move position center
+for_window [app_id="qutebrowser"] focus
+for_window [app_id="org.qutebrowser.qutebrowser"] focus
+
+bar {
+    position top
+    gaps 3 7 0 7
+    status_command while date +'%Y-%m-%d %H:%M'; do sleep 30; done
+
+    colors {
+        background $background
+        statusline $foreground
+        focused_workspace $color4 $color4 $foreground
+        active_workspace $color8 $color8 $foreground
+        inactive_workspace $background $background $foreground
+        urgent_workspace $color1 $color1 $foreground
+    }
+}

@@ -152,6 +152,7 @@ alias reboot="systemctl reboot"
 alias shutdown="systemctl poweroff"
 
 # Utils
+alias bitwarden='bitwarden --enable-features=UseOzonePlatform --ozone-platform=wayland --disable-gpu'
 alias extract='dtrx'
 alias ip="ip -c"
 alias open="xdg-open"

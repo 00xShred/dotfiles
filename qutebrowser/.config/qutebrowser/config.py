@@ -68,6 +68,9 @@ c.content.javascript.clipboard = "access"
 c.content.pdfjs = False
 c.content.cookies.accept = "no-3rdparty"
 c.content.headers.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+
+# Codeberg bypass
+config.set('content.headers.user_agent', 'Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0', 'https://codeberg.org/*')
 c.content.blocking.adblock.lists = [
     "https://easylist.to/easylist/easylist.txt",
     "https://easylist.to/easylist/easyprivacy.txt",
@@ -107,11 +110,11 @@ c.aliases = {
 
 # 1. Bitwarden
 config.bind(
-    "<Ctrl-p>",
+    ",b",
     'spawn --userscript qute-bitwarden --password-prompt "wofi --dmenu -p Password:"',
 )
-config.bind("<Ctrl-Alt-p>", "spawn --userscript qute-bitwarden --totp-only")
-config.bind("<Ctrl-Shift-p>", "spawn --userscript qute-bitwarden --totp")
+config.bind(",o", "spawn --userscript qute-bitwarden --totp-only")
+config.bind(",t", "spawn --userscript qute-bitwarden --totp")
 
 # 2. Media (MPV)
 config.bind(";m", "spawn mpv --force-window=immediate {url}")

@@ -2,10 +2,10 @@
 
 # .files
 
-### A minimal, keyboard-centric dwl experience.
+### A minimal, keyboard-centric Sway experience.
 
 [![Arch Linux](https://img.shields.io/badge/Arch-Linux-1793d1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://archlinux.org)
-[![dwl](https://img.shields.io/badge/dwl-WM-3a5aa7?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/djpohly/dwl)
+[![Sway](https://img.shields.io/badge/Sway-WM-3a5aa7?style=for-the-badge&logo=linux&logoColor=white)](https://swaywm.org/)
 [![Zsh](https://img.shields.io/badge/Shell-Zsh-orange?style=for-the-badge&logo=zsh&logoColor=white)](https://zsh.org)
 
 <br />
@@ -14,11 +14,11 @@
 
 ## About
 
-My daily driver on Arch + dwl (with Hyprland configured as a fallback). Everything is keyboard-driven, color-synced through Pywal, and managed with GNU Stow. Take what's useful.
+My daily driver on Arch + Sway (with Hyprland configured as a fallback). Everything is keyboard-driven, color-synced through Pywal, and managed with GNU Stow. Take what's useful.
 
 ## Stack
 
-- **WM:** [dwl](https://codeberg.org/dwl/dwl) (Primary) / [Hyprland](https://hyprland.org/) (Fallback)
+- **WM:** [Sway](https://swaywm.org/) (Primary) / [Hyprland](https://hyprland.org/) (Fallback)
 - **Terminal:** [Kitty](https://sw.kovidgoyal.net/kitty/) — GPU-accelerated, Pywal-themed
 - **Multiplexer:** [Zellij](https://zellij.dev/) — persistent sessions and layouts
 - **Shell:** Zsh + [Starship](https://starship.rs/) prompt
@@ -26,12 +26,12 @@ My daily driver on Arch + dwl (with Hyprland configured as a fallback). Everythi
 - **Files:** [Yazi](https://yazi-rs.github.io/) — terminal file manager with image previews
 - **Documents:** [Zathura](https://pwmt.org/projects/zathura/) — PDF viewer with SyncTeX + Neovim integration
 - **Browser:** [Zen Browser](https://zen-browser.app/) (daily) / [Qutebrowser](https://qutebrowser.org/) (keyboard-driven)
-- **Bar:** [somebar](https://github.com/raphi/somebar) (for dwl) / [Waybar](https://github.com/Alexays/Waybar) (for Hyprland)
+- **Bar:** swaybar (for Sway) / [Waybar](https://github.com/Alexays/Waybar) (for Hyprland)
 - **Theming:** [Pywal](https://github.com/dylanaraps/pywal) — wallpaper-based system-wide color sync
 - **Display:** [Kanshi](https://git.sr.ht/~emersion/kanshi) — automatic monitor profile switching
 - **Notifications:** [Dunst](https://dunst-project.org/) — Pywal-themed notification daemon
-- **Launcher:** [fuzzel](https://codeberg.org/dnkl/fuzzel) & [wmenu](https://codeberg.org/adnano/wmenu) (for dwl) / [Wofi](https://hg.sr.ht/~scoopta/wofi) (for Hyprland)
-- **Locker:** [swaylock](https://github.com/jeffmhubbard/swaylock) (for dwl) / [hyprlock](https://github.com/hyprwm/hyprlock) (for Hyprland)
+- **Launcher:** [wmenu](https://codeberg.org/adnano/wmenu) (for Sway) / [Wofi](https://hg.sr.ht/~scoopta/wofi) (for Hyprland)
+- **Locker:** [swaylock](https://github.com/jeffmhubbard/swaylock) (for Sway) / [hyprlock](https://github.com/hyprwm/hyprlock) (for Hyprland)
 - **Office:** [OnlyOffice](https://www.onlyoffice.com/) — document, spreadsheet, and presentation editor
 
 ## Installation
@@ -87,7 +87,8 @@ chmod +x install.sh
 
 ```
 $HOME/dotfiles
-├── dwl/           # Primary Window manager
+├── sway/          # Primary Window manager
+├── swaylock/      # Sway lock screen
 ├── hypr/          # Fallback Window manager
 ├── kitty/         # Terminal
 ├── zellij/        # Multiplexer
