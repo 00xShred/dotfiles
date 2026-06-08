@@ -46,12 +46,16 @@ if command -v hyprctl >/dev/null 2>&1 && [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; 
     hyprctl reload
 fi
 
+if command -v swaymsg >/dev/null 2>&1 && [ -n "$SWAYSOCK" ]; then
+    swaymsg reload >/dev/null 2>&1 || true
+fi
+
 # Restart background services using nohup
 killall kanshi &>/dev/null
 sleep 0.2
 nohup kanshi >/dev/null 2>&1 &
 
-if command -v waybar >/dev/null 2>&1 && [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+if command -v waybar >/dev/null 2>&1 && { [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ] || [ -n "$SWAYSOCK" ]; }; then
     killall waybar &>/dev/null
     sleep 0.5
     nohup waybar >/dev/null 2>&1 &
