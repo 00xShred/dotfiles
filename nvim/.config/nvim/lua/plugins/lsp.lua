@@ -18,8 +18,6 @@ return {
         "pyright",
         "dockerfile-language-server",
         "yaml-language-server",
-        "rust-analyzer",
-
         -- Formatters
         "prettier",
         "stylua",

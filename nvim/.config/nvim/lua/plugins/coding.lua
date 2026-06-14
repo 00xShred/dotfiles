@@ -1,13 +1,4 @@
 return {
-  -- Completion
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = { "hrsh7th/cmp-emoji" },
-    opts = function(_, opts)
-      table.insert(opts.sources, { name = "emoji" })
-    end,
-  },
-
   -- Syntax Highlighting
   {
     "nvim-treesitter/nvim-treesitter",
@@ -69,7 +60,12 @@ return {
       opts.formatters_by_ft.lua = { "stylua" }
       opts.formatters_by_ft.python = { "black" }
 
-      opts.format_on_save = nil
+      opts.format_on_save = function(bufnr)
+        local ft = vim.bo[bufnr].filetype
+        if ft == "rust" then
+          return { timeout_ms = 2000, lsp_fallback = false }
+        end
+      end
     end,
   },
 }

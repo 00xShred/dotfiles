@@ -24,7 +24,15 @@ require("lazy").setup({
     { import = "lazyvim.plugins.extras.lang.python" },
     { import = "lazyvim.plugins.extras.lang.typescript" }, -- Covers JS/TS
     { import = "lazyvim.plugins.extras.lang.clangd" }, -- Covers C/C++
+    { import = "lazyvim.plugins.extras.lang.rust" },
     { import = "lazyvim.plugins.extras.lang.json" },
+    { import = "lazyvim.plugins.extras.lang.yaml" },
+    { import = "lazyvim.plugins.extras.lang.docker" },
+    { import = "lazyvim.plugins.extras.lang.toml" },
+    { import = "lazyvim.plugins.extras.lang.astro" },
+
+    -- Testing
+    { import = "lazyvim.plugins.extras.test.core" },
 
     -- Optional: Formatting & UI
     { import = "lazyvim.plugins.extras.formatting.prettier" },
