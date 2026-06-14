@@ -1,57 +1,56 @@
-/* Import pywal colors */
-@import "/home/gabriel/.cache/wal/colors.css";
+@import "/home/gabriel/.cache/wal/colors-waybar.css";
 
 * {
   font-family: "JetBrains Mono Nerd Font", monospace;
-  font-weight: 500; /* Slightly lighter font weight */
-  font-size: 14px;
+  font-weight: 500;
+  font-size: 13px;
 }
 
 #window {
-  background-color: rgba(10, 10, 10, 0.95); /* Darker, more solid background */
-  border: 1px solid @color1; /* Thinner 1px border instead of thick 3px */
-  border-radius: 10px;
+  background-color: alpha(@background, 0.94);
+  border: 2px solid @color5;
+  border-radius: 8px;
 }
 
 #input {
-  /* REMOVED: background-color and border */
-  background-color: transparent;
-  border: none;
+  background-color: alpha(@color8, 0.22);
+  border: 1px solid alpha(@color5, 0.55);
+  border-radius: 6px;
   color: @foreground;
-  padding: 10px 15px; /* Add side padding for text breathing room */
-  margin: 5px;
+  padding: 9px 12px;
+  margin: 8px;
 }
 
 #outer-box {
-  margin: 0px;
-  padding: 10px;
+  margin: 0;
+  padding: 8px;
 }
 
 #scroll {
-  margin: 5px 0px;
+  margin: 4px 0;
 }
 
 #text {
-  margin: 2px;
+  margin: 0;
   color: @foreground;
 }
 
-/* Unselected entries */
 #entry {
   padding: 8px 10px;
   border-radius: 6px;
   background-color: transparent;
 }
 
-/* Selected Entry: Minimal Approach */
-/* Instead of a full color block, we use a subtle highlight */
 #entry:selected {
-  background-color: rgba(255, 255, 255, 0.08); /* Very subtle white tint */
-  color: @color1; /* Highlight text color instead of background */
-  font-weight: bold;
+  background-color: @color1;
+}
+
+#entry:selected #text {
+  color: @background;
+  font-weight: 700;
 }
 
 #img {
-  margin-right: 12px;
+  margin-right: 10px;
   background-color: transparent;
 }
