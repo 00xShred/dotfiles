@@ -29,8 +29,9 @@ WALLPAPER="$DIR/${SELECTED#./}"
 
 # 3. APPLY WALLPAPER
 echo "Applying: $WALLPAPER"
-killall swaybg &>/dev/null
-nohup swaybg -i "$WALLPAPER" -m fill >/dev/null 2>&1 &
+dunstify -a wallpaper -u low \
+    -h string:x-dunst-stack-tag:wallpaper \
+    -i preferences-desktop-wallpaper "Applying wallpaper" "$(basename "$WALLPAPER")" 2>/dev/null || true
 
 # Generate colors
 wal -i "$WALLPAPER" || true
@@ -47,15 +48,11 @@ if command -v hyprctl >/dev/null 2>&1 && [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; 
 fi
 
 if command -v swaymsg >/dev/null 2>&1 && [ -n "$SWAYSOCK" ]; then
-    swaymsg reload >/dev/null 2>&1 || true
+    "$HOME/.scripts/reload_sway.sh" >/dev/null 2>&1 || true
 fi
 
-# Restart background services using nohup
-killall kanshi &>/dev/null
-sleep 0.2
-nohup kanshi >/dev/null 2>&1 &
-
-if command -v waybar >/dev/null 2>&1 && { [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ] || [ -n "$SWAYSOCK" ]; }; then
+# Restart Hyprland-only bar. Sway owns swaybar, dunst, kanshi, and swaybg via exec_always.
+if command -v waybar >/dev/null 2>&1 && [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
     killall waybar &>/dev/null
     sleep 0.5
     nohup waybar >/dev/null 2>&1 &
@@ -65,15 +62,15 @@ if [ -x "$HOME/.local/bin/somebar" ]; then
     "$HOME/.local/bin/somebar" -c "status reloaded" &>/dev/null || true
 fi
 
-killall dunst &>/dev/null
-sleep 0.2
-nohup dunst >/dev/null 2>&1 &
-
 # Update Apps
 nvr --remote-send ":colorscheme neopywal<CR>" &>/dev/null & # Run nvr in background
 pywalfox update &>/dev/null
 
 qutebrowser ':config-source' &>/dev/null &
+
+dunstify -a wallpaper -u normal \
+    -h string:x-dunst-stack-tag:wallpaper \
+    -i preferences-desktop-wallpaper "Wallpaper applied" "$(basename "$WALLPAPER")" 2>/dev/null || true
 
 echo "Done!"
 exit 0

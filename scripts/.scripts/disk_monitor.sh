@@ -9,7 +9,9 @@ while true; do
 
   # Compare
   if [ "$CURRENT" -ge "$THRESHOLD" ]; then
-    notify-send -u critical "⚠️ LOW DISK SPACE" "Root partition is ${CURRENT}% full. Clean it up!"
+    dunstify -a system -u critical \
+      -h string:x-dunst-stack-tag:disk-space \
+      -i drive-harddisk "Low disk space" "Root partition is ${CURRENT}% full."
   fi
 
   # Sleep for 1 hour (3600 seconds) before checking again

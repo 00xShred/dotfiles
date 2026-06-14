@@ -17,5 +17,9 @@ fi
 
 FILE_PATH="$NOTE_DIR/note_$NEXT_NUM.md"
 
+dunstify -a notes -u low \
+    -h string:x-dunst-stack-tag:notes \
+    -i accessories-text-editor "Quick note" "Created note_$NEXT_NUM.md" 2>/dev/null || true
+
 # Launch terminal with a specific class so Hyprland can catch it
 kitty --class floating_note nvim "$FILE_PATH"

@@ -4,7 +4,12 @@
 entries=$(cliphist list)
 
 # Exit if empty
-[ -z "$entries" ] && dunstify "📋 Clipboard empty" && exit
+[ -z "$entries" ] && {
+    dunstify -a clipboard -u low \
+        -h string:x-dunst-stack-tag:clipboard \
+        -i edit-paste "Clipboard empty"
+    exit
+}
 
 # Show menu and capture selection
 chosen=$(echo "$entries" | wofi --dmenu --prompt "Paste from history..." --insensitive)
@@ -18,5 +23,6 @@ id=$(printf '%s' "$chosen" | cut -f1)
 # Decode full content and copy to clipboard
 cliphist decode "$id" | wl-copy
 
-# Optional: notification
-dunstify -u low -h string:x-dunst-stack-tag:clipboard "📋 Copied from history"
+dunstify -a clipboard -u low \
+    -h string:x-dunst-stack-tag:clipboard \
+    -i edit-paste "Copied from history"

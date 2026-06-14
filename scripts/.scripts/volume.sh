@@ -1,33 +1,49 @@
 #!/bin/bash
 
-# This script changes the volume and sends a notification.
-# Usage: ./volume.sh up
-#        ./volume.sh down
-#        ./volume.sh mute
+STEP=5
+SINK="@DEFAULT_AUDIO_SINK@"
 
-# Use pamixer to change volume
-case $1 in
+case "$1" in
 up)
-  pamixer -i 5
+  wpctl set-mute "$SINK" 0
+  wpctl set-volume -l 1.5 "$SINK" "${STEP}%+"
   ;;
 down)
-  pamixer -d 5
+  wpctl set-volume "$SINK" "${STEP}%-"
   ;;
 mute)
-  pamixer -t
+  wpctl set-mute "$SINK" toggle
+  ;;
+*)
+  exit 2
   ;;
 esac
 
-# Check if muted
-if pamixer --get-mute | grep -q "true"; then
-  # Send a "Muted" notification
-  dunstify -a "volume" -h string:x-dunst-stack-tag:volume -i audio-volume-muted -u low "Volume Muted"
-else
-  # Get current volume
-  VOLUME=$(pamixer --get-volume)
+out=$(wpctl get-volume "$SINK") || exit 0
 
-  # Send notification with a progress bar
-  # -h int:value:$VOLUME creates the bar
-  # -h string:x-dunst-stack-tag:volume makes notifications replace each other
-  dunstify -a "volume" -h string:x-dunst-stack-tag:volume -h int:value:"$VOLUME" -i audio-volume-high -u low "Volume: ${VOLUME}%"
+if printf '%s' "$out" | grep -q MUTED; then
+  dunstify -a "volume" \
+    -h string:x-dunst-stack-tag:volume \
+    -i audio-volume-muted \
+    -u low "Volume Muted"
+  exit 0
 fi
+
+volume=$(printf '%s' "$out" | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9.]+$/) { printf "%d", ($i * 100) + 0.5; exit } }')
+[ -n "$volume" ] || exit 0
+
+if [ "$volume" -ge 100 ]; then
+  icon="audio-volume-high"
+elif [ "$volume" -ge 50 ]; then
+  icon="audio-volume-medium"
+elif [ "$volume" -gt 0 ]; then
+  icon="audio-volume-low"
+else
+  icon="audio-volume-muted"
+fi
+
+dunstify -a "volume" \
+  -h string:x-dunst-stack-tag:volume \
+  -h int:value:"$volume" \
+  -i "$icon" \
+  -u low "Volume: ${volume}%"

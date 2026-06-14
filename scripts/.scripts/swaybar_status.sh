@@ -21,6 +21,13 @@ good=${good:-#C1A554}
 warn=${warn:-#B661A5}
 bad=${bad:-#A11B4D}
 info=${info:-#2B9FDE}
+show_center=true
+
+case "${1:-}" in
+--no-center)
+    show_center=false
+    ;;
+esac
 
 block() {
     name=$1
@@ -114,30 +121,6 @@ network_block() {
     fi
 
     block network "" "󰤭" "$bad" true
-}
-
-volume_block() {
-    out=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null) || return
-
-    if printf '%s' "$out" | grep -q MUTED; then
-        block audio "" "󰖁" "$muted"
-        return
-    fi
-
-    pct=$(printf '%s' "$out" | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9.]+$/) { printf "%d", ($i * 100) + 0.5; exit } }')
-    [ -n "$pct" ] || return
-
-    if [ "$pct" -eq 0 ]; then
-        icon="󰕿"
-    elif [ "$pct" -lt 50 ]; then
-        icon="󰖀"
-    else
-        icon="󰕾"
-    fi
-
-    color=$foreground
-    [ "$pct" -gt 100 ] && color=$warn
-    block audio "" "$icon ${pct}%" "$color"
 }
 
 ram_block() {
@@ -316,7 +299,9 @@ first=1
 while :; do
     blocks=""
 
-    append_block "$(center_block "$(center_text)")"
+    if [ "$show_center" = true ]; then
+        append_block "$(center_block "$(center_text)")"
+    fi
 
     net=$(network_block)
     [ -n "$net" ] && append_block "$net"
