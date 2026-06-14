@@ -1,43 +1,110 @@
-# dunstrc - Minimal "Fresh Start" Config
+# dunst - compact desktop notifications
 
 [global]
-include = /home/gabriel/.cache/wal/dunstrc
-    # Set your font
-    font = JetBrains Mono Nerd 10
+    monitor = 0
+    follow = mouse
 
-    # Allow markup so icons and bolds work
-    allow_markup = yes
-
-    # Where to show notifications
+    width = (220, 440)
+    height = (0, 260)
     origin = top-right
-    offset = 10x10
-    
-    # How long to show them
-    show_age_threshold = 60
-    
-    # Don't stack notifications, just show one at a time
-    stack_duplicates = false
-    
-    # Hide the "..." if the message is too long
-    ellipsis = end
+    offset = (14, 42)
+    scale = 0
+    notification_limit = 5
 
-[frame]
-    width = 300
-    color = "#33ccff"
+    progress_bar = true
+    progress_bar_height = 7
+    progress_bar_frame_width = 0
+    progress_bar_min_width = 120
+    progress_bar_max_width = 380
+    progress_bar_corner_radius = 3
+
+    icon_position = left
+    min_icon_size = 24
+    max_icon_size = 40
+    icon_corner_radius = 6
+    text_icon_padding = 12
+
     frame_width = 2
-    
+    frame_color = "#8aadf4"
+    separator_height = 0
+    separator_color = frame
+    gap_size = 8
+    corner_radius = 8
+    corners = all
+    padding = 9
+    horizontal_padding = 11
+
+    font = JetBrains Mono Nerd Font 10
+    line_height = 2
+    markup = full
+    format = "<b>%s</b>\n<span size='smaller'>%b</span>"
+    alignment = center
+    vertical_alignment = center
+    ellipsize = end
+    show_age_threshold = 45
+    ignore_newline = no
+
+    sort = update
+    stack_duplicates = true
+    hide_duplicate_count = false
+    indicate_hidden = yes
+    show_indicators = yes
+    history_length = 20
+    browser = qutebrowser
+
+    mouse_left_click = close_current
+    mouse_middle_click = do_action, close_current
+    mouse_right_click = close_all
+
 [urgency_low]
-    background = "#282828"
-    foreground = "#ebdbb2"
-    timeout = 5
+    background = "#161821"
+    foreground = "#cad3f5"
+    frame_color = "#5b6078"
+    highlight = "#8aadf4"
+    timeout = 3
 
 [urgency_normal]
-    background = "#282828"
-    foreground = "#ebdbb2"
-    timeout = 10
+    background = "#1e2030"
+    foreground = "#cad3f5"
+    frame_color = "#8aadf4"
+    highlight = "#a6da95"
+    timeout = 6
 
 [urgency_critical]
-    background = "#fb4934"
-    foreground = "#282828"
+    background = "#2a161b"
+    foreground = "#f4dbd6"
+    frame_color = "#ed8796"
+    highlight = "#ed8796"
     timeout = 0
-    frame_width = 4
+
+[volume]
+    appname = volume
+    timeout = 2
+
+[brightness]
+    appname = brightness
+    timeout = 2
+
+[sway]
+    appname = sway
+    timeout = 3
+
+[screenshot]
+    appname = screenshot
+    timeout = 4
+
+[wallpaper]
+    appname = wallpaper
+    timeout = 4
+
+[clipboard]
+    appname = clipboard
+    timeout = 3
+
+[notes]
+    appname = notes
+    timeout = 3
+
+[system]
+    appname = system
+    timeout = 8
