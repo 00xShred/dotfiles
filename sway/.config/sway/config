@@ -1,11 +1,15 @@
 # Minimal personal Sway config.
 
+# Import environment variables into systemd and D-Bus
+exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
+exec systemctl --user start sway-session.service
+
 set $mod Mod4
 set $term kitty
 
 include /home/gabriel/.cache/wal/colors-sway
 
-client.focused $color4 $color4 $foreground $color1 $color4
+client.focused $color4 $color4 $foreground $color4 $color1
 client.focused_inactive $color8 $background $foreground $color8 $color8
 client.unfocused $color8 $background $foreground $color8 $color8
 client.urgent $color1 $color1 $foreground $color1 $color1
@@ -60,15 +64,15 @@ bindsym $mod+s exec ~/.scripts/screenshot.sh copy
 bindsym $mod+Shift+s exec ~/.scripts/screenshot.sh save
 
 # Sway
-bindsym $mod+r reload
+bindsym $mod+r exec ~/.scripts/reload_sway.sh
 bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit Sway?' -B 'Exit' 'swaymsg exit'
 bindsym $mod+Mod1+l exec swaylock -f
-exec_always sh -c 'killall swaybg 2>/dev/null; exec swaybg -i "$1" -m fill' swaybg $wallpaper
+exec ~/.scripts/start_wallpaper.sh
 exec_always sh -c 'killall kanshi 2>/dev/null; exec kanshi'
-exec_always sh -c 'killall dunst 2>/dev/null; exec dunst'
+exec_always sh -c 'killall dunst 2>/dev/null; exec dunst -conf /home/gabriel/.cache/wal/dunstrc'
 exec_always sh -c 'killall nm-applet 2>/dev/null; exec nm-applet --indicator'
-exec_always sh -c 'pkill -f "wl-paste --type text --watch cliphist store" 2>/dev/null; exec wl-paste --type text --watch cliphist store'
-exec_always sh -c 'pkill -f "wl-paste --type image --watch cliphist store" 2>/dev/null; exec wl-paste --type image --watch cliphist store'
+exec_always ~/.scripts/cliphist_watch.sh text
+exec_always ~/.scripts/cliphist_watch.sh image
 exec_always swaymsg "gaps inner all set 5"
 exec_always swaymsg "gaps outer all set 3"
 exec_always swaymsg "[all] border pixel 2"
@@ -115,8 +119,12 @@ bindsym $mod+Control+k resize shrink height 20px
 bindsym $mod+Control+l resize grow width 20px
 
 # Gestures
-bindgesture swipe:3:right workspace prev
-bindgesture swipe:3:left workspace next
+bindgesture --exact swipe:3:right workspace prev
+bindgesture --exact swipe:3:left workspace next
+bindgesture --exact swipe:4:right workspace prev
+bindgesture --exact swipe:4:left workspace next
+bindgesture pinch:2:outward exec wtype -M ctrl -k equal -m ctrl
+bindgesture pinch:2:inward exec wtype -M ctrl -k minus -m ctrl
 
 # Volume and brightness
 bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
@@ -149,9 +157,30 @@ bar {
         background $background
         statusline $foreground
         separator $color8
-        focused_workspace $color1 $color1 $foreground
+        focused_workspace $color4 $color4 $foreground
         active_workspace $color8 $color8 $foreground
         inactive_workspace $background $background $foreground
-        urgent_workspace $color1 $color1 $foreground
+        urgent_workspace $color2 $color2 $foreground
+    }
+}
+
+bar {
+    position top
+    output DP-7
+    font pango:JetBrainsMono Nerd Font 10
+    height 28
+    tray_padding 4
+    tray_output none
+    strip_workspace_numbers yes
+    status_command ~/.scripts/swaybar_status.sh --no-center
+
+    colors {
+        background $background
+        statusline $foreground
+        separator $color8
+        focused_workspace $color4 $color4 $foreground
+        active_workspace $color8 $color8 $foreground
+        inactive_workspace $background $background $foreground
+        urgent_workspace $color2 $color2 $foreground
     }
 }
