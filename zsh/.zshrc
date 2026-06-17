@@ -127,6 +127,7 @@ alias gc="git commit -m"
 alias gp="git push"
 alias gl="git log --oneline --graph --decorate"
 alias gd="git diff"
+alias gds="git diff --stat"
 alias gco="git checkout"
 alias gsw="git switch"
 alias gswc="git switch -c"
@@ -399,3 +400,5 @@ fi
 
 # Added by Antigravity CLI installer
 export PATH="/home/gabriel/.local/bin:$PATH"
+
+source /home/gabriel/.config/broot/launcher/bash/br
