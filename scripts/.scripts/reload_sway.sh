@@ -4,7 +4,6 @@
 # the services declared with exec_always and the built-in bar block.
 killall waybar 2>/dev/null || true
 killall swaybar 2>/dev/null || true
-pkill -f "/home/gabriel/.scripts/swaybar_status.sh" 2>/dev/null || true
 pkill -f "$HOME/.scripts/swaybar_status.sh" 2>/dev/null || true
 killall swaybg 2>/dev/null || true
 

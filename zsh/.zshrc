@@ -100,8 +100,8 @@ alias epprog="cd programming/IdeaProjects/gduarte/"
 alias linalg="cd OneDrive/Desktop/ETH/1S/LinAlg/"
 alias lice="cd OneDrive/Desktop/lice"
 alias ideas="cd Documents/ideas" 
-alias gith="cd /home/gabriel/programming/gith"
-alias vis="cd /home/gabriel/programming/vis/"
+alias gith="cd $HOME/programming/gith"
+alias vis="cd $HOME/programming/vis/"
 
 # Replacements (Modern Tools)
 # Note: 'eza' is the maintained version of 'exa'
@@ -384,7 +384,7 @@ export PATH="$HOME/.local/share/gem/ruby/3.4.0/bin:$PATH"
 export KUBECONFIG=~/.kube/config-k3s
 
 # bun completions
-[ -s "/home/gabriel/.bun/_bun" ] && source "/home/gabriel/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"
@@ -399,6 +399,7 @@ if [ -d ~/.config/zshrc.d ]; then
 fi
 
 # Added by Antigravity CLI installer
-export PATH="/home/gabriel/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
-source /home/gabriel/.config/broot/launcher/bash/br
+[ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
+

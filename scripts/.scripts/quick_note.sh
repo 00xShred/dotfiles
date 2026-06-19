@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directory setup
-NOTE_DIR="/home/gabriel/Documents/Notes/quick"
+NOTE_DIR="$HOME/Documents/Notes/quick"
 mkdir -p "$NOTE_DIR"
 
 # Find the highest existing note number

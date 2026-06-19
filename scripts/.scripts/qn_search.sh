@@ -1,5 +1,5 @@
 #!/bin/bash
-NOTE_DIR="/home/gabriel/Documents/Notes/quick"
+NOTE_DIR="$HOME/Documents/Notes/quick"
 
 # 1. Use fzf to find a file
 # We CD into the directory so the preview and selection paths are cleaner

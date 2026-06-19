@@ -7,7 +7,7 @@ exec systemctl --user start sway-session.service
 set $mod Mod4
 set $term kitty
 
-include /home/gabriel/.cache/wal/colors-sway
+include /home/0xShred/.cache/wal/colors-sway
 
 client.focused $color4 $color4 $foreground $color4 $color1
 client.focused_inactive $color8 $background $foreground $color8 $color8
@@ -73,7 +73,7 @@ bindsym $mod+Shift+e exec swaynag -t warning -m 'Exit Sway?' -B 'Exit' 'swaymsg 
 bindsym $mod+Mod1+l exec swaylock -f
 exec ~/.scripts/start_wallpaper.sh
 exec_always sh -c 'killall kanshi 2>/dev/null; exec kanshi'
-exec_always sh -c 'killall dunst 2>/dev/null; exec dunst -conf /home/gabriel/.cache/wal/dunstrc'
+exec_always sh -c 'killall dunst 2>/dev/null; exec dunst -conf /home/0xShred/.cache/wal/dunstrc'
 exec_always sh -c 'killall nm-applet 2>/dev/null; exec nm-applet --indicator'
 exec_always ~/.scripts/cliphist_watch.sh text
 exec_always ~/.scripts/cliphist_watch.sh image

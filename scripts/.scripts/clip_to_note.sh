@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRAP_FILE="/home/gabriel/Documents/Notes/quick/scraps.md"
+SCRAP_FILE="$HOME/Documents/Notes/quick/scraps.md"
 TIMESTAMP=$(date "+%Y-%m-%d %H:%M")
 CLIP_CONTENT=$(wl-paste)
 
