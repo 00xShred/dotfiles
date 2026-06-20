@@ -9,7 +9,7 @@ set $term kitty
 
 include /home/0xShred/.cache/wal/colors-sway
 
-client.focused $color4 $color4 $foreground $color4 $color1
+client.focused $color4 $color4 $foreground $color1 $color1
 client.focused_inactive $color8 $background $foreground $color8 $color8
 client.unfocused $color8 $background $foreground $color8 $color8
 client.urgent $color1 $color1 $foreground $color1 $color1

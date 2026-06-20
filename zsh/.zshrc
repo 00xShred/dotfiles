@@ -142,11 +142,10 @@ alias gstd="git stash drop"
 alias gcl="git clone"
 alias gb="git branch"
 alias gba="git branch -a"
+alias gpu="git push -u origin"
 
-# Hyprland / Configs
-alias hyprc="$EDITOR ~/.config/hypr/hyprland.conf"
+# zsh
 alias zshc="$EDITOR ~/.zshrc && source ~/.zshrc"
-alias hreload="hyprctl reload"
 
 # System
 alias reboot="systemctl reboot"
@@ -186,6 +185,9 @@ alias headphones='wpctl set-default $(wpctl status | sed -n "/Sinks:/,/Sources:/
 
 # clean logs 
 alias cleanroot='sudo pacman -Scc && sudo journalctl --vacuum-size=100M && sudo timeshift --check'
+
+# increase constrast
+alias gamma='gammastep -m wayland -O 6500 -g 1.3'
 
 # --- 8. FUNCTIONS ---
 
