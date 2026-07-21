@@ -174,6 +174,12 @@ alias -s {md,txt,json,toml,yaml,yml,ini,conf,zsh}=nvim
 # Images/Documents -> Open in default viewer (xdg-open)
 alias -s {png,jpg,jpeg,gif,pdf,mp4,mkv}=xdg-open
 
+# rustaceans, I summon you all!
+alias cb='cargo build'
+alias cr='cargo run'
+alias crq='cargo run --quiet'
+alias ct='cargo test'
+
 # audio
 alias audio='wpctl'
 
@@ -331,17 +337,26 @@ function gclone() {
 
 # System Maintenance 
 sysmaintain() {
-    echo -e "\n\033[1;34m[1/4] 📦 Updating System...\033[0m"
+    echo -e "\n\033[1;34m[1/5] 📦 Updating System...\033[0m"
     yay -Syu # yay handles both repo and AUR updates
 
-    echo -e "\n\033[1;34m[2/4] 🧹 Cleaning Orphans & Cache...\033[0m"
+    echo -e "\n\033[1;34m[2/5] 📦 Updating Flatpaks...\033[0m"
+    flatpak update
+    flatpak uninstall --unused
+
+    echo -e "\n\033[1;34m[3/5] 🧹 Cleaning Orphans & Cache...\033[0m"
     if [[ -n $(pacman -Qtdq) ]]; then
         sudo pacman -Rns $(pacman -Qtdq)
     fi
     sudo paccache -rk2
+    sudo paccache -ruk0
 
-    echo -e "\n\033[1;34m[3/4] 🚑 Checking Errors...\033[0m"
+    echo -e "\n\033[1;34m[4/5] 🧩 Checking Config Diffs...\033[0m"
+    sudo pacdiff
+
+    echo -e "\n\033[1;34m[5/5] 🚑 Checking Errors...\033[0m"
     systemctl --failed
+    journalctl -p 3 -xb
 
     echo -e "\n\033[1;32m✅ Maintenance Complete.\033[0m"
 }
@@ -405,3 +420,4 @@ export PATH="$HOME/.local/bin:$PATH"
 
 [ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
 
+export PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
