@@ -1,7 +1,7 @@
 # --- 1. INSTANT PROMPT (Must be at the very top) ---
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
 # --- 2. OH-MY-ZSH CONFIG ---
@@ -92,13 +92,6 @@ alias docs="cd ~/Documents"
 alias idocs="cd OneDrive/Documents/DocsImportantes"
 alias down="cd ~/Downloads"
 alias config="cd ~/.config"
-alias hypr="cd ~/.config/hypr"
-alias dm="cd OneDrive/Desktop/ETH/1S/DiskMath/"
-alias and="cd OneDrive/Desktop/ETH/1S/AnD/"
-alias eprog="cd OneDrive/Desktop/ETH/1S/Eprog/"
-alias epprog="cd programming/IdeaProjects/gduarte/"
-alias linalg="cd OneDrive/Desktop/ETH/1S/LinAlg/"
-alias lice="cd OneDrive/Desktop/lice"
 alias ideas="cd Documents/ideas" 
 alias gith="cd $HOME/programming/gith"
 alias vis="cd $HOME/programming/vis/"
@@ -200,7 +193,7 @@ alias gamma='gammastep -m wayland -O 6500 -g 1.3'
 # Search text in files and display results in Bat
 fsearch() {
     rg --line-number --no-heading --color=always "$1" | \
-    fzf --ansi --delimiter : --preview "bat --style=numbers --color=always --highlight-line {2} {1}"
+        fzf --ansi --delimiter : --preview "bat --style=numbers --color=always --highlight-line {2} {1}"
 }
 
 # Refresh mrconfig automatically
@@ -213,31 +206,31 @@ function mr-refresh() {
 
 # magic-enter
 magic-enter () {
-  if [[ -z $BUFFER ]]; then
-    zle -I
-    eza --icons --group-directories-first
-    if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-        echo ""
-        git status -sb
-        echo ""
-        echo ""
+    if [[ -z $BUFFER ]]; then
+        zle -I
+        eza --icons --group-directories-first
+        if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+            echo ""
+            git status -sb
+            echo ""
+            echo ""
+        fi
+        zle redisplay
+    else
+        zle accept-line
     fi
-    zle redisplay
-  else
-    zle accept-line
-  fi
 }
 
 zle -N magic-enter
 bindkey "^M" magic-enter
 
 function yy() {
-	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		cd -- "$cwd"
-	fi
-	rm -f -- "$tmp"
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
 }
 
 # fshow - git commit browser
@@ -245,38 +238,38 @@ alias fshow="git log --graph --color=always \
     --format='%C(auto)%h%d %s %C(black)%C(bold)%cr' | \
     fzf --ansi --no-sort --reverse --tiebreak=index --bind=ctrl-s:toggle-sort \
     --bind 'ctrl-m:execute:
-                (grep -o \"[a-f0-9]\{7\}\" | head -1 |
-                xargs -I % sh -c \"git show --color=always %\") <<FZF-EOF
-                {}
+(grep -o \"[a-f0-9]\{7\}\" | head -1 |
+    xargs -I % sh -c \"git show --color=always %\") <<FZF-EOF
+{}
 FZF-EOF'"
 
 # Extract anything 
 ex () {
-  if [ -f $1 ] ; then
-    case $1 in
-      *.tar.bz2)   tar xjf $1   ;;
-      *.tar.gz)    tar xzf $1   ;;
-      *.bz2)       bunzip2 $1   ;;
-      *.rar)       unrar x $1   ;;
-      *.gz)        gunzip $1    ;;
-      *.tar)       tar xf $1    ;;
-      *.tbz2)      tar xjf $1   ;;
-      *.tgz)       tar xzf $1   ;;
-      *.zip)       unzip $1     ;;
-      *.Z)         uncompress $1;;
-      *.7z)        7z x $1      ;;
-      *)           echo "'$1' cannot be extracted via ex()" ;;
-    esac
-  else
-    echo "'$1' is not a valid file"
-  fi
+    if [ -f $1 ] ; then
+        case $1 in
+            *.tar.bz2)   tar xjf $1   ;;
+            *.tar.gz)    tar xzf $1   ;;
+            *.bz2)       bunzip2 $1   ;;
+            *.rar)       unrar x $1   ;;
+            *.gz)        gunzip $1    ;;
+            *.tar)       tar xf $1    ;;
+            *.tbz2)      tar xjf $1   ;;
+            *.tgz)       tar xzf $1   ;;
+            *.zip)       unzip $1     ;;
+            *.Z)         uncompress $1;;
+            *.7z)        7z x $1      ;;
+            *)           echo "'$1' cannot be extracted via ex()" ;;
+        esac
+    else
+        echo "'$1' is not a valid file"
+    fi
 }
 
 # Fuzzy find and open in nvim
 vf() {
-  local file
-  file=$(fzf --preview 'bat --style=numbers --color=always --line-range :500 {}')
-  [ -n "$file" ] && nvim "$file"
+    local file
+    file=$(fzf --preview 'bat --style=numbers --color=always --line-range :500 {}')
+    [ -n "$file" ] && nvim "$file"
 }
 
 # Create directory and enter it
@@ -324,21 +317,27 @@ run() {
 function gclone() {
     # 1. Go to your git folder
     cd ~/programming/gith || return
-    
+
     # 2. Clone the repo (passing whatever argument you typed)
     gh repo clone "$1"
-    
+
     # 3. Refresh mr (using the function we made earlier)
     # Note: This assumes you added the mr-refresh function from my previous reply
     mr-refresh
-    
+
     echo "🚀 Repo cloned and registered!"
 }
 
 # System Maintenance 
 sysmaintain() {
     echo -e "\n\033[1;34m[1/5] 📦 Updating System...\033[0m"
-    yay -Syu # yay handles both repo and AUR updates
+    if ! grep -Eq '^[[:space:]]*Server[[:space:]]*=' /etc/pacman.d/mirrorlist; then
+        echo "No active pacman mirrors in /etc/pacman.d/mirrorlist"
+        echo "Uncomment at least one Server line, then rerun sysmaintain."
+        return 1
+    fi
+    sudo pacman-db-upgrade
+    yay -Syyu # force package DB refresh; yay handles repo and AUR updates
 
     echo -e "\n\033[1;34m[2/5] 📦 Updating Flatpaks...\033[0m"
     flatpak update
@@ -359,6 +358,10 @@ sysmaintain() {
     journalctl -p 3 -xb
 
     echo -e "\n\033[1;32m✅ Maintenance Complete.\033[0m"
+}
+
+sysmaintian() {
+    sysmaintain "$@"
 }
 
 # --- 9. SSH AGENT  ---
@@ -410,9 +413,9 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # Source all configuration snippets from zshrc.d
 if [ -d ~/.config/zshrc.d ]; then
-  for f in ~/.config/zshrc.d/*.{sh,zsh}(N); do
-    source "$f"
-  done
+    for f in ~/.config/zshrc.d/*.{sh,zsh}(N); do
+        source "$f"
+    done
 fi
 
 # Added by Antigravity CLI installer

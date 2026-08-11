@@ -1,10 +1,5 @@
 #!/bin/bash
 
-if command -v hyprctl >/dev/null 2>&1 && [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
-    hyprctl dispatch setfloating address:$(hyprctl activewindow -j | jq -r .address)
-    hyprctl dispatch centerwindow
-fi
-
 # 1. VARIABLES
 DIR="$HOME/Pictures/Wallpapers"
 
@@ -43,19 +38,8 @@ fi
 pkill -USR1 -x dwl 2>/dev/null || true
 
 # 4. RELOAD EVERYTHING
-if command -v hyprctl >/dev/null 2>&1 && [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
-    hyprctl reload
-fi
-
 if command -v swaymsg >/dev/null 2>&1 && [ -n "$SWAYSOCK" ]; then
     "$HOME/.scripts/reload_sway.sh" >/dev/null 2>&1 || true
-fi
-
-# Restart Hyprland-only bar. Sway owns swaybar, dunst, kanshi, and swaybg via exec_always.
-if command -v waybar >/dev/null 2>&1 && [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
-    killall waybar &>/dev/null
-    sleep 0.5
-    nohup waybar >/dev/null 2>&1 &
 fi
 
 if [ -x "$HOME/.local/bin/somebar" ]; then

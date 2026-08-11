@@ -2,7 +2,7 @@
 if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
   mkdir -p ~/.cache
   echo "Starting window manager..."
-  echo "Press 'h' for Hyprland (fallback), otherwise dwl starts in 3 seconds..."
+  echo "Press 's' for Sway (fallback), otherwise dwl starts in 3 seconds..."
   
   choice=""
   if [ -n "$ZSH_VERSION" ]; then
@@ -12,14 +12,14 @@ if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
   fi
   echo ""
 
-  if [ "$choice" = "h" ] || [ "$choice" = "H" ]; then
-    echo "Starting Hyprland..."
-    exec uwsm start hyprland-uwsm.desktop > ~/.cache/hyprland.log 2>&1
+  if [ "$choice" = "s" ] || [ "$choice" = "S" ]; then
+    echo "Starting Sway..."
+    exec sway > ~/.cache/sway.log 2>&1
   else
     echo "Starting dwl..."
     if ! uwsm start dwl.desktop > ~/.cache/dwl.log 2>&1; then
-      echo "dwl failed to start! Falling back to Hyprland..."
-      exec uwsm start hyprland-uwsm.desktop > ~/.cache/hyprland.log 2>&1
+      echo "dwl failed to start! Falling back to Sway..."
+      exec sway > ~/.cache/sway.log 2>&1
     fi
   fi
 fi

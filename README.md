@@ -14,11 +14,11 @@
 
 ## About
 
-My daily driver on Arch + Sway (with Hyprland configured as a fallback). Everything is keyboard-driven, color-synced through Pywal, and managed with GNU Stow. Take what's useful.
+My daily driver on Arch + Sway. Everything is keyboard-driven, color-synced through Pywal, and managed with GNU Stow. Take what's useful.
 
 ## Stack
 
-- **WM:** [Sway](https://swaywm.org/) (Primary) / [Hyprland](https://hyprland.org/) (Fallback)
+- **WM:** [Sway](https://swaywm.org/)
 - **Terminal:** [Kitty](https://sw.kovidgoyal.net/kitty/) — GPU-accelerated, Pywal-themed
 - **Multiplexer:** [Zellij](https://zellij.dev/) — persistent sessions and layouts
 - **Shell:** Zsh + [Starship](https://starship.rs/) prompt
@@ -26,12 +26,12 @@ My daily driver on Arch + Sway (with Hyprland configured as a fallback). Everyth
 - **Files:** [Yazi](https://yazi-rs.github.io/) — terminal file manager with image previews
 - **Documents:** [Zathura](https://pwmt.org/projects/zathura/) — PDF viewer with SyncTeX + Neovim integration
 - **Browser:** [Zen Browser](https://zen-browser.app/) (daily) / [Qutebrowser](https://qutebrowser.org/) (keyboard-driven)
-- **Bar:** swaybar (for Sway) / [Waybar](https://github.com/Alexays/Waybar) (for Hyprland)
+- **Bar:** swaybar
 - **Theming:** [Pywal](https://github.com/dylanaraps/pywal) — wallpaper-based system-wide color sync
 - **Display:** [Kanshi](https://git.sr.ht/~emersion/kanshi) — automatic monitor profile switching
 - **Notifications:** [Dunst](https://dunst-project.org/) — Pywal-themed notification daemon
-- **Launcher:** [wmenu](https://codeberg.org/adnano/wmenu) (for Sway) / [Wofi](https://hg.sr.ht/~scoopta/wofi) (for Hyprland)
-- **Locker:** [swaylock](https://github.com/jeffmhubbard/swaylock) (for Sway) / [hyprlock](https://github.com/hyprwm/hyprlock) (for Hyprland)
+- **Launcher:** [wmenu](https://codeberg.org/adnano/wmenu) / [Fuzzel](https://codeberg.org/dnkl/fuzzel) / [Wofi](https://hg.sr.ht/~scoopta/wofi)
+- **Locker:** [swaylock](https://github.com/jeffmhubbard/swaylock)
 - **Office:** [OnlyOffice](https://www.onlyoffice.com/) — document, spreadsheet, and presentation editor
 
 ## Installation
@@ -70,7 +70,7 @@ chmod +x install.sh
 | `Super + S`               | Screenshot (Region)               |
 | `Super + Shift + S`       | Screenshot (Full Screen)          |
 | `Super + P`               | Power Menu                        |
-| `Super + Alt + L`         | Lock Screen (Swaylock / Hyprlock) |
+| `Super + Alt + L`         | Lock Screen (Swaylock)            |
 | `Super + M`               | Toggle Mute                       |
 | `Super + Shift + C`       | Clipboard History                 |
 | `Super + Q`               | Close Window                      |
@@ -87,20 +87,17 @@ chmod +x install.sh
 
 ```
 $HOME/dotfiles
-├── sway/          # Primary Window manager
-├── swaylock/      # Sway lock screen
-├── hypr/          # Fallback Window manager
+├── sway/          # Window manager
+├── swaylock/      # Lock screen
 ├── kitty/         # Terminal
 ├── zellij/        # Multiplexer
 ├── nvim/          # Editor (LazyVim)
-├── waybar/        # Status bar (Hyprland)
 ├── zsh/           # Shell
 ├── yazi/          # Terminal file manager
 ├── zathura/       # Document viewer
 ├── qutebrowser/   # Keyboard-driven browser
 ├── zen-browser/   # Daily browser
 ├── dunst/         # Notifications
-├── wofi/          # App launcher (Hyprland fallback)
 ├── kanshi/        # Display profiles
 ├── wal/           # Pywal templates
 ├── scripts/       # Custom shell scripts

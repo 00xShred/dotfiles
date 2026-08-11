@@ -45,7 +45,7 @@ bindsym $mod+Shift+b exec zen-browser
 bindsym $mod+Mod1+b exec ~/.scripts/qutebw.sh --target window --untrusted-args about:blank
 bindsym $mod+d exec wmenu-run -i -f "JetBrains Mono Nerd Font 11" -N "$background" -n "$foreground" -M "$color8" -m "$foreground" -S "$color4" -s "$foreground"
 bindsym $mod+Shift+d exec fuzzel
-bindsym $mod+e exec thunar
+bindsym $mod+e exec nautilus
 bindsym $mod+Alt+d exec nwg-displays
 bindsym $mod+w exec kitty --class wallpaper_selector -e ~/.scripts/wallpaper.sh
 bindsym $mod+p exec ~/.scripts/powermenu.sh

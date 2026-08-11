@@ -21,5 +21,5 @@ dunstify -a notes -u low \
     -h string:x-dunst-stack-tag:notes \
     -i accessories-text-editor "Quick note" "Created note_$NEXT_NUM.md" 2>/dev/null || true
 
-# Launch terminal with a specific class so Hyprland can catch it
+# Launch terminal with a specific class for floating window rules
 kitty --class floating_note nvim "$FILE_PATH"

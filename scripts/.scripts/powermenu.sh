@@ -13,12 +13,11 @@ lock="  Lock"
 logout="󰗽  Logout"
 
 # Detect desktop environment
+LOCK_CMD="swaylock -f"
 if [ "$XDG_CURRENT_DESKTOP" = "dwl" ]; then
-  LOCK_CMD="swaylock -f"
   LOGOUT_CMD="uwsm stop || pkill -x dwl"
 else
-  LOCK_CMD="hyprlock"
-  LOGOUT_CMD="hyprctl dispatch exit 0"
+  LOGOUT_CMD="swaymsg exit || uwsm stop"
 fi
 
 # Pipe the options into wofi
