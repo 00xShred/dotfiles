@@ -188,6 +188,9 @@ alias cleanroot='sudo pacman -Scc && sudo journalctl --vacuum-size=100M && sudo 
 # increase constrast
 alias gamma='gammastep -m wayland -O 6500 -g 1.3'
 
+# reaper low latency when sharing browsers output
+alias reaper-lowlat='PIPEWIRE_LATENCY=128/48000 pw-jack reaper'
+
 # --- 8. FUNCTIONS ---
 
 # Search text in files and display results in Bat
@@ -329,24 +332,27 @@ function gclone() {
 }
 
 # System Maintenance 
+
 sysmaintain() {
+    sudo -v || return 1
+
     echo -e "\n\033[1;34m[1/5] 📦 Updating System...\033[0m"
     if ! grep -Eq '^[[:space:]]*Server[[:space:]]*=' /etc/pacman.d/mirrorlist; then
         echo "No active pacman mirrors in /etc/pacman.d/mirrorlist"
         echo "Uncomment at least one Server line, then rerun sysmaintain."
         return 1
     fi
+
     sudo pacman-db-upgrade
-    yay -Syyu # force package DB refresh; yay handles repo and AUR updates
+    yay -Syu
 
     echo -e "\n\033[1;34m[2/5] 📦 Updating Flatpaks...\033[0m"
     flatpak update
     flatpak uninstall --unused
 
     echo -e "\n\033[1;34m[3/5] 🧹 Cleaning Orphans & Cache...\033[0m"
-    if [[ -n $(pacman -Qtdq) ]]; then
-        sudo pacman -Rns $(pacman -Qtdq)
-    fi
+    orphans=$(pacman -Qtdq)
+    [[ -n "$orphans" ]] && sudo pacman -Rns $orphans
     sudo paccache -rk2
     sudo paccache -ruk0
 
@@ -355,7 +361,7 @@ sysmaintain() {
 
     echo -e "\n\033[1;34m[5/5] 🚑 Checking Errors...\033[0m"
     systemctl --failed
-    journalctl -p 3 -xb
+    journalctl -p 3 -xb --no-pager
 
     echo -e "\n\033[1;32m✅ Maintenance Complete.\033[0m"
 }
@@ -363,6 +369,7 @@ sysmaintain() {
 sysmaintian() {
     sysmaintain "$@"
 }
+
 
 # --- 9. SSH AGENT  ---
 export SSH_ASKPASS=/usr/bin/qt4-ssh-askpass
