@@ -9,10 +9,25 @@ show_symlink = true
 
 [opener]
 edit = [
-    { run = '${EDITOR:-nvim} "$@"', block = true, for = "unix" },
+    { run = '${EDITOR:-nvim} %s', block = true, for = "unix" },
+]
+image = [
+    { run = 'loupe %s', orphan = true, desc = "Loupe", for = "linux" },
+]
+pdf = [
+    { run = 'zathura %s', orphan = true, desc = "Zathura", for = "linux" },
 ]
 open = [
-    { run = 'xdg-open "$@"', desc = "Open", for = "linux" },
+    { run = 'xdg-open %s', desc = "Open", for = "linux" },
+]
+
+[open]
+prepend_rules = [
+    { mime = "application/pdf", use = "pdf" },
+    { mime = "image/*", use = "image" },
+    { mime = "text/*", use = "edit" },
+    { mime = "*/javascript", use = "edit" },
+    { mime = "application/json", use = "edit" },
 ]
 
 [plugin]
