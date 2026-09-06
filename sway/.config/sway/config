@@ -23,7 +23,7 @@ mouse_warping none
 gaps inner 5
 gaps outer 3
 for_window [all] border pixel 2
-for_window [all] opacity 0.95
+include /home/0xShred/.config/sway/opacity.conf
 
 seat * hide_cursor 3000
 seat * hide_cursor when-typing enable
@@ -45,7 +45,7 @@ bindsym $mod+Shift+b exec zen-browser
 bindsym $mod+Mod1+b exec ~/.scripts/qutebw.sh --target window --untrusted-args about:blank
 bindsym $mod+d exec wmenu-run -i -f "JetBrains Mono Nerd Font 11" -N "$background" -n "$foreground" -M "$color8" -m "$foreground" -S "$color4" -s "$foreground"
 bindsym $mod+Shift+d exec fuzzel
-bindsym $mod+e exec nautilus
+bindsym $mod+e exec thunar
 bindsym $mod+Alt+d exec nwg-displays
 bindsym $mod+w exec kitty --class wallpaper_selector -e ~/.scripts/wallpaper.sh
 bindsym $mod+p exec ~/.scripts/powermenu.sh
@@ -83,7 +83,6 @@ exec_always ~/.scripts/cliphist_watch.sh image
 exec_always swaymsg "gaps inner all set 5"
 exec_always swaymsg "gaps outer all set 3"
 exec_always swaymsg "[all] border pixel 2"
-exec_always swaymsg "[all] opacity 0.95"
 
 # Workspaces
 bindsym $mod+1 workspace number 1

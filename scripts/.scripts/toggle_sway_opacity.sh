@@ -1,11 +1,15 @@
 #!/bin/sh
 
-state_file="${XDG_RUNTIME_DIR:-/tmp}/sway-opacity-state"
+config_file="${XDG_CONFIG_HOME:-$HOME/.config}/sway/opacity.conf"
+current=$(awk '/^for_window \[all\] opacity/{print $NF; exit}' "$config_file")
 
-if [ "$(cat "$state_file" 2>/dev/null)" = "opaque" ]; then
-    swaymsg '[all] opacity 0.95' >/dev/null
-    printf '%s\n' translucent >"$state_file"
+if [ "$current" = "1.0" ]; then
+    target=0.95
 else
-    swaymsg '[all] opacity 1.0' >/dev/null
-    printf '%s\n' opaque >"$state_file"
+    target=1.0
 fi
+
+tmp="$config_file.tmp.$$"
+printf 'for_window [all] opacity %s\n' "$target" >"$tmp" && mv "$tmp" "$config_file"
+swaymsg reload >/dev/null
+swaymsg "[all] opacity $target" >/dev/null
