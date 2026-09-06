@@ -1,0 +1,29 @@
+{
+  "lastChangelogVersion": "0.85.1",
+  "theme": "pywal",
+  "defaultProvider": "antigravity",
+  "defaultModel": "gemini-3.8-flash",
+  "tuiMode": "regular",
+  "warnings": {
+    "anthropicExtraUsage": false
+  },
+  "treeFilterMode": "default",
+  "markdown": {
+    "mermaid": "streaming"
+  },
+  "observational-memory": {
+    "models": {
+      "observer": {
+        "provider": "openai-codex",
+        "id": "gpt-5.5",
+        "thinking": "low"
+      },
+      "consolidator": {
+        "provider": "openai-codex",
+        "id": "gpt-5.5",
+        "thinking": "low"
+      }
+    }
+  },
+  "packages": ["npm:pi-antigravity"]
+}

@@ -20,3 +20,9 @@ obs-studio/.config/obs-studio/basic/scenes/*.bak
 
 # GTK bookmarks
 gtk/.config/gtk-3.0/bookmarks
+
+# Pi Agent Harness
+pi/.pi/agent/auth.json
+pi/.pi/agent/sessions/
+pi/.pi/agent/models-store.json
+pi/.pi/agent/**/node_modules/
