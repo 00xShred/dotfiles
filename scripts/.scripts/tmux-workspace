@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+name=${1:-}
+if [[ -z "$name" ]]; then
+  printf 'usage: tmux-workspace {dev|homelab|proxmox|k3s|ctf}\n' >&2
+  exit 2
+fi
+
+window_exists() { tmux list-windows -t "$1" -F '#{window_name}' | grep -Fxq "$2"; }
+setup_homelab() {
+  tmux new-session -Ad -s homelab -c "$HOME"
+  if ! window_exists homelab local; then tmux rename-window -t homelab:1 local; fi
+  if ! window_exists homelab homelab; then
+    tmux new-window -d -t homelab -n homelab -c "$HOME"
+    tmux send-keys -t homelab:homelab homelab C-m
+  fi
+  if ! window_exists homelab proxmox; then
+    tmux new-window -d -t homelab -n proxmox -c "$HOME"
+    tmux send-keys -t homelab:proxmox proxmox C-m
+  fi
+  if ! window_exists homelab k3s; then
+    tmux new-window -d -t homelab -n k3s -c "$HOME"
+    tmux send-keys -t homelab:k3s vm C-m
+  fi
+  if ! window_exists homelab monitoring; then tmux new-window -d -t homelab -n monitoring -c "$HOME"; fi
+}
+
+case "$name" in
+  dev)
+    dir=${TMUX_DEV_DIR:-$HOME/programming}
+    tmux new-session -Ad -s dev -c "$dir"
+    if ! window_exists dev editor; then
+      tmux rename-window -t dev:1 editor
+      tmux send-keys -t dev:editor 'nvim .' C-m
+    fi
+    if ! window_exists dev servers; then
+      tmux new-window -d -t dev -n servers -c "$dir"
+      tmux split-window -d -t dev:servers -v -c "$dir"
+    fi
+    tmux select-window -t dev:editor
+    ;;
+  homelab)
+    setup_homelab
+    tmux select-window -t homelab:local
+    ;;
+  proxmox|k3s)
+    setup_homelab
+    tmux select-window -t homelab:"$name"
+    name=homelab
+    ;;
+  ctf)
+    dir=${TMUX_CTF_DIR:-$HOME/ctf}
+    tmux new-session -Ad -s ctf -c "$dir"
+    if ! window_exists ctf shell; then tmux rename-window -t ctf:1 shell; fi
+    if ! window_exists ctf notes; then tmux new-window -d -t ctf -n notes -c "$dir"; fi
+    if ! window_exists ctf tools; then tmux new-window -d -t ctf -n tools -c "$dir"; fi
+    tmux select-window -t ctf:shell
+    ;;
+  *)
+    printf 'unknown workspace: %s\n' "$name" >&2
+    exit 2
+    ;;
+esac
+
+if [[ -n "${TMUX:-}" ]]; then
+  tmux switch-client -t "$name"
+else
+  tmux attach-session -t "$name"
+fi
