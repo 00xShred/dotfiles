@@ -20,18 +20,19 @@ My daily driver on Arch + Sway. Everything is keyboard-driven, color-synced thro
 
 - **WM:** [Sway](https://swaywm.org/)
 - **Terminal:** [Kitty](https://sw.kovidgoyal.net/kitty/) — GPU-accelerated, Pywal-themed
-- **Multiplexer:** [Zellij](https://zellij.dev/) — persistent sessions and layouts
+- **Multiplexers:** [Zellij](https://zellij.dev/) & [Tmux](https://github.com/tmux/tmux) — persistent sessions and workspace layouts
 - **Shell:** Zsh + [Starship](https://starship.rs/) prompt
-- **Editor:** [Neovim](https://neovim.io/) — LazyVim config with LSP and Treesitter
-- **Files:** [Yazi](https://yazi-rs.github.io/) — terminal file manager with image previews
+- **Editor & Agent:** [Neovim](https://neovim.io/) (LazyVim config with LSP and Treesitter) + [Pi](https://github.com/badlogic/pi-mono) coding agent
+- **Files:** [Thunar](https://docs.xfce.org/xfce/thunar/start) (GUI) / [Yazi](https://yazi-rs.github.io/) (terminal file manager with image previews)
 - **Documents:** [Zathura](https://pwmt.org/projects/zathura/) — PDF viewer with SyncTeX + Neovim integration
-- **Browser:** [Zen Browser](https://zen-browser.app/) (daily) / [Qutebrowser](https://qutebrowser.org/) (keyboard-driven)
-- **Bar:** swaybar
-- **Theming:** [Pywal](https://github.com/dylanaraps/pywal) — wallpaper-based system-wide color sync
-- **Display:** [Kanshi](https://git.sr.ht/~emersion/kanshi) — automatic monitor profile switching
+- **Browser:** [Qutebrowser](https://qutebrowser.org/) (keyboard-driven daily) / [Zen Browser](https://zen-browser.app/)
+- **Bar:** swaybar with custom JSON status (`swaybar_status.sh`)
+- **Theming:** [Pywal](https://github.com/dylanaraps/pywal) (pywal16) — wallpaper-based system-wide color sync
+- **Display:** [Kanshi](https://git.sr.ht/~emersion/kanshi) — automatic monitor profile switching + [nwg-displays](https://github.com/nwg-piotr/nwg-displays)
 - **Notifications:** [Dunst](https://dunst-project.org/) — Pywal-themed notification daemon
 - **Launcher:** [wmenu](https://codeberg.org/adnano/wmenu) / [Fuzzel](https://codeberg.org/dnkl/fuzzel) / [Wofi](https://hg.sr.ht/~scoopta/wofi)
 - **Locker:** [swaylock](https://github.com/jeffmhubbard/swaylock)
+- **Git:** [lazygit](https://github.com/jesseduffield/lazygit)
 - **Office:** [OnlyOffice](https://www.onlyoffice.com/) — document, spreadsheet, and presentation editor
 
 ## Installation
@@ -53,53 +54,72 @@ chmod +x install.sh
 
 ## Key Bindings
 
-| Key Combo                 | Action                            |
-| ------------------------- | --------------------------------- |
-| `Super + Return`          | Terminal (Kitty)                  |
-| `Super + B`               | Browser (Zen)                     |
-| `Super + Shift + B`       | Browser (Qutebrowser)             |
-| `Super + E`               | File Manager (Nemo)               |
-| `Super + Y`               | CLI Files (Yazi)                  |
-| `Super + D`               | App Launcher (Fuzzel / Wofi)      |
-| `Super + A`               | Email (aerc)                      |
-| `Super + T`               | Tasks (taskwarrior-tui)           |
-| `Super + N`               | New Note                          |
-| `Super + Shift + N`       | Search Notes                      |
-| `Super + C`               | Clip to Scrapbook                 |
-| `Super + W`               | Change Wallpaper (Pywal)          |
-| `Super + S`               | Screenshot (Region)               |
-| `Super + Shift + S`       | Screenshot (Full Screen)          |
-| `Super + P`               | Power Menu                        |
-| `Super + Alt + L`         | Lock Screen (Swaylock)            |
-| `Super + M`               | Toggle Mute                       |
-| `Super + Shift + C`       | Clipboard History                 |
-| `Super + Q`               | Close Window                      |
-| `Super + F`               | Toggle Fullscreen                 |
-| `Super + V`               | Toggle Floating                   |
-| `Super + H/J/K/L`         | Move Focus                        |
-| `Super + Shift + H/J/K/L` | Swap Windows                      |
-| `Super + Ctrl + H/J/K/L`  | Resize Window                     |
-| `Super + 1-9`             | Switch Workspace / Tag            |
-| `Super + Shift + 1-9`     | Move to Workspace / Tag           |
-| `Super + Tab`             | Previous Workspace / Tag          |
+| Key Combo                 | Action                                      |
+| ------------------------- | ------------------------------------------- |
+| `Super + Return`          | Terminal (Kitty)                            |
+| `Super + B`               | Browser (Qutebrowser)                       |
+| `Super + Shift + B`       | Browser (Zen Browser)                       |
+| `Super + Alt + B`         | Qutebrowser (Bitwarden session unlock)      |
+| `Super + D`               | App Launcher (wmenu)                        |
+| `Super + Shift + D`       | App Launcher (Fuzzel)                       |
+| `Super + E`               | File Manager (Thunar)                       |
+| `Super + Alt + D`         | Display Settings (nwg-displays)             |
+| `Super + W`               | Change Wallpaper (fzf preview + Pywal)      |
+| `Super + P`               | Power Menu (Wofi)                           |
+| `Super + N`               | New Quick Note (floating Neovim)            |
+| `Super + Shift + N`       | Search Quick Notes (fzf + Neovim)           |
+| `Super + C`               | Clip Selection to Note Scraps               |
+| `Super + Shift + C`       | Clipboard History (cliphist + Wofi)         |
+| `Super + M`               | Toggle Audio Mute                           |
+| `Super + O`               | Toggle Window Opacity (0.95 / 1.0)          |
+| `Super + S`               | Screenshot Region (Copy to clipboard)       |
+| `Super + Shift + S`       | Screenshot Region (Edit in Swappy)          |
+| `Super + R`               | Reload Sway & Wallpaper                     |
+| `Super + Alt + L`         | Lock Screen (Swaylock)                      |
+| `Super + Alt + K`         | Toggle Temporary Keyboard Lock              |
+| `Super + Shift + E`       | Exit Sway (swaynag prompt)                  |
+| `Super + Q`               | Close Window                                |
+| `Super + F`               | Toggle Fullscreen                           |
+| `Super + V`               | Toggle Floating                             |
+| `Alt + Tab` / `Shift+Tab` | Next / Previous Window Focus                |
+| `Super + H/J/K/L`         | Move Focus (Left/Down/Up/Right)             |
+| `Super + Shift + H/J/K/L` | Move Window (Left/Down/Up/Right)            |
+| `Super + Ctrl + H/J/K/L`  | Resize Window                               |
+| `Super + 1-9`             | Switch Workspace                            |
+| `Super + Shift + 1-9`     | Move Window to Workspace                    |
+| `Super + Tab`             | Previous Workspace (back and forth)         |
 
 ## Folder Structure
 
 ```
 $HOME/dotfiles
-├── sway/          # Window manager
-├── swaylock/      # Lock screen
-├── kitty/         # Terminal
-├── zellij/        # Multiplexer
-├── nvim/          # Editor (LazyVim)
-├── zsh/           # Shell
-├── yazi/          # Terminal file manager
-├── zathura/       # Document viewer
-├── qutebrowser/   # Keyboard-driven browser
-├── zen-browser/   # Daily browser
-├── dunst/         # Notifications
-├── kanshi/        # Display profiles
-├── wal/           # Pywal templates
-├── scripts/       # Custom shell scripts
-└── install.sh     # Setup script
+├── btop/          # System monitor config & themes
+├── cava/          # Audio visualizer config
+├── dunst/         # Notification daemon config
+├── gtk/           # GTK-3.0 and GTK-4.0 settings
+├── kanshi/        # Display profile auto-switching
+├── kitty/         # GPU-accelerated terminal
+├── lazygit/       # Terminal UI for git
+├── nvim/          # LazyVim Neovim configuration
+├── nwg/           # nwg-displays and nwg-look settings
+├── obs-studio/    # OBS Studio profiles and scenes
+├── onlyoffice/    # Document editor config
+├── pi/            # Pi coding agent extensions, skills, settings
+├── qt/            # Qt5ct and Qt6ct style settings
+├── qutebrowser/   # Keyboard-driven browser config & quickmarks
+├── rofi/          # Rofi theme config
+├── scripts/       # Custom shell & Wayland scripts (~/.scripts)
+├── starship/      # Starship prompt configuration
+├── sway/          # Sway window manager configuration
+├── swaylock/      # Lock screen config
+├── tmux/          # Tmux configuration
+├── wal/           # Pywal templates & color themes
+├── wofi/          # Wofi launcher styling
+├── wpg/           # Wpgtk color scheme templates
+├── yazi/          # Terminal file manager configuration
+├── zathura/       # PDF / document viewer configuration
+├── zellij/        # Zellij multiplexer layouts & settings
+├── zen-browser/   # Zen browser integration
+├── zsh/           # Zsh shell configs (.zshrc, zshrc.d)
+└── install.sh     # System bootstrap and stow setup script
 ```
