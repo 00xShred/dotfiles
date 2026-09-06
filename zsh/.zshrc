@@ -436,4 +436,4 @@ export PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 alias proxmox='ssh pve'
 alias vm='ssh k3s01'
 
-source /home/0xShred/.config/broot/launcher/bash/br
+[ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
