@@ -42,7 +42,7 @@ set synctex-editor-command "nvim --server $NVIM --remote-send '<C-\><C-N>:%l<CR>
 map + zoom in
 map - zoom out
 
-map i recolor
+map d recolor
 map b toggle_statusbar
 map R reload
 map <Tab> index

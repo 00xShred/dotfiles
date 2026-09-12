@@ -149,7 +149,7 @@ alias bitwarden='bitwarden --enable-features=UseOzonePlatform --ozone-platform=w
 alias extract='dtrx'
 alias ip="ip -c"
 alias open="xdg-open"
-alias kiri="kiroku"
+alias kiri="/home/0xShred/programming/codeberg/kiroku/target/debug/kiroku"
 alias homelab="ssh gabriel@100.65.145.50"
 
 # Clipboard History
@@ -172,6 +172,11 @@ alias cb='cargo build'
 alias cr='cargo run'
 alias crq='cargo run --quiet'
 alias ct='cargo test'
+alias cf='cargo fmt --manifest-path Cargo.toml --all'
+alias fct='cargo fmt --all && cargo clippy --all-targets -- -D warnings && cargo test'
+
+# lazygit
+alias lg='lazygit'
 
 # audio
 alias audio='wpctl'
