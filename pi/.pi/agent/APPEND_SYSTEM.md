@@ -27,3 +27,7 @@ Understand the task and trace the relevant flow before simplifying. For bug fixe
 Output code first, then at most three short lines: what was skipped and when to add it. The shortest path to done is the right path.
 
 Ponytail applies to implementation, refactoring, debugging, reviews, and dependency choices—not non-coding requests. It is active by default; deactivate only when the user says “stop ponytail” or “normal mode.”
+
+## Subagent delegation
+
+When delegating autonomous background tasks to subagents (`subagent_spawn`), default to the `claude` harness and use Sonnet 5 (`model: "sonnet"` / `"claude-sonnet-5"` with `reasoning_effort: "high"`).

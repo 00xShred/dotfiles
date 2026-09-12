@@ -310,13 +310,14 @@ const makeClaudeSession = (
       settleWaiters: new Set<() => void>(),
       meta: {
         backend: "claude",
-        modelLabel: task.model,
+        modelLabel: task.model ?? "sonnet",
         // Claude models used by this backend currently expose 200k context;
         // result.modelUsage replaces this fallback when the CLI knows better.
         contextWindow: CLAUDE_CONTEXT_WINDOW,
       } satisfies SubagentMeta as SubagentMeta,
     };
 
+    const effectiveModel = task.model ?? "sonnet";
     const thinkingBudget = task.reasoningEffort
       ? THINKING_BUDGETS[task.reasoningEffort]
       : undefined;
@@ -345,7 +346,7 @@ const makeClaudeSession = (
             ...(claudeBinary
               ? { pathToClaudeCodeExecutable: claudeBinary }
               : {}),
-            ...(task.model ? { model: task.model } : {}),
+            model: effectiveModel,
             ...(thinkingBudget !== undefined
               ? { maxThinkingTokens: thinkingBudget }
               : {}),

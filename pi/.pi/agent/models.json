@@ -1,0 +1,44 @@
+{
+  "providers": {
+    "github-copilot": {
+      "headers": {
+        "User-Agent": "GitHubCopilotChat/0.35.0",
+        "Editor-Version": "vscode/1.107.0",
+        "Editor-Plugin-Version": "copilot-chat/0.35.0",
+        "Copilot-Integration-Id": "vscode-chat"
+      },
+      "models": [
+        {
+          "id": "gpt-4.1",
+          "name": "GPT-4.1 (GitHub Copilot)",
+          "api": "openai-completions",
+          "reasoning": false,
+          "input": ["text", "image"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 128000,
+          "maxTokens": 4096
+        },
+        {
+          "id": "gpt-4o",
+          "name": "GPT-4o (GitHub Copilot)",
+          "api": "openai-completions",
+          "reasoning": false,
+          "input": ["text", "image"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 128000,
+          "maxTokens": 4096
+        },
+        {
+          "id": "gpt-4o-mini",
+          "name": "GPT-4o Mini (GitHub Copilot)",
+          "api": "openai-completions",
+          "reasoning": false,
+          "input": ["text", "image"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 128000,
+          "maxTokens": 4096
+        }
+      ]
+    }
+  }
+}
