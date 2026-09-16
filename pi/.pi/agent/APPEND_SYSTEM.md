@@ -30,4 +30,6 @@ Ponytail applies to implementation, refactoring, debugging, reviews, and depende
 
 ## Subagent delegation
 
-When delegating autonomous background tasks to subagents (`subagent_spawn`), default to the `claude` harness and use Sonnet 5 (`model: "sonnet"` / `"claude-sonnet-5"` with `reasoning_effort: "high"`).
+Two subagent systems are available. Disambiguate by use case:
+1. **Headless Background Subagents (`subagent_spawn`)**: DEFAULT for autonomous background tasks, research, complex codebase exploration, and parallel delegating. Default to the `claude` harness and use Sonnet 5 (`model: "sonnet"` / `"claude-sonnet-5"` with `reasoning_effort: "high"`). Tools: `subagent_spawn`, `subagent_wait`, `subagent_check`, `subagent_list`, `subagent_cancel`.
+2. **Interactive Terminal Multiplexer Subagents (`subagent`)**: Use ONLY when an interactive visual or tmux/zellij terminal pane is explicitly requested, or for dedicated visual maker agents (`mermaid-maker`, `svg-maker`). Tools: `subagent`, `subagents_list`, `subagent_message`.
