@@ -28,7 +28,34 @@ const DANGEROUS_PATTERNS = [
 	/\bkillall\b/,
 ];
 
-const READ_ONLY_GIT = new Set(["clone", "status", "log", "diff", "show", "ls-files", "rev-parse", "describe"]);
+const READ_ONLY_GIT = new Set([
+	"clone",
+	"status",
+	"log",
+	"diff",
+	"show",
+	"ls-files",
+	"rev-parse",
+	"describe",
+	"blame",
+	"check-ignore",
+	"check-ref-format",
+	"rev-list",
+	"cat-file",
+	"ls-tree",
+	"shortlog",
+	"version",
+	"help",
+	"var",
+	"merge-base",
+	"name-rev",
+	"diff-tree",
+	"diff-index",
+	"diff-files",
+	"count-objects",
+	"archive",
+	"whatchanged",
+]);
 
 function isGitMutation(command: string): boolean {
 	const normalized = command.replace(/\\\n/g, " ");
