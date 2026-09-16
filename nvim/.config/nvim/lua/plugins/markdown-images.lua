@@ -7,7 +7,6 @@ return {
         dir_path = "assets",
         relative_to_current_file = true,
         use_absolute_path = false,
-        process_cmd = "magick - -resize 700x -",
       },
       filetypes = {
         markdown = {

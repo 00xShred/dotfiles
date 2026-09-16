@@ -5,9 +5,6 @@
   "dependencies": {
     "shell-quote": "^1.8.3"
   },
-  "scripts": {
-    "test": "bun test"
-  },
   "pi": {
     "extensions": ["./index.ts"]
   }

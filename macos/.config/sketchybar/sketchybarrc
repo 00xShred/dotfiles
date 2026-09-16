@@ -1,0 +1,16 @@
+#!/bin/bash
+SKETCHYBAR=/opt/local/bin/sketchybar
+# Minimal analogue of the repository's swaybar: dark, compact, workspace-first.
+COLOR_BG=0xff1e1e2e
+COLOR_FG=0xffcdd6f4
+COLOR_ACCENT=0xff89b4fa
+$SKETCHYBAR --bar height=28 color=$COLOR_BG position=top y_offset=0
+$SKETCHYBAR --default label.color=$COLOR_FG label.font="JetBrainsMono Nerd Font:Regular:11.0" icon.font="JetBrainsMono Nerd Font:Regular:11.0"
+for i in {1..9}; do
+  $SKETCHYBAR --add space space.$i left \
+    --set space.$i space=$i label="$i" label.color=$COLOR_FG icon.drawing=off background.drawing=off \
+    click_script="/opt/local/bin/yabai -m space --focus $i"
+done
+$SKETCHYBAR --add item clock right --set clock update_freq=10 icon= label="" script="$HOME/.config/sketchybar/clock.sh"
+$SKETCHYBAR --add item battery right --set battery update_freq=30 icon= label="" script="$HOME/.config/sketchybar/battery.sh"
+$SKETCHYBAR --update

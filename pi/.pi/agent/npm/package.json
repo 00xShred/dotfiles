@@ -2,6 +2,6 @@
   "name": "pi-extensions",
   "private": true,
   "dependencies": {
-    "pi-antigravity": "^0.7.3"
+    "pi-antigravity": "^0.7.2"
   }
 }

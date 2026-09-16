@@ -3,7 +3,7 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # --- 1. PYWAL INTEGRATION ---
-include ../../.cache/wal/colors-zathura
+include "/home/gabriel/.cache/wal/zathurarc"
 set recolor "false"
 set recolor-keephue "true"
 

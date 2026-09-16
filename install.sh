@@ -1,84 +1,129 @@
 #!/bin/bash
-set -e
+set -euo pipefail
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
+backup_link_target() {
+  local target="$1"
+  if [[ -e "$target" && ! -L "$target" ]]; then
+    mv "$target" "$target.bak.$(date +%Y%m%d%H%M%S)"
+  fi
+}
+link_config() {
+  local src="$1" dest="$2"
+  mkdir -p "$(dirname "$dest")"
+  backup_link_target "$dest"
+  [[ -L "$dest" && "$(readlink "$dest")" == "$src" ]] || ln -sfn "$src" "$dest"
+}
 
-# --- CONFIGURATION ---
-DOTFILES_DIR="$HOME/dotfiles"
-LOG_FILE="$HOME/install_log.txt"
-
-# Folders to be stowed
-STOW_FOLDERS="btop dunst sway swaylock kitty nvim rofi wofi gtk yazi wal wpg zsh kanshi tmux scripts qt lazygit cava nwg onlyoffice obs-studio zathura zen-browser qutebrowser zellij pi starship"
-
-# 1. Official Arch Packages
-NATIVE_PKGS="7zip adobe-source-code-pro-fonts adobe-source-han-sans-jp-fonts adobe-source-han-serif-jp-fonts alsa-utils amd-ucode base base-devel bat bc blackarch-mirrorlist blackarch-officials blueman bluez bluez-qt bluez-utils breeze-gtk breeze-plus breeze-plymouth brightnessctl btop caligula cliphist cmake cppdap cups cups-pdf deno direnv discord dnsmasq docker dosfstools dunst edk2-ovmf efibootmgr eza fastfetch fcft fd ffmpegthumbnailer firefox flatpak flatpak-kcm foomatic-db-engine foomatic-db-nonfree foomatic-db-ppds foot frameworkintegration5 fuzzel fzf gammastep gdb geoclue git git-delta github-cli glow go go-yq gobject-introspection greetd greetd-tuigreet grim grub gst-plugin-pipewire gutenprint gvfs gvfs-mtp htop iwd jq k9s kanshi karchive5 kauth5 kbookmarks5 kcmutils5 kcodecs5 kcompletion5 kconfig5 kconfigwidgets5 kcoreaddons5 kcrash5 kdbusaddons5 kde-gtk-config kdeclarative5 kded5 kgamma kglobalaccel5 kguiaddons5 ki18n5 kiconthemes5 kio5 kirigami2 kitemviews5 kitty kitty-shell-integration kitty-terminfo kjobwidgets5 knotifications5 kpackage5 kservice5 ktextwidgets5 kvantum kvantum-qt5 kwallet-pam kwallet5 kwidgetsaddons5 kwindowsystem5 kwrited kxmlgui5 lazygit leptonica libdbusmenu-qt5 libportal libportal-gtk4 libpulse librsync libspng libvirt linux linux-firmware linux-zen linux-zen-headers loupe ly man-db man-pages mtools nano navi ncdu neovim network-manager-applet networkmanager-openconnect nmap noto-fonts noto-fonts-cjk noto-fonts-emoji npm nwg-displays nwg-look obs-studio onlyoffice-bin openconnect openssh-askpass os-prober otf-font-awesome otf-ipafont oxygen oxygen-sounds pacman-contrib pamixer papirus-icon-theme pavucontrol pavucontrol-qt pipewire pipewire-alsa pipewire-jack polkit-qt5 power-profiles-daemon psmisc python-markdown python-pip python-pipx python-poetry python-pyquery python-requests python-toml qemu-desktop qt5-declarative qt5-graphicaleffects qt5-multimedia qt5-quickcontrols qt5-quickcontrols2 qt5-speech qt5-wayland qt5ct qt6ct qutebrowser rhash rust sddm slurp smartmontools sof-firmware solid5 songrec sonnet5 spotify-launcher starship stow swappy sway swaybg swayidle swaylock system-config-printer tailscale taskwarrior-tui tealdeer tesseract tesseract-data-eng tesseract-data-osd thefuck thunar timeshift translate-shell ttf-droid ttf-fantasque-nerd ttf-fira-code ttf-hanazono ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-victor-mono ufw umockdev unrar unzip uv uwsm vim virt-manager vulkan-radeon wacomtablet wev wf-recorder wireless_tools wireplumber wl-clipboard wlr-randr wlsunset wmenu wofi wtype xclip xdg-utils xf86-video-amdgpu xf86-video-ati xorg-server xorg-xinit yad yazi ydotool zathura zathura-pdf-mupdf tmux zellij zoxide zram-generator zsh zsh-autosuggestions zsh-completions zsh-syntax-highlighting"
-
-# 2. AUR Packages
-AUR_PKGS="ani-cli bibata-cursor-theme bitwarden-cli breeze-plus darkly-bin dragon-drop epson-inkjet-printer-escpr flat-remix-gtk input-remapper-git neovim-remote onedriver ookla-speedtest-bin otf-space-grotesk python-pywal16 python-pywalfox timeshift-autosnap ttf-gabarito-git ttf-material-symbols-variable-git ttf-readex-pro ttf-roboto-flex ttf-rubik-vf wdisplays wlogout yay-bin zen-browser-bin"
-
-echo "### Arch Dotfiles Installer ###" | tee -a "$LOG_FILE"
-
-# 1. Update System
-sudo pacman -Syu --noconfirm
-sudo pacman -S --needed --noconfirm git base-devel stow
-
-# 2. Install Yay
-if ! command -v yay &>/dev/null; then
-    git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
-    cd /tmp/yay-bin && makepkg -si --noconfirm && cd - && rm -rf /tmp/yay-bin
-fi
-
-# 3. Install All Packages
-sudo pacman -S --needed --noconfirm $NATIVE_PKGS
-yay -S --needed --noconfirm $AUR_PKGS
-
-# 4. Stow Dotfiles
-echo "-> Stowing Dotfiles..."
-mkdir -p "$HOME/.config"
-cd "$DOTFILES_DIR"
-
-for folder in $STOW_FOLDERS; do
-    echo "   Processing $folder..."
-
-    # Backup existing non-link configs to avoid Stow conflicts
-    case "$folder" in
-        gtk)
-            for d in gtk-3.0 gtk-4.0; do
-                [ -e "$HOME/.config/$d" ] && [ ! -L "$HOME/.config/$d" ] && mv "$HOME/.config/$d" "$HOME/.config/${d}.bak"
-            done
-            ;;
-        nwg)
-            for d in nwg-displays nwg-look; do
-                [ -e "$HOME/.config/$d" ] && [ ! -L "$HOME/.config/$d" ] && mv "$HOME/.config/$d" "$HOME/.config/${d}.bak"
-            done
-            ;;
-        qt)
-            for d in qt5ct qt6ct; do
-                [ -e "$HOME/.config/$d" ] && [ ! -L "$HOME/.config/$d" ] && mv "$HOME/.config/$d" "$HOME/.config/${d}.bak"
-            done
-            ;;
-        starship)
-            [ -e "$HOME/.config/starship.toml" ] && [ ! -L "$HOME/.config/starship.toml" ] && mv "$HOME/.config/starship.toml" "$HOME/.config/starship.toml.bak"
-            ;;
-        pi)
-            [ -e "$HOME/.pi/agent" ] && [ ! -L "$HOME/.pi/agent" ] && mv "$HOME/.pi/agent" "$HOME/.pi/agent.bak"
-            ;;
-        zsh)
-            [ -e "$HOME/.zshrc" ] && [ ! -L "$HOME/.zshrc" ] && mv "$HOME/.zshrc" "$HOME/.zshrc.bak"
-            [ -e "$HOME/.config/zshrc.d" ] && [ ! -L "$HOME/.config/zshrc.d" ] && mv "$HOME/.config/zshrc.d" "$HOME/.config/zshrc.d.bak"
-            ;;
-        scripts)
-            [ -e "$HOME/.scripts" ] && [ ! -L "$HOME/.scripts" ] && mv "$HOME/.scripts" "$HOME/.scripts.bak"
-            ;;
-        *)
-            [ -e "$HOME/.config/$folder" ] && [ ! -L "$HOME/.config/$folder" ] && mv "$HOME/.config/$folder" "$HOME/.config/${folder}.bak"
-            ;;
-    esac
-
-    stow -v $folder
-done
-
-# 5. Finalize
-if [ "$SHELL" != "/usr/bin/zsh" ]; then
-    chsh -s /usr/bin/zsh
-fi
-
-echo "### DONE! Please reboot. ###"
+case "$(uname -s)" in
+  Darwin)
+    echo "== macOS dotfiles bootstrap =="
+    if command -v brew >/dev/null 2>&1; then
+      brew bundle --file="$DOTFILES_DIR/packages/Brewfile"
+    elif command -v port >/dev/null 2>&1; then
+      echo "Homebrew unavailable on Intel; using MacPorts."
+      sudo port selfupdate
+      sudo port install $(grep -vE '^[[:space:]]*(#|$)' "$DOTFILES_DIR/packages/MacPorts.txt")
+    else
+      echo "Install Homebrew or MacPorts, then rerun ./install.sh."
+      exit 1
+    fi
+    # Reuse the actual shared configs; Linux-only desktop layers are intentionally skipped.
+    link_config "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
+    link_config "$DOTFILES_DIR/zsh/.config/zshrc.d" "$HOME/.config/zshrc.d"
+    link_config "$DOTFILES_DIR/nvim/.config/nvim" "$HOME/.config/nvim"
+    link_config "$DOTFILES_DIR/tmux/.config/tmux" "$HOME/.config/tmux"
+    link_config "$DOTFILES_DIR/yazi/.config/yazi" "$HOME/.config/yazi"
+    link_config "$DOTFILES_DIR/lazygit/.config/lazygit" "$HOME/.config/lazygit"
+    link_config "$DOTFILES_DIR/kitty/.config/kitty" "$HOME/.config/kitty"
+    link_config "$DOTFILES_DIR/macos/.yabairc" "$HOME/.yabairc"
+    link_config "$DOTFILES_DIR/macos/.skhdrc" "$HOME/.skhdrc"
+    # Merge Pi's non-secret repository content without replacing auth.json or models-store.json.
+    mkdir -p "$HOME/.pi/agent"
+    for p in agents extensions scripts skills themes; do
+      link_config "$DOTFILES_DIR/pi/.pi/agent/$p" "$HOME/.pi/agent/$p"
+    done
+    [[ -e "$HOME/.pi/agent/settings.json" ]] || cp "$DOTFILES_DIR/pi/.pi/agent/settings.json" "$HOME/.pi/agent/settings.json"
+    # Pi extensions keep their own dependencies; install only missing node_modules.
+    for pkg in "$DOTFILES_DIR/pi/.pi/agent" "$DOTFILES_DIR/pi/.pi/agent/extensions"/* "$DOTFILES_DIR/pi/.pi/agent/npm"; do
+      [[ -f "$pkg/package.json" && -d "$pkg/node_modules" ]] || [[ ! -f "$pkg/package.json" ]] || (cd "$pkg" && npm install)
+    done
+    mkdir -p "$HOME/.cache/wal"
+    [[ -e "$HOME/.cache/wal/colors-kitty.conf" ]] || cat > "$HOME/.cache/wal/colors-kitty.conf" <<'EOF'
+background #0b0d10
+foreground #d7d7d7
+cursor #ff5f57
+selection_background #3a1014
+selection_foreground #ffffff
+color0 #111317
+color1 #e53946
+color2 #8fb573
+color3 #d6a657
+color4 #6f8faf
+color5 #c678dd
+color6 #56b6c2
+color7 #d7d7d7
+color8 #3b4048
+color9 #ff4d5a
+color10 #a6c47a
+color11 #f0c36a
+color12 #8aa6c1
+color13 #d18fea
+color14 #74c7d4
+color15 #ffffff
+EOF
+    [[ -e "$HOME/.cache/wal/colors-wal.vim" ]] || cat > "$HOME/.cache/wal/colors-wal.vim" <<'EOF'
+let g:background = '#0b0d10'
+let g:foreground = '#d7d7d7'
+let g:cursor = '#ff5f57'
+let g:color0 = '#111317'
+let g:color1 = '#e53946'
+let g:color2 = '#8fb573'
+let g:color3 = '#d6a657'
+let g:color4 = '#6f8faf'
+let g:color5 = '#c678dd'
+let g:color6 = '#56b6c2'
+let g:color7 = '#d7d7d7'
+let g:color8 = '#3b4048'
+let g:color9 = '#ff4d5a'
+let g:color10 = '#a6c47a'
+let g:color11 = '#f0c36a'
+let g:color12 = '#8aa6c1'
+let g:color13 = '#d18fea'
+let g:color14 = '#74c7d4'
+let g:color15 = '#ffffff'
+EOF
+    [[ -e "$HOME/.cache/wal/colors.sh" ]] || cat > "$HOME/.cache/wal/colors.sh" <<'EOF'
+background='#0b0d10'
+foreground='#d7d7d7'
+cursor='#ff5f57'
+color0='#111317'
+color1='#e53946'
+color2='#8fb573'
+color3='#d6a657'
+color4='#6f8faf'
+color5='#c678dd'
+color6='#56b6c2'
+color7='#d7d7d7'
+color8='#3b4048'
+color9='#ff4d5a'
+color10='#a6c47a'
+color11='#f0c36a'
+color12='#8aa6c1'
+color13='#d18fea'
+color14='#74c7d4'
+color15='#ffffff'
+EOF
+    # Safe, user-level developer conveniences.
+    defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+    defaults write NSGlobalDomain KeyRepeat -int 2
+    defaults write NSGlobalDomain InitialKeyRepeat -int 15
+    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+    defaults write com.apple.finder AppleShowAllFiles -bool true
+    killall Finder 2>/dev/null || true
+    echo "macOS configuration linked. Restart the shell; yabai/skhd configs are ready."
+    ;;
+  Linux)
+    exec "$DOTFILES_DIR/install-arch.sh" "$@"
+    ;;
+  *) echo "Unsupported OS: $(uname -s)"; exit 1 ;;
+esac

@@ -121,5 +121,22 @@ $HOME/dotfiles
 ├── zellij/        # Zellij multiplexer layouts & settings
 ├── zen-browser/   # Zen browser integration
 ├── zsh/           # Zsh shell configs (.zshrc, zshrc.d)
-└── install.sh     # System bootstrap and stow setup script
+└── install.sh     # Cross-platform system bootstrap
 ```
+
+## macOS
+
+The macOS layer reuses the shell, Kitty, Neovim, tmux, Yazi, Lazygit, Starship,
+and colors from the shared configuration. Linux-only Sway/Wayland components
+are skipped. On Intel/MacPorts, yabai + skhd provide the Sway-style Option+h/j/k/l and
+Option+1-9 workflow. SketchyBar is intentionally disabled so macOS keeps its
+native menu bar only.
+
+On macOS, install Homebrew and the Xcode Command Line Tools first, then run:
+
+```sh
+./install.sh
+``` 
+
+The reproducible package manifest is `packages/Brewfile`.
+

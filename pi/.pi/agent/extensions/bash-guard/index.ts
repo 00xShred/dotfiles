@@ -1,6 +1,3 @@
-import { existsSync, readFileSync } from "node:fs";
-import { homedir } from "node:os";
-import { join } from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { DynamicBorder, isToolCallEventType } from "@earendil-works/pi-coding-agent";
 import type { SelectItem } from "@earendil-works/pi-tui";
@@ -49,234 +46,26 @@ function anyArgStartsWith(args: string[], prefix: string): boolean {
 	return args.some((a) => a.startsWith(prefix));
 }
 
-export const PURE_READ_ONLY_GIT = new Set([
-	"status",
-	"log",
-	"diff",
-	"show",
-	"ls-files",
-	"rev-parse",
-	"describe",
-	"blame",
-	"check-ignore",
-	"check-ref-format",
-	"rev-list",
-	"cat-file",
-	"ls-tree",
-	"shortlog",
-	"version",
-	"help",
-	"var",
-	"merge-base",
-	"name-rev",
-	"diff-tree",
-	"diff-index",
-	"diff-files",
-	"count-objects",
-	"archive",
-	"whatchanged",
-	"clone",
-]);
+const READ_ONLY_GIT = new Set(["status", "log", "diff", "show", "ls-files", "rev-parse", "describe", "clone"]);
 
-const SAFE_UNIX_TOOLS = new Set([
-	"cat", "head", "tail", "wc", "sort", "uniq", "cut", "awk", "tr", "column",
-	"jq", "fold", "fmt", "nl", "less", "more", "bat", "grep", "rg", "egrep", "fgrep",
-	"ls", "pwd", "which", "whereis", "type", "file", "stat", "du", "df",
-	"echo", "printf", "date", "uptime", "whoami", "uname", "id", "env", "printenv",
-	"diff", "true", "false", "test", "expr", "basename", "dirname", "realpath", "sleep",
-]);
-
-export function parseGitCommand(args: string[]): { subcommand?: string; subArgs: string[] } | null {
-	const gitIndex = args.indexOf("git");
-	if (gitIndex < 0) return null;
-
-	let i = gitIndex + 1;
-	while (i < args.length) {
-		const arg = args[i];
-		if (arg === "--") {
-			i++;
-			break;
-		}
-		if (arg.startsWith("-")) {
-			if (["-C", "-c", "--git-dir", "--work-tree", "--namespace", "--super-prefix", "--exec-path"].includes(arg)) {
-				i += 2;
-			} else {
-				i += 1;
-			}
-			continue;
-		}
-		break;
-	}
-
-	if (i >= args.length) {
-		return { subcommand: undefined, subArgs: [] };
-	}
-
-	return { subcommand: args[i], subArgs: args.slice(i + 1) };
-}
-
-export function isGitSegmentMutation(args: string[]): boolean {
-	const parsed = parseGitCommand(args);
-	if (!parsed) return false;
-	const { subcommand, subArgs } = parsed;
-	if (!subcommand) return false;
-
-	if (PURE_READ_ONLY_GIT.has(subcommand)) return false;
-
-	if (subcommand === "branch") {
-		if (subArgs.some((a) => /^(-[dDmcC]|--delete|--move)$/.test(a))) return true;
-		if (subArgs.some((a) => /^(-u|--set-upstream-to|--unset-upstream|--edit-description)$/.test(a))) return true;
-		const branchListingFlags = new Set(["-l", "--list", "-a", "--all", "-r", "--remotes", "-v", "-vv", "--verbose", "--show-current"]);
-		const listingParamFlags = new Set(["--contains", "--no-contains", "--merged", "--no-merged", "--points-at", "--sort", "--format"]);
-		let isListing = subArgs.length === 0 || subArgs.some((a) => branchListingFlags.has(a));
-		let hasCreatingArg = false;
-		let j = 0;
-		while (j < subArgs.length) {
-			const a = subArgs[j];
-			if (listingParamFlags.has(a)) {
-				isListing = true;
-				j += 2;
-				continue;
-			}
-			if (branchListingFlags.has(a) || a.startsWith("-")) {
-				j++;
-				continue;
-			}
-			if (isListing) {
-				j++;
-			} else {
-				hasCreatingArg = true;
-				break;
-			}
-		}
-		return hasCreatingArg;
-	}
-
-	if (subcommand === "tag") {
-		const deleteFlag = subArgs.some((a) => a === "-d" || a === "--delete");
-		if (deleteFlag) return true;
-		if (subArgs.length === 0 || subArgs.some((a) => a === "-l" || a.startsWith("--list"))) {
-			return false;
-		}
-		return true;
-	}
-
-	if (subcommand === "remote") {
-		if (subArgs.length === 0 || subArgs[0] === "-v" || subArgs[0] === "--verbose" || subArgs[0] === "show" || subArgs[0] === "get-url") {
-			return false;
-		}
-		return true;
-	}
-
-	if (subcommand === "stash") {
-		if (subArgs[0] === "list" || subArgs[0] === "show") {
-			return false;
-		}
-		return true;
-	}
-
-	if (subcommand === "config") {
-		if (subArgs.some((a) => a === "--get" || a === "--get-all" || a === "--list" || a === "-l")) {
-			return false;
-		}
-		return true;
-	}
-
-	return true;
-}
-
-export function isGitMutation(command: string): boolean {
+function isGitMutation(command: string): boolean {
 	let tokens: Token[];
 	try { tokens = shellParse(command) as Token[]; } catch { return /\bgit\b/.test(command); }
 	for (const segment of splitOnOps(tokens, ["&&", "||", ";", "|"])) {
 		const args = tokensToStrings(segment);
-		if (isGitSegmentMutation(args)) return true;
-	}
-	return false;
-}
-
-function getUserWhitelist(): string[] {
-	const results: string[] = [];
-	try {
-		const globalSettings = join(homedir(), ".pi", "agent", "settings.json");
-		if (existsSync(globalSettings)) {
-			const parsed = JSON.parse(readFileSync(globalSettings, "utf-8"));
-			const bg = parsed["bash-guard"];
-			if (bg && Array.isArray(bg.whitelist)) {
-				results.push(...bg.whitelist.filter((s: unknown): s is string => typeof s === "string"));
-			} else if (bg && Array.isArray(bg.allowlist)) {
-				results.push(...bg.allowlist.filter((s: unknown): s is string => typeof s === "string"));
-			}
+		const gitIndex = args.indexOf("git");
+		if (gitIndex < 0) continue;
+		const subcommand = args[gitIndex + 1];
+		if (READ_ONLY_GIT.has(subcommand)) continue;
+		if (subcommand === "branch") {
+			const branchArgs = args.slice(gitIndex + 2);
+			if (branchArgs.every((arg) => arg.startsWith("-") && !/^-[dDmcC]$/.test(arg))) continue;
 		}
-	} catch {}
-	return results;
-}
-
-export function isSegmentSafe(args: string[], userWhitelist: string[] = []): boolean {
-	if (args.length === 0) return true;
-
-	const cmdLine = args.join(" ");
-	for (const wl of userWhitelist) {
-		const trimmed = wl.trim();
-		if (trimmed && (cmdLine === trimmed || cmdLine.startsWith(trimmed + " "))) {
-			return true;
+		if (subcommand === "remote") {
+			const remoteArgs = args.slice(gitIndex + 2);
+			if (remoteArgs.length === 0 || remoteArgs[0] === "-v" || remoteArgs[0] === "--verbose" || remoteArgs[0] === "show" || remoteArgs[0] === "get-url") continue;
 		}
-	}
-
-	const cmd = args[0];
-	const rest = args.slice(1);
-
-	if (cmd === "git") {
-		return !isGitSegmentMutation(args);
-	}
-
-	if (SAFE_UNIX_TOOLS.has(cmd)) {
 		return true;
-	}
-
-	if (cmd === "sed" && !hasFlag(rest, "-i") && !rest.includes("--in-place")) {
-		return true;
-	}
-
-	if (cmd === "find" && !rest.includes("-delete") && !rest.includes("-exec") && !rest.includes("-execdir") && !rest.includes("-ok") && !rest.includes("-okdir")) {
-		return true;
-	}
-
-	if (cmd === "cargo") {
-		const sub = rest[0];
-		if (["check", "test", "clippy", "status", "metadata", "tree", "verify-project", "version", "--version"].includes(sub)) {
-			return true;
-		}
-	}
-
-	if (["npm", "pnpm", "bun", "yarn"].includes(cmd)) {
-		const sub = rest[0];
-		if (["test", "lint", "check", "--version", "-v"].includes(sub)) {
-			return true;
-		}
-	}
-
-	if (["node", "python", "python3", "rustc", "go"].includes(cmd)) {
-		if (rest.length === 1 && (rest[0] === "-v" || rest[0] === "--version")) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-function hasFileOverwritingRedirection(tokens: Token[]): boolean {
-	for (let i = 0; i < tokens.length; i++) {
-		const t = tokens[i];
-		if (isOpToken(t)) {
-			if (t.op === ">" || t.op === ">>" || t.op === "2>" || t.op === "2>>") {
-				const next = tokens[i + 1];
-				if (typeof next === "string" && next.trim() === "/dev/null") {
-					continue;
-				}
-				return true;
-			}
-		}
 	}
 	return false;
 }
@@ -503,7 +292,7 @@ function analyzeSegment(seg: Token[]): Risk | null {
 	return { severity, reasons };
 }
 
-export function analyzeBashCommand(command: string, userWhitelist: string[] = []): Risk | null {
+function analyzeBashCommand(command: string): Risk | null {
 	let tokens: Token[];
 	try {
 		tokens = shellParse(command) as Token[];
@@ -512,21 +301,12 @@ export function analyzeBashCommand(command: string, userWhitelist: string[] = []
 		return { severity: "medium", reasons: ["unparsed shell command (unable to analyze safely)"] };
 	}
 
-	// Fast-path: if every segment is safe and has no unsafe redirection or input redirect
-	const allSegments = splitOnOps(tokens, ["&&", "||", ";", "|"]);
-	const allSegmentsSafe = allSegments.every((seg) => isSegmentSafe(tokensToStrings(seg), userWhitelist));
-	const hasUnsafeRedirect = hasFileOverwritingRedirection(tokens);
-
-	if (allSegmentsSafe && !hasUnsafeRedirect && !tokens.some((t) => isOpToken(t) && t.op === "<")) {
-		return null;
-	}
-
 	const reasons: string[] = [];
 	let severity: Severity = "medium";
 
 	// Whole-command operator checks
 	const ops = tokens.filter(isOpToken).map((t) => t.op);
-	if (hasUnsafeRedirect) {
+	if (ops.some((op) => op === ">" || op === ">>" || op === "2>" || op === "2>>")) {
 		reasons.push("shell output redirection (can overwrite files)");
 		severity = severity === "high" ? "high" : "medium";
 	}
@@ -534,15 +314,7 @@ export function analyzeBashCommand(command: string, userWhitelist: string[] = []
 		reasons.push("shell input redirection (questionable)");
 	}
 	if (ops.includes("|")) {
-		// Only flag pipe if any segment is unsafe or pipes to a shell
-		const pipeSegments = splitOnOps(tokens, ["|"]);
-		const anyUnsafePipe = pipeSegments.some((seg) => !isSegmentSafe(tokensToStrings(seg), userWhitelist));
-		const pipeToShell = tokensToStrings(tokens).some((arg) =>
-			["sh", "bash", "zsh", "fish", "dash"].includes(arg),
-		);
-		if (anyUnsafePipe || pipeToShell) {
-			reasons.push("pipe operator (chained commands)");
-		}
+		reasons.push("pipe operator (chained commands)");
 	}
 
 	// Segment analysis (split on &&, ||, ;)
@@ -782,8 +554,7 @@ export default function (pi: ExtensionAPI) {
 			return;
 		}
 
-		const userWhitelist = getUserWhitelist();
-		const risk = analyzeBashCommand(command, userWhitelist);
+		const risk = analyzeBashCommand(command);
 		if (!risk) return;
 
 		const now = Date.now();

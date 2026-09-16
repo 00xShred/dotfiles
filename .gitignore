@@ -26,5 +26,4 @@ pi/.pi/agent/auth.json
 pi/.pi/agent/sessions/
 pi/.pi/agent/models-store.json
 pi/.pi/agent/**/node_modules/
-pi/.pi/agent/skills/.system
-pi/.pi/agent/skills/codex-skills/
+pi/.pi/agent/skills/.system/

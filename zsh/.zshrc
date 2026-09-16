@@ -1,4 +1,4 @@
-# --- 1. INSTANT PROMPT (Must be at the very top) ---
+# --- 1. POWERLEVEL10K INSTANT PROMPT ---
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -24,8 +24,14 @@ plugins=(
     zsh-syntax-highlighting
 )
 
-# Source OMZ
-source $ZSH/oh-my-zsh.sh
+# Source OMZ when installed. Otherwise use package-manager zsh plugins directly.
+if [[ -r "$ZSH/oh-my-zsh.sh" ]]; then
+    source "$ZSH/oh-my-zsh.sh"
+else
+    [[ -r /opt/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /opt/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+    [[ -r /opt/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /opt/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
 
 # --- 3. "PRO" COMPLETION SETTINGS (FZF-TAB) ---
 
@@ -61,6 +67,8 @@ setopt SHARE_HISTORY             # Share history between all sessions
 # Initialize FZF keybindings (Ctrl+R for history, Ctrl+T for files)
 [ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
 [ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
+[ -f /opt/local/share/fzf/shell/key-bindings.zsh ] && source /opt/local/share/fzf/shell/key-bindings.zsh
+[ -f /opt/local/share/fzf/shell/completion.zsh ] && source /opt/local/share/fzf/shell/completion.zsh
 
 # Use vim keys in command line (optional, if you like Vi mode, uncomment below)
 bindkey -v 
@@ -71,7 +79,7 @@ export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.npm-global/bin:${KREW_ROOT:-$HOME
 export PATH="$HOME/.scripts:$PATH"
 
 # Initialize tools
-eval "$(zoxide init zsh)" # Replaces 'cd' with smarter navigation
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)" # Replaces 'cd' with smarter navigation
 
 # Import Colors (wal)
 [ -f ~/.cache/wal/colors.sh ] && source ~/.cache/wal/colors.sh
@@ -147,48 +155,10 @@ alias shutdown="systemctl poweroff"
 # Utils
 alias bitwarden='bitwarden --enable-features=UseOzonePlatform --ozone-platform=wayland --disable-gpu'
 alias extract='dtrx'
-
-# Pi Coding Agent (auto-starts inside tmux for side-by-side leaf preview & subagents)
-pi() {
-    # If already inside tmux, non-interactive, or --no-tmux is requested, run directly
-    if [[ -n "$TMUX" || ! -t 0 || ! -t 1 || "$*" == *"--no-tmux"* ]]; then
-        command pi "${@/--no-tmux/}"
-        return
-    fi
-
-    local pi_bin="${commands[pi]:-$(whence -p pi 2>/dev/null || which pi 2>/dev/null || echo pi)}"
-    local dir_slug="$(basename "$PWD" | tr -cs '[:alnum:]_-' '-' | sed 's/^-//;s/-$//')"
-    [[ -z "$dir_slug" ]] && dir_slug="main"
-    local sname="pi-${dir_slug}"
-
-    # If this directory's session exists and is detached, reattach to it
-    if tmux has-session -t "$sname" 2>/dev/null; then
-        local attached
-        attached="$(tmux list-sessions -F '#{session_name} #{session_attached}' | awk -v s="$sname" '$1 == s { print $2 }')"
-        if [[ "$attached" == "0" ]]; then
-            tmux attach-session -t "$sname"
-            return
-        fi
-        # If already attached in another terminal, launch a distinct session
-        sname="${sname}-$$"
-    fi
-
-    tmux new-session -s "$sname" -c "$PWD" "$pi_bin" "$@"
-}
 alias ip="ip -c"
 alias open="xdg-open"
 alias kiri="/home/0xShred/programming/codeberg/kiroku/target/debug/kiroku"
 alias homelab="ssh gabriel@100.65.145.50"
-
-# Resize images to 700px width (defaults to assets/*.png)
-rzimg() {
-    if [ $# -eq 0 ]; then
-        magick mogrify -resize 700x assets/*.png 2>/dev/null && echo "Normalized assets/*.png to 700px width"
-    else
-        magick mogrify -resize 700x "$@" && echo "Normalized $@ to 700px width"
-    fi
-}
-alias img700='rzimg'
 
 # Clipboard History
 alias cl="cliphist list | fzf | cliphist decode | wl-copy"
@@ -436,13 +406,13 @@ fi
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # navi
-eval "$(navi widget zsh)"
+command -v navi >/dev/null 2>&1 && eval "$(navi widget zsh)"
 
 # man 
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # direnev
-eval "$(direnv hook zsh)"
+command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
 
 # exports
 export PATH="$HOME/.cargo/bin:$PATH"
@@ -480,3 +450,4 @@ alias proxmox='ssh pve'
 alias vm='ssh k3s01'
 
 [ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"

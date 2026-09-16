@@ -30,12 +30,4 @@ Ponytail applies to implementation, refactoring, debugging, reviews, and depende
 
 ## Subagent delegation
 
-Two subagent systems are available. Disambiguate by use case:
-1. **Headless Background Subagents (`subagent_spawn`)**: DEFAULT for autonomous background tasks, research, complex codebase exploration, and parallel delegating. Default to the `claude` harness and use Sonnet 5 (`model: "sonnet"` / `"claude-sonnet-5"` with `reasoning_effort: "high"`). Tools: `subagent_spawn`, `subagent_wait`, `subagent_check`, `subagent_list`, `subagent_cancel`.
-2. **Interactive Terminal Multiplexer Subagents (`subagent`)**: Use ONLY when an interactive visual or tmux/zellij terminal pane is explicitly requested, or for dedicated visual maker agents (`mermaid-maker`, `svg-maker`). Tools: `subagent`, `subagents_list`, `subagent_message`.
-
-## Terminal Markdown formatting
-
-- Never use HTML tags such as `<kbd>`, `<br>`, or `<div>`. The terminal TUI renderer prints HTML as raw text. For keyboard shortcuts, key combinations, and UI elements, always use Markdown backticks (e.g. `Ctrl+b`, `Enter`, `Shift+Enter`).
-- Do not wrap commit messages, lists, or plain prose inside ` ```text ` blocks unless explicitly requested. Use clean Markdown headings, bullet points, or blockquotes instead. Reserve fenced code blocks for actual commands and executable code.
-
+When delegating autonomous background tasks to subagents (`subagent_spawn`), default to the `claude` harness and use Sonnet 5 (`model: "sonnet"` / `"claude-sonnet-5"` with `reasoning_effort: "high"`).

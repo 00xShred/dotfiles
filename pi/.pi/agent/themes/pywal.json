@@ -5,8 +5,6 @@
     "bg": "#080a13",
     "fg": "#c1c1c4",
     "cursor": "#c1c1c4",
-    "userMsgBg": "#202233",
-    "userMsgText": "#ffffff",
     "black": "#080a13",
     "red": "#A11B4D",
     "green": "#C1A554",
@@ -36,12 +34,12 @@
     "dim": "gray",
     "text": "fg",
     "thinkingText": "gray",
-    "selectedBg": "userMsgBg",
+    "selectedBg": "black",
     "scrollbarThumb": "gray",
     "searchMatchBg": "yellow",
     "searchMatchText": "bg",
-    "userMessageBg": "userMsgBg",
-    "userMessageText": "userMsgText",
+    "userMessageBg": "black",
+    "userMessageText": "fg",
     "customMessageBg": "black",
     "customMessageText": "fg",
     "customMessageLabel": "blue",
@@ -83,7 +81,7 @@
   },
   "export": {
     "pageBg": "#080a13",
-    "cardBg": "#202233",
+    "cardBg": "#080a13",
     "infoBg": "#A11B4D"
   }
 }

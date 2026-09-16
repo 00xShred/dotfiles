@@ -5,11 +5,14 @@ return {
     name = "neopywal",
     lazy = false,
     priority = 1000,
+    opts = {
+      use_palette = "pywal",
+    },
   },
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "neopywal",
+      colorscheme = "neopywal-dark",
     },
   },
 

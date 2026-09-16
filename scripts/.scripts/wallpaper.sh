@@ -52,16 +52,6 @@ pywalfox update &>/dev/null
 
 qutebrowser ':config-source' &>/dev/null &
 
-# Regenerate Pi pywal theme
-if [ -f "$HOME/.pi/agent/scripts/pi-pywal-theme.mjs" ]; then
-    node "$HOME/.pi/agent/scripts/pi-pywal-theme.mjs" &>/dev/null &
-fi
-
-# Reload Zathura instances with new pywal colors
-for srv in $(busctl --user list | awk '/org\.pwmt\.zathura/ {print $1}'); do
-    busctl --user call "$srv" /org/pwmt/zathura org.pwmt.zathura SourceConfig &>/dev/null &
-done
-
 dunstify -a wallpaper -u normal \
     -h string:x-dunst-stack-tag:wallpaper \
     -i preferences-desktop-wallpaper "Wallpaper applied" "$(basename "$WALLPAPER")" 2>/dev/null || true

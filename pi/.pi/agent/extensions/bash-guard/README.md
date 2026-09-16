@@ -11,15 +11,14 @@ which pi-subagents injects into every spawned process.
 ### Main session (`PI_SUBAGENT_DEPTH` = 0 or unset) — interactive prompt
 
 - Heuristically detects destructive/questionable commands via shell-aware parsing
-- Blocks mutating `git ...` commands (e.g. `commit`, `push`, `pull`, `checkout`, `reset`, `branch <new>`). Read-only Git commands (`diff`, `status`, `log`, `show`, `blame`, etc.) pass through freely even with global options (`-C`, `--no-pager`)
-- Bypasses prompts for safe inspection commands and harmless pipelines (e.g. `git diff | head`, `cat | jq`, `cargo check/test`)
-- Configurable whitelist via `~/.pi/agent/settings.json` under `"bash-guard": { "whitelist": [...] }`
+- Prompts for **any** `git ...` command (escalates severity for especially risky ones: `git rm`,
+  `git reset --hard`, `git clean -fdx`, `git push --force`, `git reflog expire`, `git gc --prune`)
 - Prompts for disk/volume tooling: `diskutil`, `hdiutil`, `mkfs*`, `newfs_*`, `wipefs`, `parted`,
   `fdisk`, `gdisk/sgdisk`, `cryptsetup`, `pvcreate/vgcreate/lvcreate`, `zpool`, `lsblk`
 - Prompts for: `rm`/`rmdir`/`unlink`, `sudo`, `find -delete`, `dd`, `truncate`, `sed -i`,
   `perl -pi`, `chmod/chown -R`, `mv/cp --force`, `kill`/`pkill`/`killall`, `shutdown`/`reboot`,
   `systemctl stop/disable`, `curl|sh`/`wget|sh`, `kubectl delete`, `terraform destroy`,
-  `aws s3 rm --recursive`, `gcloud delete`, unsafe file overwriting redirections (`>`, `>>`), unsafe pipes
+  `aws s3 rm --recursive`, `gcloud delete`, shell redirections (`>`, `>>`, `2>`), pipes
 - Shows a 2-option dialog: **Run** / **Abort**
 - If aborted, the tool call is blocked and the model receives a clear reason
 - Remembers recently aborted commands for 60 s to prevent retry loops
