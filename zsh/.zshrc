@@ -155,10 +155,48 @@ alias shutdown="systemctl poweroff"
 # Utils
 alias bitwarden='bitwarden --enable-features=UseOzonePlatform --ozone-platform=wayland --disable-gpu'
 alias extract='dtrx'
+
+# Pi Coding Agent (auto-starts inside tmux for side-by-side leaf preview & subagents)
+pi() {
+    # If already inside tmux, non-interactive, or --no-tmux is requested, run directly
+    if [[ -n "$TMUX" || ! -t 0 || ! -t 1 || "$*" == *"--no-tmux"* ]]; then
+        command pi "${@/--no-tmux/}"
+        return
+    fi
+
+    local pi_bin="${commands[pi]:-$(whence -p pi 2>/dev/null || which pi 2>/dev/null || echo pi)}"
+    local dir_slug="$(basename "$PWD" | tr -cs '[:alnum:]_-' '-' | sed 's/^-//;s/-$//')"
+    [[ -z "$dir_slug" ]] && dir_slug="main"
+    local sname="pi-${dir_slug}"
+
+    # If this directory's session exists and is detached, reattach to it
+    if tmux has-session -t "$sname" 2>/dev/null; then
+        local attached
+        attached="$(tmux list-sessions -F '#{session_name} #{session_attached}' | awk -v s="$sname" '$1 == s { print $2 }')"
+        if [[ "$attached" == "0" ]]; then
+            tmux attach-session -t "$sname"
+            return
+        fi
+        # If already attached in another terminal, launch a distinct session
+        sname="${sname}-$$"
+    fi
+
+    tmux new-session -s "$sname" -c "$PWD" "$pi_bin" "$@"
+}
 alias ip="ip -c"
 alias open="xdg-open"
 alias kiri="/home/0xShred/programming/codeberg/kiroku/target/debug/kiroku"
 alias homelab="ssh gabriel@100.65.145.50"
+
+# Resize images to 700px width (defaults to assets/*.png)
+rzimg() {
+    if [ $# -eq 0 ]; then
+        magick mogrify -resize 700x assets/*.png 2>/dev/null && echo "Normalized assets/*.png to 700px width"
+    else
+        magick mogrify -resize 700x "$@" && echo "Normalized $@ to 700px width"
+    fi
+}
+alias img700='rzimg'
 
 # Clipboard History
 alias cl="cliphist list | fzf | cliphist decode | wl-copy"
