@@ -170,7 +170,7 @@ alias -g C='| wc -l'  # Count lines
 alias -g N='> /dev/null 2>&1' # Silence output
 
 # Text files -> Open in nvim
-alias -s {md,txt,json,toml,yaml,yml,ini,conf,zsh}=nvim
+alias -s {md,txt,json,toml,yaml,yml,ini,conf,zsh,java}=nvim
 
 # Images/Documents -> Open in default viewer (xdg-open)
 alias -s {png,jpg,jpeg,gif,pdf,mp4,mkv}=xdg-open
@@ -182,6 +182,16 @@ alias crq='cargo run --quiet'
 alias ct='cargo test'
 alias cf='cargo fmt --manifest-path Cargo.toml --all'
 alias fct='cargo fmt --all && cargo clippy --all-targets -- -D warnings && cargo test'
+
+# java / prog1 workflow
+alias jclean='rm -f **/*.class(N)'
+alias jdoc='javadoc -d doc -encoding UTF-8 -charset UTF-8 *.java'
+alias mc='mvn clean compile'
+alias mt='mvn test'
+alias mp='mvn clean package'
+alias gw='./gradlew'
+alias gwb='./gradlew build'
+alias gwt='./gradlew test'
 
 # lazygit
 alias lg='lazygit'
@@ -205,6 +215,92 @@ alias gamma='gammastep -m wayland -O 6500 -g 1.3'
 alias reaper-lowlat='PIPEWIRE_LATENCY=128/48000 pw-jack reaper'
 
 # --- 8. FUNCTIONS ---
+
+# Java build (Maven / Gradle / standalone javac)
+jc() {
+    if [[ -f pom.xml ]]; then
+        mvn compile "$@"
+    elif [[ -f gradlew ]]; then
+        ./gradlew compileJava "$@"
+    elif [[ -f build.gradle || -f build.gradle.kts ]]; then
+        gradle compileJava "$@"
+    elif [[ $# -gt 0 ]]; then
+        javac -g "$@"
+    else
+        javac -g *.java
+    fi
+}
+
+# Java run (strips .java/.class, auto-detects Main / main() / fzf picker)
+jr() {
+    local target="$1"
+    if [[ -n "$target" ]]; then
+        shift
+        target="${target%.java}"
+        target="${target%.class}"
+    else
+        if [[ -f "Main.class" || -f "Main.java" ]]; then
+            target="Main"
+        else
+            local -a mains=( $(grep -lE "public\s+static\s+void\s+main" *.java(N) 2>/dev/null) )
+            if [[ ${#mains[@]} -eq 1 ]]; then
+                target="${mains[1]%.java}"
+            elif [[ ${#mains[@]} -gt 1 ]] && command -v fzf >/dev/null 2>&1; then
+                target=$(printf "%s\n" "${mains[@]}" | fzf --prompt="Select main class: ")
+                target="${target%.java}"
+            else
+                local -a java_files=( *.java(N) )
+                if [[ ${#java_files[@]} -eq 1 ]]; then
+                    target="${java_files[1]%.java}"
+                fi
+            fi
+        fi
+    fi
+
+    if [[ -z "$target" ]]; then
+        echo "Usage: jr [Class|File.java] [args...]"
+        return 1
+    fi
+
+    if [[ -f "${target}.class" ]]; then
+        java "$target" "$@"
+    elif [[ -f "${target}.java" ]]; then
+        java "${target}.java" "$@"
+    else
+        java "$target" "$@"
+    fi
+}
+
+# Java compile & run in one shot
+jcr() {
+    jc && jr "$@"
+}
+
+# Java REPL (substitutes BlueJ object bench: loads .java files into interactive shell)
+jsh() {
+    local -a files=( *.java(N) )
+    if [[ $# -gt 0 ]]; then
+        jshell "$@"
+    elif [[ ${#files[@]} -gt 0 ]]; then
+        jshell --class-path . "${files[@]}"
+    else
+        jshell --class-path .
+    fi
+}
+
+# Java test runner
+jt() {
+    if [[ -f pom.xml ]]; then
+        mvn test "$@"
+    elif [[ -f gradlew ]]; then
+        ./gradlew test "$@"
+    elif [[ -f build.gradle || -f build.gradle.kts ]]; then
+        gradle test "$@"
+    else
+        echo "No build tool detected (pom.xml / build.gradle)."
+    fi
+}
+
 
 # Search text in files and display results in Bat
 fsearch() {
@@ -451,3 +547,7 @@ alias vm='ssh k3s01'
 
 [ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
 export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+
+# Add JBang to environment
+alias j!=jbang
+export PATH="$HOME/.jbang/bin:$PATH"
