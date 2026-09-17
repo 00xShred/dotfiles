@@ -4,7 +4,7 @@ config_file="${XDG_CONFIG_HOME:-$HOME/.config}/sway/opacity.conf"
 current=$(awk '/^for_window \[all\] opacity/{print $NF; exit}' "$config_file")
 
 if [ "$current" = "1.0" ]; then
-    target=0.95
+    target=0.97
 else
     target=1.0
 fi
