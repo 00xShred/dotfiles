@@ -25,5 +25,11 @@
       }
     }
   },
-  "packages": ["npm:pi-antigravity"]
+  "packages": ["npm:pi-antigravity"],
+  "bash-guard": {
+    "whitelist": [
+      "pdftotext",
+      "pdftotex"
+    ]
+  }
 }
