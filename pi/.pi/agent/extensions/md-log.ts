@@ -25,6 +25,7 @@
  * .md-link extension this was modeled on).
  */
 
+import { execFileSync } from "node:child_process";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import * as fs from "node:fs";
 import * as path from "node:path";
@@ -33,6 +34,41 @@ const QA_TOOLS = new Set(["quiz", "ask_user_question"]);
 
 export default function mdLog(pi: ExtensionAPI) {
 	let logFile: string | null = null;
+	let leafPaneId: string | null = null;
+
+	function openLeafSplit(filepath: string): boolean {
+		if (!process.env.TMUX) return false;
+		try {
+			if (leafPaneId) {
+				const check = execFileSync("tmux", ["display-message", "-p", "-t", leafPaneId, "#{pane_id}"], { encoding: "utf8" }).trim();
+				if (check === leafPaneId) return true;
+			}
+		} catch {
+			leafPaneId = null;
+		}
+
+		try {
+			const target = process.env.TMUX_PANE ? ["-t", process.env.TMUX_PANE] : [];
+			const out = execFileSync(
+				"tmux",
+				["split-window", "-h", "-l", "45%", "-d", ...target, "-P", "-F", "#{pane_id}", "leaf -w " + JSON.stringify(filepath)],
+				{ encoding: "utf8" }
+			).trim();
+			if (out) {
+				leafPaneId = out;
+				return true;
+			}
+		} catch {}
+		return false;
+	}
+
+	function closeLeafSplit(): void {
+		if (!process.env.TMUX || !leafPaneId) return;
+		try {
+			execFileSync("tmux", ["kill-pane", "-t", leafPaneId], { stdio: "ignore" });
+		} catch {}
+		leafPaneId = null;
+	}
 
 	// --- State restoration on session restart ---
 
@@ -50,7 +86,14 @@ export default function mdLog(pi: ExtensionAPI) {
 				"md-log",
 				theme.fg("accent", "🗒 ") + theme.fg("dim", path.basename(logFile)),
 			);
+			if (process.env.TMUX) {
+				openLeafSplit(logFile);
+			}
 		}
+	});
+
+	pi.on("session_shutdown", async () => {
+		closeLeafSplit();
 	});
 
 	// --- Serialization: events can fire close together; keep appends ordered ---
@@ -318,13 +361,35 @@ export default function mdLog(pi: ExtensionAPI) {
 
 			// Backfill the active branch.
 			const written = backfill(ctx);
+			const opened = openLeafSplit(resolved);
 
 			const theme = ctx.ui.theme;
 			ctx.ui.setStatus(
 				"md-log",
 				theme.fg("accent", "🗒 ") + theme.fg("dim", path.basename(resolved)),
 			);
-			ctx.ui.notify(`Linked: ${resolved} (${written} entries backfilled)`, "success");
+			const splitMsg = opened ? " (leaf preview opened in tmux split)" : "";
+			ctx.ui.notify(`Linked: ${resolved} (${written} entries backfilled)${splitMsg}`, "success");
+		},
+	});
+
+	pi.registerCommand("md-split", {
+		description: "Open/toggle leaf live markdown preview in a side tmux pane",
+		handler: async (_args, ctx) => {
+			if (!logFile) {
+				ctx.ui.notify("No markdown log linked. Run /md-log first.", "warning");
+				return;
+			}
+			if (!process.env.TMUX) {
+				ctx.ui.notify("Not running inside tmux. Start pi inside tmux to use auto-split.", "error");
+				return;
+			}
+			const opened = openLeafSplit(logFile);
+			if (opened) {
+				ctx.ui.notify("Leaf preview split opened in tmux", "info");
+			} else {
+				ctx.ui.notify("Leaf split already active or failed to open", "info");
+			}
 		},
 	});
 
@@ -335,6 +400,7 @@ export default function mdLog(pi: ExtensionAPI) {
 				ctx.ui.notify("No file linked", "warning");
 				return;
 			}
+			closeLeafSplit();
 			const name = path.basename(logFile);
 			logFile = null;
 			pi.appendEntry("md-log", { file: null });
