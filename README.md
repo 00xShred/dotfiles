@@ -42,9 +42,8 @@ My daily driver on Arch + Sway. Everything is keyboard-driven, color-synced thro
 ```bash
 # 1. Update & install git
 sudo pacman -Syu git
-
 # 2. Clone the repo (must be named 'dotfiles' for symlinks to work)
-git clone https://github.com/gab-dev-7/dotfiles.git "$HOME/dotfiles"
+git clone https://codeberg.org/0xShred/dotfiles.git "$HOME/dotfiles"
 cd "$HOME/dotfiles"
 
 # 3. Run the installer
