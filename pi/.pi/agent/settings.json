@@ -1,8 +1,38 @@
 {
-  "lastChangelogVersion": "0.85.1",
+  "lastChangelogVersion": "0.86.1",
   "theme": "pywal",
-  "defaultProvider": "antigravity",
-  "defaultModel": "gemini-3.8-flash",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-sonnet-5",
+  "enabledModels": [
+    "antigravity/claude-opus-4-6",
+    "antigravity/claude-sonnet-4-6",
+    "antigravity/gemini-3-flash",
+    "antigravity/gemini-3.1-pro",
+    "antigravity/gemini-3.5-flash",
+    "antigravity/gemini-3.6-flash",
+    "antigravity/gemini-3.7-flash",
+    "antigravity/gemini-3.8-flash",
+    "antigravity/gpt-oss-120b",
+    "anthropic/claude-sonnet-5",
+    "anthropic/claude-opus-4-6",
+    "anthropic/claude-opus-4-7",
+    "anthropic/claude-haiku-4-5",
+    "claude-agent-sdk/claude-sonnet-5",
+    "claude-agent-sdk/claude-opus-4-6",
+    "claude-agent-sdk/claude-haiku-4-5",
+    "deepseek/deepseek-flash",
+    "deepseek/deepseek-v4-pro",
+    "github-copilot/gpt-4.1",
+    "moonshotai/kimi-k2.6",
+    "moonshotai/kimi-k2.7-code",
+    "moonshotai/kimi-k2.7-code-highspeed",
+    "moonshotai/kimi-k3",
+    "openai-codex/gpt-5.5",
+    "openai-codex/gpt-5.6-luna",
+    "openai-codex/gpt-5.6-sol",
+    "openai-codex/gpt-5.6-terra",
+    "openai-codex/gpt-6-astra"
+  ],
   "tuiMode": "regular",
   "warnings": {
     "anthropicExtraUsage": false
@@ -25,7 +55,11 @@
       }
     }
   },
-  "packages": ["npm:pi-antigravity"],
+  "packages": [
+    "npm:pi-antigravity",
+    "npm:pi-claude-auth",
+    "npm:claude-agent-sdk-pi"
+  ],
   "bash-guard": {
     "whitelist": [
       "pdftotext",

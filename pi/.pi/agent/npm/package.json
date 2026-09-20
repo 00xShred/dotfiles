@@ -2,6 +2,8 @@
   "name": "pi-extensions",
   "private": true,
   "dependencies": {
-    "pi-antigravity": "^0.7.2"
+    "claude-agent-sdk-pi": "^1.0.22",
+    "pi-antigravity": "^0.8.0",
+    "pi-claude-auth": "^0.1.3"
   }
 }
