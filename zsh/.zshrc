@@ -156,11 +156,21 @@ alias shutdown="systemctl poweroff"
 alias bitwarden='bitwarden --enable-features=UseOzonePlatform --ozone-platform=wayland --disable-gpu'
 alias extract='dtrx'
 
-# Pi Coding Agent (auto-starts inside tmux for side-by-side leaf preview & subagents)
+# Pi Coding Agent (use -t/--tmux to start inside tmux for side-by-side leaf preview & subagents)
 pi() {
-    # If already inside tmux, non-interactive, or --no-tmux is requested, run directly
-    if [[ -n "$TMUX" || ! -t 0 || ! -t 1 || "$*" == *"--no-tmux"* ]]; then
-        command pi "${@/--no-tmux/}"
+    # Only use tmux flow if -t/--tmux is requested, we're in an interactive terminal, and not already inside tmux
+    local want_tmux=0
+    local -a args=()
+    for arg in "$@"; do
+        if [[ "$arg" == "-t" || "$arg" == "--tmux" ]]; then
+            want_tmux=1
+        else
+            args+=("$arg")
+        fi
+    done
+
+    if [[ "$want_tmux" -eq 0 || -n "$TMUX" || ! -t 0 || ! -t 1 ]]; then
+        command pi "${args[@]}"
         return
     fi
 
@@ -181,7 +191,7 @@ pi() {
         sname="${sname}-$$"
     fi
 
-    tmux new-session -s "$sname" -c "$PWD" "$pi_bin" "$@"
+    tmux new-session -s "$sname" -c "$PWD" "$pi_bin" "${args[@]}"
 }
 alias ip="ip -c"
 alias open="xdg-open"
@@ -233,6 +243,7 @@ alias gwt='./gradlew test'
 
 # lazygit
 alias lg='lazygit'
+alias pi-patch-prices='node ~/dotfiles/pi/.pi/agent/scripts/patch-model-picker-price.mjs'
 
 # audio
 alias audio='wpctl'
