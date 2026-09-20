@@ -77,7 +77,7 @@ bindsym $mod+Mod1+k exec ~/.scripts/toggle_keyboard_lock.sh
 exec ~/.scripts/start_wallpaper.sh
 exec_always sh -c 'killall kanshi 2>/dev/null; exec kanshi'
 exec_always sh -c 'killall dunst 2>/dev/null; exec dunst -conf "$HOME/.cache/wal/dunstrc"'
-exec_always sh -c 'killall nm-applet 2>/dev/null; exec nm-applet --indicator'
+exec_always sh -c 'killall nm-applet 2>/dev/null; exec nm-applet --indicator >/dev/null 2>&1'
 exec_always ~/.scripts/cliphist_watch.sh text
 exec_always ~/.scripts/cliphist_watch.sh image
 exec_always swaymsg "gaps inner all set 5"
