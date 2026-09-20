@@ -238,6 +238,8 @@ function streamClaudeCli(
 
 export default function (pi: ExtensionAPI): void {
   // Register Claude Code CLI as a provider
+  // Keep Claude CLI available to subagents without exposing it in Pi's interactive picker.
+  if (process.env.PI_SUBAGENT !== "1") return;
   pi.registerProvider(PROVIDER_ID, {
     name: PROVIDER_NAME,
     baseUrl: "http://localhost",
