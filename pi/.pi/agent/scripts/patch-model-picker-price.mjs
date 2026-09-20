@@ -1,39 +1,40 @@
 #!/usr/bin/env node
 // Reapplies the "show price + context window in /model picker" patch.
-// pi ships this compiled in node_modules, so `npm update -g` wipes it on every upgrade.
+// pi ships this compiled into a hashed dist/bundle/chunks/*.js file, so
+// `npm update -g` (new hash) or a fresh install wipes it every time.
 // Run this after any pi update: node ~/dotfiles/pi/.pi/agent/scripts/patch-model-picker-price.mjs
 import { execSync } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
 
 const root = execSync("npm root -g").toString().trim();
-const file = `${root}/@earendil-works/pi-coding-agent/dist/modes/interactive/components/model-selector.js`;
+const chunksDir = `${root}/@earendil-works/pi-coding-agent/dist/bundle/chunks`;
 
-let src = readFileSync(file, "utf8");
+// Minified anchor: the `line=` build-up right after `providerBadge=...` in the
+// /model picker's updateList(). Contains no helper fn call, so it's self-contained.
+const anchor =
+	'providerBadge=theme.fg("muted",`[${item.provider}]`),line=`${cursor}${currentMarker}${modelText} ${providerBadge}${defaultBadge}`;';
+const patched =
+	'providerBadge=theme.fg("muted",`[${item.provider}]`),' +
+	"price=item.model.cost?theme.fg(\"muted\",` · $${item.model.cost.input}/$${item.model.cost.output} per 1M · ctx ${item.model.contextWindow>=1e6?(item.model.contextWindow/1e6).toFixed(1)+\"M\":Math.round(item.model.contextWindow/1e3)+\"k\"}`):\"\"," +
+	'line=`${cursor}${currentMarker}${modelText} ${providerBadge}${price}${defaultBadge}`;';
 
-if (src.includes("formatTokenCount")) {
-	console.log("Already patched:", file);
-	process.exit(0);
+let applied = 0;
+for (const name of readdirSync(chunksDir)) {
+	if (!name.endsWith(".js")) continue;
+	const file = `${chunksDir}/${name}`;
+	const src = readFileSync(file, "utf8");
+	if (src.includes(patched)) {
+		console.log("Already patched:", file);
+		applied++;
+	} else if (src.includes(anchor)) {
+		// Replacer fn avoids String#replace treating `$$` in `patched` as a special substitution token.
+		writeFileSync(file, src.replace(anchor, () => patched));
+		console.log("Patched:", file);
+		applied++;
+	}
 }
 
-src = src.replace(
-	`import { keyDisplayText, keyHint } from "./keybinding-hints.js";\n`,
-	`import { keyDisplayText, keyHint } from "./keybinding-hints.js";\n` +
-		`function formatTokenCount(value) {\n` +
-		`    if (!Number.isFinite(value))\n` +
-		`        return "?";\n` +
-		`    return value >= 1000000\n` +
-		`        ? \`\${(value / 1000000).toFixed(1)}M\`\n` +
-		`        : \`\${Math.round(value / 1000)}k\`;\n` +
-		`}\n`,
-);
-
-src = src.replace(
-	`            const providerBadge = theme.fg("muted", \`[\${item.provider}]\`);\n            const line = \`\${cursor}\${currentMarker}\${modelText} \${providerBadge}\${defaultBadge}\`;`,
-	`            const providerBadge = theme.fg("muted", \`[\${item.provider}]\`);\n` +
-		`            const cost = item.model.cost;\n` +
-		`            const price = cost ? theme.fg("muted", \` · $\${cost.input}/$\${cost.output} per 1M · ctx \${formatTokenCount(item.model.contextWindow)}\`) : "";\n` +
-		`            const line = \`\${cursor}\${currentMarker}\${modelText} \${providerBadge}\${price}\${defaultBadge}\`;`,
-);
-
-writeFileSync(file, src);
-console.log("Patched:", file);
+if (!applied) {
+	console.error("Anchor not found in any chunk under", chunksDir, "- pi's bundle layout likely changed, update the anchor.");
+	process.exit(1);
+}
