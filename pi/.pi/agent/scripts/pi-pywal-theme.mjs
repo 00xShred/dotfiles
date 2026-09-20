@@ -10,6 +10,21 @@ const wal = JSON.parse(readFileSync(walPath, "utf8"));
 const c = wal.colors;
 const s = wal.special;
 
+function getLuminance(hex) {
+  const rgb = hex.slice(1).match(/.{2}/g).map((v) => parseInt(v, 16) / 255);
+  const linear = rgb.map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2];
+}
+
+function adjustBg(hex) {
+  const rgb = hex.slice(1).match(/.{2}/g).map((v) => parseInt(v, 16));
+  const delta = getLuminance(hex) < 0.5 ? [24, 24, 32] : [-25, -25, -25];
+  return `#${rgb.map((v, i) => Math.max(0, Math.min(255, v + delta[i])).toString(16).padStart(2, "0")).join("")}`;
+}
+
+const userMsgBg = adjustBg(s.background);
+const userMsgText = getLuminance(s.background) < 0.5 ? "#ffffff" : "#000000";
+
 const theme = {
   $schema: "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
   name: "pywal",
@@ -33,6 +48,8 @@ const theme = {
     brightBlue: c.color13,
     brightPink: c.color14,
     brightWhite: c.color15,
+    userMsgBg,
+    userMsgText,
   },
   colors: {
     accent: "blue",
@@ -51,8 +68,8 @@ const theme = {
     scrollbarThumb: "gray",
     searchMatchBg: "yellow",
     searchMatchText: "bg",
-    userMessageBg: "black",
-    userMessageText: "fg",
+    userMessageBg: "userMsgBg",
+    userMessageText: "userMsgText",
     customMessageBg: "black",
     customMessageText: "fg",
     customMessageLabel: "blue",

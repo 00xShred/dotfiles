@@ -20,7 +20,9 @@
     "brightMagenta": "#3A5AA7",
     "brightBlue": "#B661A5",
     "brightPink": "#2B9FDE",
-    "brightWhite": "#c1c1c4"
+    "brightWhite": "#c1c1c4",
+    "userMsgBg": "#202233",
+    "userMsgText": "#ffffff"
   },
   "colors": {
     "accent": "blue",
@@ -38,8 +40,8 @@
     "scrollbarThumb": "gray",
     "searchMatchBg": "yellow",
     "searchMatchText": "bg",
-    "userMessageBg": "black",
-    "userMessageText": "fg",
+    "userMessageBg": "userMsgBg",
+    "userMessageText": "userMsgText",
     "customMessageBg": "black",
     "customMessageText": "fg",
     "customMessageLabel": "blue",
