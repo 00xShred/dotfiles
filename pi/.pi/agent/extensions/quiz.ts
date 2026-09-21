@@ -5,6 +5,7 @@ import {
 	Key,
 	Text,
 	matchesKey,
+	renderLatex,
 	truncateToWidth,
 	wrapTextWithAnsi,
 } from "@earendil-works/pi-tui";
@@ -126,9 +127,9 @@ function normalizeOptions(
 	const seen = new Set<string>();
 	return (options || [])
 		.map((option) => ({
-			label: option.label.trim(),
+			label: formatMathText(option.label.trim()),
 			value: option.value?.trim() || option.label.trim(),
-			description: option.description?.trim() || undefined,
+			description: option.description?.trim() ? formatMathText(option.description.trim()) : undefined,
 		}))
 		.filter((option) => {
 			if (option.label.length === 0) return false;
@@ -205,6 +206,59 @@ function createEditorTheme(theme: any): EditorTheme {
 			noMatch: (t) => theme.fg("warning", t),
 		},
 	};
+}
+
+// Quiz questions/options often carry inline LaTeX math (from $...$, \text{},
+// \frac{}{}, etc.) which the terminal can't render and which prints as noisy
+// literal backslashes/braces. Strip the LaTeX wrapper syntax and swap common
+// commands for their plain-text/Unicode equivalents so it reads naturally.
+const LATEX_SYMBOLS: Record<string, string> = {
+	times: "×",
+	cdot: "·",
+	neq: "≠",
+	leq: "≤",
+	le: "≤",
+	geq: "≥",
+	ge: "≥",
+	pm: "±",
+	infty: "∞",
+	to: "→",
+	rightarrow: "→",
+	Rightarrow: "⇒",
+	leftrightarrow: "↔",
+	in: "∈",
+	forall: "∀",
+	exists: "∃",
+	approx: "≈",
+	sum: "Σ",
+	pi: "π",
+	alpha: "α",
+	beta: "β",
+	gamma: "γ",
+	delta: "δ",
+	theta: "θ",
+	lambda: "λ",
+};
+
+function formatMathText(text: string): string {
+	// Real math spans get the exact LaTeX-to-Unicode renderer normal chat
+	// markdown uses (pi-tui's renderLatex), so \oplus, \overline{}, subscripts,
+	// etc. become proper Unicode instead of being hand-translated/stripped.
+	// Scoped to $...$/$$...$$ delimiters only (never the whole string) — plain
+	// text with underscores, carets, or "&" (filenames, code, prose) must not
+	// be misread as math.
+	const out = text
+		.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderLatex(expr.trim(), { display: true }) ?? expr)
+		.replace(/\$([^$\n]+?)\$/g, (_, expr) => renderLatex(expr.trim()) ?? expr);
+	// Anything left is plain text or a LaTeX command the author forgot to wrap
+	// in $...$ — best-effort cleanup so it doesn't print as raw noise.
+	return out
+		.replace(/\\text\{([^{}]*)\}/g, "$1") // \text{foo} -> foo
+		.replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1/$2)") // \frac{a}{b} -> (a/b)
+		.replace(/\\sqrt\{([^{}]*)\}/g, "√$1") // \sqrt{x} -> √x
+		.replace(/\\([a-zA-Z]+)/g, (_, cmd) => LATEX_SYMBOLS[cmd] ?? cmd) // known symbols, else drop backslash
+		.replace(/\\[[\]]/g, "") // stray \[ \]
+		.replace(/[{}]/g, ""); // leftover grouping braces
 }
 
 function addWrapped(lines: string[], text: string, width: number, indent = ""): void {
@@ -902,15 +956,16 @@ export default function quiz(pi: ExtensionAPI) {
 		parameters: QuizParams,
 
 		async execute(_toolCallId, params, signal, onUpdate, ctx) {
-			const context = params.details?.trim() || undefined;
-			const explanation = params.explanation.trim();
+			const question = formatMathText(params.question.trim());
+			const context = params.details?.trim() ? formatMathText(params.details.trim()) : undefined;
+			const explanation = formatMathText(params.explanation.trim());
 			const mode: QuizMode = params.multiSelect ? "multi-select" : "single-select";
 
 			let options: QuizOption[];
 			try {
 				options = normalizeOptions(params.options);
 			} catch (e) {
-				return unavailableResult(params.question, mode, `quiz ${(e as Error).message}`, [], context);
+				return unavailableResult(question, mode, `quiz ${(e as Error).message}`, [], context);
 			}
 
 			// Shuffle for display (default on) BEFORE resolving correct indices, so
@@ -936,12 +991,12 @@ export default function quiz(pi: ExtensionAPI) {
 			);
 
 			if (signal?.aborted) {
-				return cancelledResult(params.question, mode, correctIndices, context);
+				return cancelledResult(question, mode, correctIndices, context);
 			}
 
 			if (options.length < 2) {
 				return unavailableResult(
-					params.question,
+					question,
 					mode,
 					"quiz requires at least two options",
 					correctIndices,
@@ -950,22 +1005,22 @@ export default function quiz(pi: ExtensionAPI) {
 			}
 
 			if (correctError) {
-				return unavailableResult(params.question, mode, `quiz ${correctError}`, correctIndices, context);
+				return unavailableResult(question, mode, `quiz ${correctError}`, correctIndices, context);
 			}
 
 			if (!ctx.hasUI) {
-				return unavailableResult(params.question, mode, "quiz requires interactive mode UI", correctIndices, context);
+				return unavailableResult(question, mode, "quiz requires interactive mode UI", correctIndices, context);
 			}
 
 			return withUILock(async () => {
 				const response =
 					mode === "single-select"
-						? await askSingleChoice(ctx, params.question, context, options, correctIndices, explanation)
-						: await askMultiChoice(ctx, params.question, context, options, correctIndices, explanation);
+						? await askSingleChoice(ctx, question, context, options, correctIndices, explanation)
+						: await askMultiChoice(ctx, question, context, options, correctIndices, explanation);
 				if (!response) {
-					return cancelledResult(params.question, mode, correctIndices, context);
+					return cancelledResult(question, mode, correctIndices, context);
 				}
-				return buildResult(params.question, context, mode, options, response, correctIndices, explanation);
+				return buildResult(question, context, mode, options, response, correctIndices, explanation);
 			});
 		},
 
@@ -979,7 +1034,7 @@ export default function quiz(pi: ExtensionAPI) {
 			const options = normalizeOptions(
 				args.options as Array<{ label: string; value?: string; description?: string }> | undefined,
 			);
-			let text = theme.fg("toolTitle", theme.bold("quiz ")) + theme.fg("muted", args.question);
+			let text = theme.fg("toolTitle", theme.bold("quiz ")) + theme.fg("muted", formatMathText(String(args.question ?? "")));
 			if (args.multiSelect) {
 				text += theme.fg("dim", " [multi-select]");
 			}
