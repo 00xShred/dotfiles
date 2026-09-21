@@ -1,56 +1,65 @@
-# --- 1. POWERLEVEL10K INSTANT PROMPT ---
-typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-# --- 2. OH-MY-ZSH CONFIG ---
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="powerlevel10k/powerlevel10k"
-
-# Update behavior
-zstyle ':omz:update' mode auto
-
-# plugins: 
-# - git: standard git aliases
-# - zsh-autosuggestions: the "ghost text" based on history
-# - fzf-tab: REPLACES standard tab completion with a fuzzy finder (The "Pro" feature)
-# - zsh-syntax-highlighting: MUST be last. Colors commands red/green.
-plugins=(
-    git 
-    kubectl 
-    zsh-autosuggestions 
-    fzf-tab 
-    zsh-syntax-highlighting
+# --- 1. COMPLETION SYSTEM (Fast, Cached) ---
+setopt EXTENDED_GLOB
+fpath=(
+    /usr/share/zsh/site-functions
+    $HOME/.local/share/zsh/plugins/zsh-completions/src(N)
+    $fpath
 )
 
-# Source OMZ when installed. Otherwise use package-manager zsh plugins directly.
-if [[ -r "$ZSH/oh-my-zsh.sh" ]]; then
-    source "$ZSH/oh-my-zsh.sh"
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+    compinit -d "${ZDOTDIR:-$HOME}/.zcompdump"
 else
-    [[ -r /opt/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /opt/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-    [[ -r /opt/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /opt/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+    compinit -C -d "${ZDOTDIR:-$HOME}/.zcompdump"
 fi
 
+# Background zcompile .zcompdump for instant loading
+{
+    if [[ -s "${ZDOTDIR:-$HOME}/.zcompdump" && (! -s "${ZDOTDIR:-$HOME}/.zcompdump.zwc" || "${ZDOTDIR:-$HOME}/.zcompdump" -nt "${ZDOTDIR:-$HOME}/.zcompdump.zwc") ]]; then
+        zcompile "${ZDOTDIR:-$HOME}/.zcompdump"
+    fi
+} &!
 
-# --- 3. "PRO" COMPLETION SETTINGS (FZF-TAB) ---
+# --- 2. PLUGINS (Direct, no OMZ wrapper) ---
+# fzf-tab (replaces standard completion menu with fuzzy finder)
+for plugin in \
+    $HOME/.local/share/zsh/plugins/fzf-tab/fzf-tab.plugin.zsh \
+    $HOME/.oh-my-zsh/custom/plugins/fzf-tab/fzf-tab.plugin.zsh
+do
+    if [[ -f "$plugin" ]]; then source "$plugin"; break; fi
+done
 
-# Disable the default OMZ ls colors in favor of fzf-tab specific ones
+# Autosuggestions (ghost text based on history)
+for plugin in \
+    /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
+    /opt/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+    $HOME/.local/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+do
+    if [[ -f "$plugin" ]]; then source "$plugin"; break; fi
+done
+
+# --- 3. COMPLETION & FZF-TAB SETTINGS ---
 zstyle ':completion:*:*' list-colors "${(s.:.)LS_COLORS}"
-
-# Use fzf-tab for completion (The magic part)
-# This creates a preview window when you tab-complete files or directories
+zstyle ':completion:*' menu no
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
 zstyle ':fzf-tab:complete:__git_checkout:*' fzf-preview 'git log --color=always --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $word'
-zstyle ':fzf-tab:*' switch-group ',' '.' # Use comma and dot to switch groups in completion
+zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,%cpu,%mem,comm -w -w"
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+    '[[ $group == "[process ID]" ]] && ps --pid=$word -o cmd --no-headers -w -w'
+zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-flags --preview-window=down:3:wrap
+zstyle ':fzf-tab:complete:systemctl-*:*' fzf-preview 'SYSTEMD_COLORS=1 systemctl status $word'
+zstyle ':fzf-tab:*' switch-group ',' '.'
 
 # Autosuggestions configuration
-# Suggest from history first, but only matches.
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 
-# --- 4. HISTORY MANAGEMENT (Fixes "Weird Suggestions") ---
-# This makes your history smart. It ignores duplicates and doesn't save failed commands.
+# General shell ergonomics
+setopt AUTO_CD               # Type folder name directly to cd
+setopt INTERACTIVE_COMMENTS  # Allow # comments in interactive shell
+setopt NO_BEEP               # No beep on error/completion
+
+# --- 4. HISTORY MANAGEMENT ---
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=50000
 SAVEHIST=50000
@@ -63,23 +72,70 @@ setopt HIST_IGNORE_SPACE         # Don't record lines starting with a space
 setopt HIST_SAVE_NO_DUPS         # Don't write duplicate entries in the history file
 setopt SHARE_HISTORY             # Share history between all sessions
 
-# --- 5. KEYBINDINGS ---
-# Initialize FZF keybindings (Ctrl+R for history, Ctrl+T for files)
-[ -f /usr/share/fzf/key-bindings.zsh ] && source /usr/share/fzf/key-bindings.zsh
-[ -f /usr/share/fzf/completion.zsh ] && source /usr/share/fzf/completion.zsh
-[ -f /opt/local/share/fzf/shell/key-bindings.zsh ] && source /opt/local/share/fzf/shell/key-bindings.zsh
-[ -f /opt/local/share/fzf/shell/completion.zsh ] && source /opt/local/share/fzf/shell/completion.zsh
+# --- 5. KEYBINDINGS & VI MODE ---
+bindkey -v
+export KEYTIMEOUT=1              # Instant switch to normal mode on Esc
+bindkey '^?' backward-delete-char # Backspace works past insert point
 
-# Use vim keys in command line (optional, if you like Vi mode, uncomment below)
-bindkey -v 
+# Beam cursor '|' in insert mode, block '█' in normal mode
+function zle-keymap-select {
+    if [[ ${KEYMAP} == vicmd ]] || [[ $1 = 'block' ]]; then
+        echo -ne '\e[2 q'
+    elif [[ ${KEYMAP} == main ]] || [[ ${KEYMAP} == viins ]] || [[ -z ${KEYMAP} ]] || [[ $1 = 'beam' ]]; then
+        echo -ne '\e[5 q'
+    fi
+}
+zle -N zle-keymap-select
+_fix_cursor() { echo -ne '\e[5 q' }
+precmd_functions+=(_fix_cursor)
+
+# Prefix history search with Up / Down
+autoload -U up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey "^[[A" up-line-or-beginning-search
+bindkey "^[[B" down-line-or-beginning-search
+bindkey -M vicmd "k" up-line-or-beginning-search
+bindkey -M vicmd "j" down-line-or-beginning-search
+
+# Initialize FZF keybindings (Ctrl+R for history, Ctrl+T for files)
+[[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+[[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+[[ -f /opt/local/share/fzf/shell/key-bindings.zsh ]] && source /opt/local/share/fzf/shell/key-bindings.zsh
+[[ -f /opt/local/share/fzf/shell/completion.zsh ]] && source /opt/local/share/fzf/shell/completion.zsh 
 
 # --- 6. ENVIRONMENT & PATHS ---
 export EDITOR='nvim'
-export PATH="$HOME/.local/bin:$HOME/bin:$HOME/.npm-global/bin:${KREW_ROOT:-$HOME/.krew}/bin:$HOME/.local/go/bin:$PATH"
-export PATH="$HOME/.scripts:$PATH"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export GROFF_NO_SGR=1
+export KUBECONFIG=~/.kube/config-k3s
+export BUN_INSTALL="$HOME/.bun"
+export PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
+# Unique, consolidated PATH
+typeset -U path PATH
+path=(
+    $HOME/.local/bin
+    $HOME/bin
+    $HOME/.scripts
+    $HOME/.cargo/bin
+    $HOME/.bun/bin
+    $HOME/.jbang/bin
+    $HOME/.npm-global/bin
+    ${KREW_ROOT:-$HOME/.krew}/bin
+    $HOME/.local/go/bin
+    $HOME/.local/share/gem/ruby/3.4.0/bin
+    /opt/local/bin
+    /opt/local/sbin
+    $path
+)
+export PATH
+
+# Secrets
+[ -f ~/.zsh_secrets ] && source ~/.zsh_secrets
 
 # Initialize tools
-command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)" # Replaces 'cd' with smarter navigation
+command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh --cmd cd)" # Replaces 'cd' with smarter navigation
 
 # Import Colors (wal)
 [ -f ~/.cache/wal/colors.sh ] && source ~/.cache/wal/colors.sh
@@ -153,6 +209,7 @@ alias reboot="systemctl reboot"
 alias shutdown="systemctl poweroff"
 
 # Utils
+alias k="kubectl"
 alias bitwarden='bitwarden --enable-features=UseOzonePlatform --ozone-platform=wayland --disable-gpu'
 alias extract='dtrx'
 
@@ -197,6 +254,8 @@ alias ip="ip -c"
 alias open="xdg-open"
 alias kiri="/home/0xShred/programming/codeberg/kiroku/target/debug/kiroku"
 alias homelab="ssh gabriel@100.65.145.50"
+alias proxmox='ssh pve'
+alias vm='ssh k3s01'
 
 # Resize images to 700px width (defaults to assets/*.png)
 rzimg() {
@@ -240,9 +299,15 @@ alias mp='mvn clean package'
 alias gw='./gradlew'
 alias gwb='./gradlew build'
 alias gwt='./gradlew test'
+alias j!=jbang
 
 # lazygit
 alias lg='lazygit'
+
+# epoch
+alias epoch='sudo /home/0xShred/.cargo/bin/epoch'
+
+# pi-patch-prices
 alias pi-patch-prices='node ~/dotfiles/pi/.pi/agent/scripts/patch-model-picker-price.mjs'
 
 # audio
@@ -547,34 +612,21 @@ if [ -z "$SSH_AGENT_PID" ]; then
     echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$AGENT_ENV_FILE"
 fi
 
-# --- 10. P10K CONFIG ---
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# --- 10. TOOL INTEGRATIONS & PROMPT ---
+# Starship prompt
+command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
 
 # navi
 command -v navi >/dev/null 2>&1 && eval "$(navi widget zsh)"
 
-# man 
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-
-# direnev
+# direnv
 command -v direnv >/dev/null 2>&1 && eval "$(direnv hook zsh)"
-
-# exports
-export PATH="$HOME/.cargo/bin:$PATH"
-
-[ -f ~/.zsh_secrets ] && source ~/.zsh_secrets
-
-export GROFF_NO_SGR=1
-export PATH="$HOME/.local/share/gem/ruby/3.4.0/bin:$PATH"
-export KUBECONFIG=~/.kube/config-k3s
 
 # bun completions
 [ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
+# broot
+[ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
 
 # Source all configuration snippets from zshrc.d
 if [ -d ~/.config/zshrc.d ]; then
@@ -583,20 +635,11 @@ if [ -d ~/.config/zshrc.d ]; then
     done
 fi
 
-# Added by Antigravity CLI installer
-export PATH="$HOME/.local/bin:$PATH"
-
-[ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
-
-export PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-
-# Homelab access
-alias proxmox='ssh pve'
-alias vm='ssh k3s01'
-
-[ -f "$HOME/.config/broot/launcher/bash/br" ] && source "$HOME/.config/broot/launcher/bash/br"
-export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
-
-# Add JBang to environment
-alias j!=jbang
-export PATH="$HOME/.jbang/bin:$PATH"
+# Syntax highlighting (MUST be loaded at the very end)
+for plugin in \
+    /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+    /opt/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+    $HOME/.local/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+do
+    if [[ -f "$plugin" ]]; then source "$plugin"; break; fi
+done
