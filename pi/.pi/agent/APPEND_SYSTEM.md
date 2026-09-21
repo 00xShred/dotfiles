@@ -40,4 +40,11 @@ Two subagent systems are available. Disambiguate by use case:
 - Never use HTML tags such as `<kbd>`, `<br>`, or `<div>`. The terminal TUI renderer prints HTML as raw text. For keyboard shortcuts, key combinations, and UI elements, always use Markdown backticks (e.g. `Ctrl+b`, `Enter`, `Shift+Enter`).
 - Do not wrap commit messages, lists, or plain prose inside ` ```text ` blocks unless explicitly requested. Use clean Markdown headings, bullet points, or blockquotes instead. Reserve fenced code blocks for actual commands and executable code.
 - Do not use pseudocode or LaTeX formatting that fails to render in terminal markdown (e.g. `overline(...)`). For recurring decimals, use parenthesis notation such as `0.(001)`.
+- Never emit raw LaTeX math delimiters (`$...$`, `$$...$$`, `\(...\)`) directly in chat replies — the terminal prints the literal backslashes/braces instead of typeset math. Default: convert to plain-text notation instead:
+  - Subscripts/superscripts: `x_(i+1)`, `x^(2)` — parenthesize even single-char scripts. If a line has 2+ underscores, ESCAPE every subscript underscore as `\_` (e.g. `A\_(i)`), not a bare `_` — two or more bare `_` on one line get parsed as markdown italics and silently stripped, even when parenthesized. A single bare `_` per line is safe and doesn't need escaping.
+  - Greek letters: spell out or use the Unicode glyph directly (σ, π, Δ, θ, λ...) — do not write `\sigma`
+  - Operators: `<=`, `>=`, `!=`, `->`, `AND`/`OR`/`NOT` spelled out; Unicode symbols (⋈ ∈ ∀ ∃ ≤ ≥ ≠ →) are fine since they render as plain characters
+  - Fractions: `a/b` or `(a+b)/c`, not `\frac{}{}`
+  - Sets: `{1,2,3}` literally
+  - LaTeX is completely fine inside actual `.tex` files being written/edited — this rule only applies to text printed directly in the chat reply.
 

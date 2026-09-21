@@ -1,8 +1,8 @@
 {
   "lastChangelogVersion": "0.86.1",
   "theme": "pywal",
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-sonnet-5",
+  "defaultProvider": "antigravity",
+  "defaultModel": "gemini-3.8-flash",
   "enabledModels": [
     "antigravity/claude-opus-4-6",
     "antigravity/claude-sonnet-4-6",
