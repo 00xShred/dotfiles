@@ -21,5 +21,9 @@ dunstify -a notes -u low \
     -h string:x-dunst-stack-tag:notes \
     -i accessories-text-editor "Quick note" "Created note_$NEXT_NUM.md" 2>/dev/null || true
 
-# Launch terminal with a specific class for floating window rules
-kitty --class floating_note nvim "$FILE_PATH"
+# Launch terminal with a specific class/app-id for floating window rules
+if command -v foot >/dev/null 2>&1; then
+    foot -a floating_note -e nvim "$FILE_PATH"
+else
+    kitty --class floating_note nvim "$FILE_PATH"
+fi

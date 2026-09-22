@@ -77,6 +77,22 @@ bindkey -v
 export KEYTIMEOUT=1              # Instant switch to normal mode on Esc
 bindkey '^?' backward-delete-char # Backspace works past insert point
 
+# Fix Delete, Ctrl+Arrows, Home, End in Vi mode
+bindkey "^[[3~" delete-char
+bindkey -M vicmd "^[[3~" delete-char
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-word
+bindkey "^[[5D" backward-word
+bindkey "^[[5C" forward-word
+bindkey -M vicmd "^[[1;5D" vi-backward-word
+bindkey -M vicmd "^[[1;5C" vi-forward-word
+bindkey "^[[H" beginning-of-line
+bindkey "^[[F" end-of-line
+bindkey "^[[1~" beginning-of-line
+bindkey "^[[4~" end-of-line
+bindkey -M vicmd "^[[H" vi-beginning-of-line
+bindkey -M vicmd "^[[F" vi-end-of-line
+
 # Beam cursor '|' in insert mode, block '█' in normal mode
 function zle-keymap-select {
     if [[ ${KEYMAP} == vicmd ]] || [[ $1 = 'block' ]]; then
@@ -106,6 +122,10 @@ bindkey -M vicmd "j" down-line-or-beginning-search
 
 # --- 6. ENVIRONMENT & PATHS ---
 export EDITOR='nvim'
+export VISUAL='nvim'
+export GIT_EDITOR='nvim'
+export SUDO_EDITOR='nvim'
+export FCEDIT='nvim'
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export GROFF_NO_SGR=1
 export KUBECONFIG=~/.kube/config-k3s
@@ -143,12 +163,13 @@ command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh --cmd cd)" # Replac
 # --- 7. ALIASES ---
 
 # Navigation 
+alias z="cd"
+alias zi="cdi"
 alias cdc="cd && clear"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ~="cd ~"
 alias c="clear"
-alias j="z" 
 
 # Common directories
 
@@ -450,14 +471,6 @@ magic-enter () {
 zle -N magic-enter
 bindkey "^M" magic-enter
 
-function yy() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
-    yazi "$@" --cwd-file="$tmp"
-    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        cd -- "$cwd"
-    fi
-    rm -f -- "$tmp"
-}
 
 # fshow - git commit browser
 alias fshow="git log --graph --color=always \
@@ -584,7 +597,7 @@ sysmaintain() {
 
     echo -e "\n\033[1;34m[5/5] 🚑 Checking Errors...\033[0m"
     systemctl --failed
-    journalctl -p 3 -xb --no-pager
+    journalctl -p 3 -xb --no-pager | grep -Ev 'virt/tdx: TDX not supported|multicast RX registrations are not supported' || true
 
     echo -e "\n\033[1;32m✅ Maintenance Complete.\033[0m"
 }

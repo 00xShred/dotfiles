@@ -1,0 +1,4 @@
+.*\.bak.*
+.*\.tar\.gz$
+.*\.lastd$
+node_modules

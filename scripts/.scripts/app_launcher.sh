@@ -35,7 +35,7 @@ if command -v fuzzel >/dev/null 2>&1; then
         --filter-desktop \
         --list-executables-in-path \
         --delayed-filter-ms 60 \
-        --terminal "kitty -e" \
+        --terminal "${TERMINAL:-foot} -e" \
         --background-color "${background#\#}ff" \
         --text-color "${foreground#\#}ff" \
         --input-color "${foreground#\#}ff" \
@@ -47,14 +47,10 @@ if command -v fuzzel >/dev/null 2>&1; then
         --selection-match-color "${foreground#\#}ff"
 fi
 
-if command -v wofi >/dev/null 2>&1; then
-    exec wofi --show drun --insensitive --prompt Search --allow-images
-fi
-
 if command -v wmenu >/dev/null 2>&1; then
     choice=$(
         {
-            printf '%s\n' qutebrowser zen-browser kitty dolphin spotify Spotify spotify-launcher
+            printf '%s\n' qutebrowser zen-browser foot kitty dolphin spotify Spotify spotify-launcher
             printf '%s' "$PATH" | tr ':' '\n' | while IFS= read -r dir; do
                 [ -d "$dir" ] && find "$dir" -maxdepth 1 -type f -executable -printf '%f\n' 2>/dev/null
             done
@@ -82,5 +78,5 @@ if command -v wmenu >/dev/null 2>&1; then
     esac
 fi
 
-printf '%s\n' "app_launcher.sh: install fuzzel, wofi, or wmenu" >&2
+printf '%s\n' "app_launcher.sh: install fuzzel or wmenu" >&2
 exit 1

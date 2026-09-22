@@ -3,9 +3,7 @@
 
 add_newline = true
 
-# Prompt layout:
-# Line 1: Directory, Git, Languages/Runtimes, Kubernetes, Duration
-# Line 2: Character symbol
+# Prompt layout: Single inline line
 format = """
 $directory\
 $git_branch\
@@ -19,7 +17,6 @@ $golang\
 $bun\
 $kubernetes\
 $cmd_duration\
-$line_break\
 $character"""
 
 [character]
@@ -35,7 +32,7 @@ style = "bold cyan"
 format = "[$path]($style) "
 truncation_length = 3
 truncation_symbol = "…/"
-home_symbol = "~"
+home_symbol = " ~"
 
 [git_branch]
 symbol = " "
@@ -43,18 +40,18 @@ style = "bold purple"
 format = "on [$symbol$branch]($style) "
 
 [git_status]
-style = "bold red"
-format = '([\[$all_status$ahead_behind\]]($style) )'
-conflicted = "🏳 "
-ahead = "⇡${count}"
-behind = "⇣${count}"
-diverged = "⇡${ahead_count}⇣${behind_count}"
-untracked = "?${count}"
-stashed = "*"
-modified = "!${count}"
-staged = "+${count}"
-renamed = "»"
-deleted = "✘${count}"
+style = "bright-black"
+format = '([$ahead_behind]($style))([\[$all_status\]]($style) )'
+conflicted = "[=${count}](bold red) "
+ahead = "[⇡${count}](bold cyan) "
+behind = "[⇣${count}](bold magenta) "
+diverged = "[⇡${ahead_count}⇣${behind_count}](bold red) "
+untracked = "[?${count}](bold blue) "
+stashed = "[*${count}](bright-black) "
+modified = "[!${count}](bold yellow) "
+staged = "[+${count}](bold green) "
+renamed = "[»${count}](bold cyan) "
+deleted = "[✘${count}](bold red) "
 
 [git_state]
 style = "bold yellow"

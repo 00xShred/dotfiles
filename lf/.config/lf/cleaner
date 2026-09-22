@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+if [ -n "$KITTY_WINDOW_ID" ] || [ "$TERM" = "xterm-kitty" ]; then
+    kitten icat --clear --silent --stdin no --transfer-mode file < /dev/tty > /dev/tty
+fi

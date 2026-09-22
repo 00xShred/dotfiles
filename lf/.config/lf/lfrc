@@ -1,0 +1,199 @@
+# ~/.config/lf/lfrc
+# Modern lf configuration using $TERMINAL and $EDITOR
+
+# ==============================================================================
+# Basic Settings
+# ==============================================================================
+set previewer ~/.config/lf/previewer
+set cleaner ~/.config/lf/cleaner
+set icons true
+set drawbox true
+set mouse true
+set shell zsh
+set shellopts '-eu'
+set ifs "\n"
+set scrolloff 5
+set tabstop 4
+set period 1
+set ratios 1:2:3
+set promptfmt "\033[34;1m%w\033[0m \033[32m%f\033[0m"
+
+# ==============================================================================
+# File Associations & Openers
+# ==============================================================================
+cmd open ${{
+    mime="$(file --dereference --brief --mime-type -- "$f" 2>/dev/null || true)"
+    ext="${f##*.}"
+    ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
+
+    case "$mime" in
+        application/pdf)
+            zathura "$f" >/dev/null 2>&1 &
+            ;;
+        text/*|application/json|application/javascript|application/x-yaml|application/toml|application/xml|application/x-subrip)
+            ${EDITOR:-nvim} "$f"
+            ;;
+        image/*)
+            if command -v loupe >/dev/null 2>&1; then
+                loupe "$f" >/dev/null 2>&1 &
+            else
+                xdg-open "$f" >/dev/null 2>&1 &
+            fi
+            ;;
+        video/*|audio/*)
+            xdg-open "$f" >/dev/null 2>&1 &
+            ;;
+        *)
+            case "$ext" in
+                pdf)
+                    zathura "$f" >/dev/null 2>&1 & ;;
+                md|markdown|txt|toml|yaml|yml|json|sh|zsh|rs|py|c|cpp|h|lua|conf|ini)
+                    ${EDITOR:-nvim} "$f" ;;
+                html|htm)
+                    xdg-open "$f" >/dev/null 2>&1 & ;;
+                *)
+                    xdg-open "$f" >/dev/null 2>&1 & ;;
+            esac
+            ;;
+    esac
+}}
+
+# Spawn external terminal in current directory using $TERMINAL
+cmd terminal ${{
+    ${TERMINAL:-foot} &
+}}
+
+# Interactive Zoxide Jump
+cmd z ${{
+    res="$(zoxide query -i -- "$@")"
+    if [ -n "$res" ]; then
+        cmd="cd"
+        [ ! -d "$res" ] && cmd="select"
+        lf -remote "send $id $cmd \"$res\""
+    fi
+}}
+
+# Fuzzy find files using FZF
+cmd fzf_jump ${{
+    res="$(find . -maxdepth 4 -not -path '*/.*' | fzf --reverse --header='Jump to file/dir')"
+    if [ -n "$res" ]; then
+        res="$(realpath "$res")"
+        if [ -d "$res" ]; then
+            lf -remote "send $id cd \"$res\""
+        else
+            lf -remote "send $id select \"$res\""
+        fi
+    fi
+}}
+
+# Ripgrep content search with preview
+cmd fzf_search ${{
+    res="$(rg --column --line-number --no-heading --color=always --smart-case '' | \
+        fzf --ansi --delimiter : \
+            --preview 'bat --style=numbers --color=always --highlight-line {2} {1}' \
+            --preview-window 'up,60%,border-bottom,+{2}+3/3,~3')"
+    [ -n "$res" ] || exit 0
+    file="$(echo "$res" | cut -d: -f1)"
+    line="$(echo "$res" | cut -d: -f2)"
+    ${EDITOR:-nvim} "+$line" "$file"
+}}
+
+# Move to Trash (Safe Delete)
+cmd trash ${{
+    files=$(echo "$fx" | tr '\n' ' ')
+    if command -v gio >/dev/null 2>&1; then
+        gio trash $fx
+    else
+        mkdir -p ~/.local/share/Trash/files
+        mv -t ~/.local/share/Trash/files $fx
+    fi
+    lf -remote "send $id echo \"Moved to trash: $files\""
+}}
+
+# Permanent Delete with Confirmation
+cmd delete_forever ${{
+    printf "Permanently delete selected files? (y/N): "
+    read -r ans
+    if [ "$ans" = "y" ] || [ "$ans" = "Y" ]; then
+        rm -rf $fx
+        lf -remote "send $id echo \"Deleted permanently.\""
+    else
+        lf -remote "send $id echo \"Aborted.\""
+    fi
+}}
+
+# Create new file
+cmd touch %{{
+    printf "File name: "
+    read -r name
+    [ -z "$name" ] && exit 0
+    touch "$name"
+    lf -remote "send $id select \"$name\""
+}}
+
+# Create new directory
+cmd mkdir %{{
+    printf "Directory name: "
+    read -r name
+    [ -z "$name" ] && exit 0
+    mkdir -p "$name"
+    lf -remote "send $id select \"$name\""
+}}
+
+# Smart Extract Archive
+cmd extract ${{
+    case "$f" in
+        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar -xjvf "$f" ;;
+        *.tar.gz|*.tgz) tar -xzvf "$f" ;;
+        *.tar.xz|*.txz) tar -xJvf "$f" ;;
+        *.tar) tar -xvf "$f" ;;
+        *.zip) unzip "$f" ;;
+        *.rar|*.7z) 7z x "$f" ;;
+        *) echo "Unsupported format" ;;
+    esac
+}}
+
+# Copy current path to clipboard
+cmd copy_path ${{
+    printf '%s' "$fx" | wl-copy 2>/dev/null || printf '%s' "$fx" | xclip -selection clipboard 2>/dev/null
+    lf -remote "send $id echo \"Copied path to clipboard\""
+}}
+
+# ==============================================================================
+# Keybindings
+# ==============================================================================
+
+# Navigation
+map gh cd ~
+map gr cd /
+map gd cd ~/Downloads
+map gc cd ~/.config
+map gl cd ~/.config/lf
+
+# Terminal spawn
+map <c-x> terminal
+
+# File Operations
+map d trash
+map D delete_forever
+map a touch
+map A mkdir
+map r rename
+map e $$EDITOR "$f"
+map i $~/.config/lf/previewer "$f" 80 40 0 0 | less -R
+map yy copy
+map dd cut
+map p paste
+map X extract
+map Y copy_path
+
+# Search & Quick Jump
+map f fzf_jump
+map F fzf_search
+map z z
+
+# Toggle Options
+map zh set hidden!
+map zr set reverse!
+map zs set sorttype!
+map zc set preview!

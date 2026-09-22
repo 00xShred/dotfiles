@@ -15,14 +15,14 @@ STATUS=$(echo "$STATUS_JSON" | jq -r '.status')
 
 # 2. Logic Check
 if [ "$STATUS" == "unauthenticated" ]; then
-    EMAIL=$(wofi --dmenu -p "Bitwarden Email:")
+    EMAIL=$(fuzzel --dmenu --prompt "Bitwarden Email: ")
     [ -z "$EMAIL" ] && exit 1
-    BW_SESSION=$(wofi --dmenu -p "Master Password:" --password | bw login "$EMAIL" --raw)
+    BW_SESSION=$(fuzzel --dmenu --prompt "Master Password: " --password | bw login "$EMAIL" --raw)
     export BW_SESSION
     cache_session
 
 elif [ "$STATUS" == "locked" ]; then
-    BW_PASS=$(wofi --dmenu -p "Vault Locked. Master Password:" --password)
+    BW_PASS=$(fuzzel --dmenu --prompt "Vault Locked. Master Password: " --password)
     [ -z "$BW_PASS" ] && exit 1
 
     BW_SESSION=$(echo "$BW_PASS" | bw unlock --raw)

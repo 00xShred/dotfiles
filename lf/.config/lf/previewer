@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+set -e
+
+file="$1"
+w="$2"
+h="$3"
+x="$4"
+y="$5"
+
+if [ ! -r "$file" ]; then
+    echo "Unreadable file: $file"
+    exit 0
+fi
+
+# Mime type & extension
+mimetype="$(file --dereference --brief --mime-type -- "$file" 2>/dev/null || true)"
+ext="${file##*.}"
+ext="$(echo "$ext" | tr '[:upper:]' '[:lower:]')"
+
+# 1. Markdown preview via leaf
+if [ "$ext" = "md" ] || [ "$ext" = "markdown" ] || [ "$mimetype" = "text/markdown" ]; then
+    if command -v leaf >/dev/null 2>&1; then
+        leaf --inline "ansi:$w" "$file" && exit 0
+    elif [ -x "$HOME/.cargo/bin/leaf" ]; then
+        "$HOME/.cargo/bin/leaf" --inline "ansi:$w" "$file" && exit 0
+    elif command -v bat >/dev/null 2>&1; then
+        bat --color=always --paging=never --style=numbers,changes --terminal-width="$w" "$file" && exit 0
+    fi
+fi
+
+case "$mimetype" in
+    image/*)
+        if [ -n "$KITTY_WINDOW_ID" ] || [ "$TERM" = "xterm-kitty" ]; then
+            kitten icat --silent --stdin no --transfer-mode file --place "${w}x${h}@${x}x${y}" "$file" < /dev/tty > /dev/tty
+            exit 1
+        elif command -v chafa >/dev/null 2>&1; then
+            chafa -s "${w}x${h}" "$file"
+            exit 0
+        fi
+        ;;
+    video/*)
+        cache="/tmp/lf-thumb-$(echo "$file" | md5sum | awk '{print $1}').png"
+        if [ ! -f "$cache" ]; then
+            ffmpegthumbnailer -i "$file" -o "$cache" -s 0 -q 5 2>/dev/null || true
+        fi
+        if [ -f "$cache" ]; then
+            if [ -n "$KITTY_WINDOW_ID" ] || [ "$TERM" = "xterm-kitty" ]; then
+                kitten icat --silent --stdin no --transfer-mode file --place "${w}x${h}@${x}x${y}" "$cache" < /dev/tty > /dev/tty
+                exit 1
+            elif command -v chafa >/dev/null 2>&1; then
+                chafa -s "${w}x${h}" "$cache"
+                exit 0
+            fi
+        fi
+        ;;
+    application/pdf)
+        cache="/tmp/lf-pdf-$(echo "$file" | md5sum | awk '{print $1}')"
+        if [ ! -f "${cache}-1.png" ]; then
+            pdftoppm -png -f 1 -l 1 "$file" "$cache" 2>/dev/null || true
+        fi
+        if [ -f "${cache}-1.png" ]; then
+            if [ -n "$KITTY_WINDOW_ID" ] || [ "$TERM" = "xterm-kitty" ]; then
+                kitten icat --silent --stdin no --transfer-mode file --place "${w}x${h}@${x}x${y}" "${cache}-1.png" < /dev/tty > /dev/tty
+                exit 1
+            elif command -v chafa >/dev/null 2>&1; then
+                chafa -s "${w}x${h}" "${cache}-1.png"
+                exit 0
+            fi
+        fi
+        ;;
+    text/* | application/json | application/javascript | application/xml | application/x-yaml | application/toml)
+        if command -v bat >/dev/null 2>&1; then
+            bat --color=always --paging=never --style=numbers,changes --terminal-width="$w" "$file" && exit 0
+        else
+            head -n "$h" "$file" && exit 0
+        fi
+        ;;
+    inode/directory)
+        if command -v eza >/dev/null 2>&1; then
+            eza -la --icons --color=always --group-directories-first "$file" && exit 0
+        else
+            ls -lh --color=always "$file" && exit 0
+        fi
+        ;;
+    application/zip | application/x-tar | application/x-7z-compressed | application/x-rar | application/gzip | application/x-bzip2 | application/x-xz)
+        if command -v 7z >/dev/null 2>&1; then
+            7z l "$file" && exit 0
+        elif command -v tar >/dev/null 2>&1; then
+            tar -tvf "$file" 2>/dev/null && exit 0
+        fi
+        ;;
+esac
+
+# Fallback
+if file -b --mime-encoding "$file" | grep -q 'binary'; then
+    echo "=== Binary File ==="
+    file -b "$file"
+    ls -lh "$file" | awk '{print "Size: " $5 ", Permissions: " $1}'
+else
+    if command -v bat >/dev/null 2>&1; then
+        bat --color=always --paging=never --style=numbers,changes --terminal-width="$w" "$file" 2>/dev/null || head -n "$h" "$file"
+    else
+        head -n "$h" "$file"
+    fi
+fi
+exit 0

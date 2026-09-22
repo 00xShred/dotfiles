@@ -12,7 +12,7 @@ entries=$(cliphist list)
 }
 
 # Show menu and capture selection
-chosen=$(echo "$entries" | wofi --dmenu --prompt "Paste from history..." --insensitive)
+chosen=$(echo "$entries" | fuzzel --dmenu --prompt "Clipboard > " --width 60)
 
 # Exit if cancelled
 [ -z "$chosen" ] && exit

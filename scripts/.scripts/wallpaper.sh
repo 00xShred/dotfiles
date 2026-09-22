@@ -3,12 +3,20 @@
 # 1. VARIABLES
 DIR="$HOME/Pictures/Wallpapers"
 
-# 2. SELECT WALLPAPER (Using fzf with Kitty image preview)
+# 2. SELECT WALLPAPER (Preview via Kitty icat or Sixel)
 cd "$DIR" || exit
+
+if [ -n "$KITTY_PID" ] || [ "$TERM" = "xterm-kitty" ]; then
+    PREVIEW_CMD='kitten icat --clear --transfer-mode=memory --stdin=no --place=${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0 {}'
+elif command -v chafa >/dev/null 2>&1; then
+    PREVIEW_CMD='chafa -f sixel -s ${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES} {}'
+else
+    PREVIEW_CMD='magick {} -resize "$(( ${FZF_PREVIEW_COLUMNS:-50} * 11 ))x$(( ${FZF_PREVIEW_LINES:-25} * 22 ))" sixel:-'
+fi
 
 SELECTED=$(find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) |
     sort |
-    fzf --preview 'kitten icat --clear --transfer-mode=memory --stdin=no --place=${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0 {}' \
+    fzf --preview "$PREVIEW_CMD" \
         --preview-window=right:60% \
         --prompt="Choose Wallpaper > " \
         --border=rounded \

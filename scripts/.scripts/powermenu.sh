@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# --- Wofi Configuration ---
-# We use the same theme-aware, compact style as our other scripts
-WOFI_CMD="wofi --dmenu -i -p Power-Menu --width 300 --lines 5"
+# --- Menu Configuration ---
+MENU_CMD="fuzzel --dmenu --prompt Power-Menu>  --lines 5 --width 20"
 
 # --- Options ---
 # We use Nerd Font icons to match your setup
@@ -20,8 +19,8 @@ else
   LOGOUT_CMD="swaymsg exit || uwsm stop"
 fi
 
-# Pipe the options into wofi
-choice=$(printf "%s\n%s\n%s\n%s\n%s" "$shutdown" "$reboot" "$suspend" "$lock" "$logout" | $WOFI_CMD)
+# Pipe the options into fuzzel
+choice=$(printf "%s\n%s\n%s\n%s\n%s" "$shutdown" "$reboot" "$suspend" "$lock" "$logout" | $MENU_CMD)
 
 # --- Action ---
 case "$choice" in

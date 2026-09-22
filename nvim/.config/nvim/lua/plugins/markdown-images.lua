@@ -22,7 +22,7 @@ return {
     "3rd/image.nvim",
     ft = { "markdown" },
     opts = {
-      backend = "kitty",
+      backend = (vim.env.KITTY_PID or vim.env.TERM == "xterm-kitty") and "kitty" or "sixel",
       integrations = {
         markdown = {
           enabled = true,

@@ -5,7 +5,7 @@ exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSO
 exec systemctl --user start sway-session.service
 
 set $mod Mod4
-set $term kitty
+set $term foot
 
 include ~/.cache/wal/colors-sway
 
@@ -47,13 +47,14 @@ bindsym $mod+d exec wmenu-run -i -f "JetBrains Mono Nerd Font 11" -N "$backgroun
 bindsym $mod+Shift+d exec fuzzel
 bindsym $mod+e exec thunar
 bindsym $mod+Alt+d exec nwg-displays
-bindsym $mod+w exec kitty --class wallpaper_selector -e ~/.scripts/wallpaper.sh
+bindsym $mod+w exec foot -a wallpaper_selector -e ~/.scripts/wallpaper.sh
 bindsym $mod+p exec ~/.scripts/powermenu.sh
 bindsym $mod+n exec ~/.scripts/quick_note.sh
-bindsym $mod+Shift+n exec kitty --class floating_note ~/.scripts/qn_search.sh
+bindsym $mod+Shift+n exec foot -a floating_note ~/.scripts/qn_search.sh
 bindsym $mod+c exec ~/.scripts/clip_to_note.sh
 bindsym $mod+Shift+c exec ~/.scripts/clipmenu.sh
 bindsym $mod+m exec ~/.scripts/volume.sh mute
+bindsym $mod+z exec zapzap
 
 
 # Windows
@@ -145,6 +146,7 @@ for_window [app_id="wallpaper_selector"] floating enable, resize set 800 500, mo
 for_window [class="wallpaper_selector"] floating enable, resize set 800 500, move position center
 for_window [app_id="floating_note"] floating enable, resize set 900 600, move position center
 for_window [class="floating_note"] floating enable, resize set 900 600, move position center
+for_window [app_id="floating_network"] floating enable, resize set 700 500, move position center
 for_window [app_id="qutebrowser"] focus
 for_window [app_id="org.qutebrowser.qutebrowser"] focus
 

@@ -19,18 +19,18 @@ My daily driver on Arch + Sway. Everything is keyboard-driven, color-synced thro
 ## Stack
 
 - **WM:** [Sway](https://swaywm.org/)
-- **Terminal:** [Kitty](https://sw.kovidgoyal.net/kitty/) — GPU-accelerated, Pywal-themed
+- **Terminal:** [Foot](https://codeberg.org/dnkl/foot) — lightweight Wayland terminal with Pywal colors / [Kitty](https://sw.kovidgoyal.net/kitty/) (fallback)
 - **Multiplexers:** [Zellij](https://zellij.dev/) & [Tmux](https://github.com/tmux/tmux) — persistent sessions and workspace layouts
 - **Shell:** Zsh + [Starship](https://starship.rs/) prompt
 - **Editor & Agent:** [Neovim](https://neovim.io/) (LazyVim config with LSP and Treesitter) + [Pi](https://github.com/badlogic/pi-mono) coding agent
-- **Files:** [Thunar](https://docs.xfce.org/xfce/thunar/start) (GUI) / [Yazi](https://yazi-rs.github.io/) (terminal file manager with image previews)
+- **Files:** [Thunar](https://docs.xfce.org/xfce/thunar/start) (GUI) / [lf](https://github.com/gokcehan/lf), [nnn](https://github.com/jarun/nnn), [joshuto](https://github.com/kamiyaa/joshuto) (terminal file managers with previews)
 - **Documents:** [Zathura](https://pwmt.org/projects/zathura/) — PDF viewer with SyncTeX + Neovim integration
 - **Browser:** [Qutebrowser](https://qutebrowser.org/) (keyboard-driven daily) / [Zen Browser](https://zen-browser.app/)
 - **Bar:** swaybar with custom JSON status (`swaybar_status.sh`)
 - **Theming:** [Pywal](https://github.com/dylanaraps/pywal) (pywal16) — wallpaper-based system-wide color sync
 - **Display:** [Kanshi](https://git.sr.ht/~emersion/kanshi) — automatic monitor profile switching + [nwg-displays](https://github.com/nwg-piotr/nwg-displays)
 - **Notifications:** [Dunst](https://dunst-project.org/) — Pywal-themed notification daemon
-- **Launcher:** [wmenu](https://codeberg.org/adnano/wmenu) / [Fuzzel](https://codeberg.org/dnkl/fuzzel) / [Wofi](https://hg.sr.ht/~scoopta/wofi)
+- **Launcher:** [wmenu](https://codeberg.org/adnano/wmenu) / [Fuzzel](https://codeberg.org/dnkl/fuzzel)
 - **Locker:** [swaylock](https://github.com/jeffmhubbard/swaylock)
 - **Git:** [lazygit](https://github.com/jesseduffield/lazygit)
 - **Office:** [OnlyOffice](https://www.onlyoffice.com/) — document, spreadsheet, and presentation editor
@@ -55,7 +55,7 @@ chmod +x install.sh
 
 | Key Combo                 | Action                                      |
 | ------------------------- | ------------------------------------------- |
-| `Super + Return`          | Terminal (Kitty)                            |
+| `Super + Return`          | Terminal (Foot)                             |
 | `Super + B`               | Browser (Qutebrowser)                       |
 | `Super + Shift + B`       | Browser (Zen Browser)                       |
 | `Super + Alt + B`         | Qutebrowser (Bitwarden session unlock)      |
@@ -64,11 +64,11 @@ chmod +x install.sh
 | `Super + E`               | File Manager (Thunar)                       |
 | `Super + Alt + D`         | Display Settings (nwg-displays)             |
 | `Super + W`               | Change Wallpaper (fzf preview + Pywal)      |
-| `Super + P`               | Power Menu (Wofi)                           |
+| `Super + P`               | Power Menu (Fuzzel)                         |
 | `Super + N`               | New Quick Note (floating Neovim)            |
 | `Super + Shift + N`       | Search Quick Notes (fzf + Neovim)           |
 | `Super + C`               | Clip Selection to Note Scraps               |
-| `Super + Shift + C`       | Clipboard History (cliphist + Wofi)         |
+| `Super + Shift + C`       | Clipboard History (cliphist + Fuzzel)       |
 | `Super + M`               | Toggle Audio Mute                           |
 | `Super + O`               | Toggle Window Opacity (0.95 / 1.0)          |
 | `Super + S`               | Screenshot Region (Copy to clipboard)       |
@@ -95,10 +95,16 @@ $HOME/dotfiles
 ├── btop/          # System monitor config & themes
 ├── cava/          # Audio visualizer config
 ├── dunst/         # Notification daemon config
+├── environment/   # Session & default environment variables
+├── foot/          # Foot Wayland terminal configuration
+├── fuzzel/        # Fuzzel Wayland application launcher
 ├── gtk/           # GTK-3.0 and GTK-4.0 settings
+├── joshuto/       # Joshuto terminal file manager configuration
 ├── kanshi/        # Display profile auto-switching
-├── kitty/         # GPU-accelerated terminal
+├── kitty/         # GPU-accelerated terminal (fallback)
 ├── lazygit/       # Terminal UI for git
+├── lf/            # LF terminal file manager with previews
+├── nnn/           # NNN terminal file manager and plugins
 ├── nvim/          # LazyVim Neovim configuration
 ├── nwg/           # nwg-displays and nwg-look settings
 ├── obs-studio/    # OBS Studio profiles and scenes
@@ -113,13 +119,11 @@ $HOME/dotfiles
 ├── swaylock/      # Lock screen config
 ├── tmux/          # Tmux configuration
 ├── wal/           # Pywal templates & color themes
-├── wofi/          # Wofi launcher styling
 ├── wpg/           # Wpgtk color scheme templates
-├── yazi/          # Terminal file manager configuration
 ├── zathura/       # PDF / document viewer configuration
 ├── zellij/        # Zellij multiplexer layouts & settings
 ├── zen-browser/   # Zen browser integration
-├── zsh/           # Zsh shell configs (.zshrc, zshrc.d)
+├── zsh/           # Zsh shell configs (.zshrc, .zshenv, zshrc.d)
 └── install.sh     # Cross-platform system bootstrap
 ```
 
