@@ -9,7 +9,7 @@ cd "$DIR" || exit
 if [ -n "$KITTY_PID" ] || [ "$TERM" = "xterm-kitty" ]; then
     PREVIEW_CMD='kitten icat --clear --transfer-mode=memory --stdin=no --place=${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES}@0x0 {}'
 elif command -v chafa >/dev/null 2>&1; then
-    PREVIEW_CMD='chafa -f sixel -s ${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES} {}'
+    PREVIEW_CMD='chafa -f sixel -s ${FZF_PREVIEW_COLUMNS}x${FZF_PREVIEW_LINES} --scale max --align mid,mid --margin-bottom 0 {}'
 else
     PREVIEW_CMD='magick {} -resize "$(( ${FZF_PREVIEW_COLUMNS:-50} * 11 ))x$(( ${FZF_PREVIEW_LINES:-25} * 22 ))" sixel:-'
 fi
@@ -17,10 +17,10 @@ fi
 SELECTED=$(find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) |
     sort |
     fzf --preview "$PREVIEW_CMD" \
-        --preview-window=right:60% \
+        --preview-window=right:65% \
         --prompt="Choose Wallpaper > " \
         --border=rounded \
-        --margin=5%)
+        --margin=1%)
 
 # Exit if cancelled
 if [ -z "$SELECTED" ]; then
