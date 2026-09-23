@@ -14,13 +14,17 @@ else
     PREVIEW_CMD='magick {} -resize "$(( ${FZF_PREVIEW_COLUMNS:-50} * 11 ))x$(( ${FZF_PREVIEW_LINES:-25} * 22 ))" sixel:-'
 fi
 
-SELECTED=$(find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) |
+FZF_OUT=$(find . -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) |
     sort |
     fzf --preview "$PREVIEW_CMD" \
         --preview-window=right:65% \
-        --prompt="Choose Wallpaper > " \
+        --prompt="Choose Wallpaper [Enter: Auto, Ctrl+Z: Colorz, Ctrl+T: ColorThief] > " \
+        --expect="ctrl-z,ctrl-t" \
         --border=rounded \
         --margin=1%)
+
+KEY=$(printf "%s\n" "$FZF_OUT" | sed -n '1p')
+SELECTED=$(printf "%s\n" "$FZF_OUT" | sed -n '2p')
 
 # Exit if cancelled
 if [ -z "$SELECTED" ]; then
@@ -30,14 +34,42 @@ fi
 # Construct full path (remove ./ prefix if present)
 WALLPAPER="$DIR/${SELECTED#./}"
 
+# Determine backend (key override or smart pick)
+case "$KEY" in
+    ctrl-z)
+        BACKEND="colorz"
+        ;;
+    ctrl-t)
+        BACKEND="colorthief"
+        ;;
+    *)
+        case "$(basename "$WALLPAPER" | tr '[:upper:]' '[:lower:]')" in
+            *berserk*|*guts*)
+                BACKEND="colorz"
+                ;;
+            *)
+                BACKEND="colorthief"
+                ;;
+        esac
+        ;;
+esac
+
 # 3. APPLY WALLPAPER
-echo "Applying: $WALLPAPER"
+echo "Applying: $WALLPAPER ($BACKEND)"
 dunstify -a wallpaper -u low \
     -h string:x-dunst-stack-tag:wallpaper \
-    -i preferences-desktop-wallpaper "Applying wallpaper" "$(basename "$WALLPAPER")" 2>/dev/null || true
+    -i preferences-desktop-wallpaper "Applying wallpaper" "$(basename "$WALLPAPER") [$BACKEND]" 2>/dev/null || true
 
-# Generate colors
-wal -i "$WALLPAPER" || true
+# Generate colors with fallback if colorz fails
+if ! wal -i "$WALLPAPER" --backend "$BACKEND"; then
+    echo "Backend $BACKEND failed, falling back to colorthief..."
+    wal -i "$WALLPAPER" --backend colorthief || true
+fi
+
+# Ensure dark/monochrome palettes have distinct accents
+if [ -x "$HOME/.scripts/wal-palette-guard.py" ]; then
+    "$HOME/.scripts/wal-palette-guard.py" || true
+fi
 
 if [ -x "$HOME/.scripts/rebuild-dwl-theme.sh" ]; then
     "$HOME/.scripts/rebuild-dwl-theme.sh" || true
