@@ -48,7 +48,7 @@ case "$KEY" in
                 BACKEND="colorz"
                 ;;
             *)
-                BACKEND="colorthief"
+                BACKEND="wal"
                 ;;
         esac
         ;;
