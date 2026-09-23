@@ -88,12 +88,14 @@ case "$MIMETYPE" in
         exit 0
         ;;
     application/pdf)
-        cache="/tmp/joshuto-pdf-$(echo "$FILE_PATH" | md5sum | awk '{print $1}')"
+        cache="/tmp/joshuto-pdf-v2-$(echo "$FILE_PATH" | md5sum | awk '{print $1}')"
         if [ ! -f "${cache}-1.png" ]; then
-            pdftoppm -png -f 1 -l 1 "$FILE_PATH" "$cache" 2>/dev/null || true
+            # Render at a useful resolution; chafa will scale it to the preview pane.
+            pdftoppm -png -r 200 -f 1 -l 1 "$FILE_PATH" "$cache" 2>/dev/null || true
         fi
         if [ -f "${cache}-1.png" ] && command -v chafa >/dev/null 2>&1; then
-            chafa --polite=on --probe=off -f symbols -s "${PREVIEW_WIDTH}x${PREVIEW_HEIGHT}" "${cache}-1.png" && exit 0
+            chafa --polite=on --probe=off -f symbols --symbols=solid --colors=full \
+                --scale=max -s "${PREVIEW_WIDTH}x${PREVIEW_HEIGHT}" "${cache}-1.png" && exit 0
         fi
         echo "=== PDF Document ==="
         file -b "$FILE_PATH"
