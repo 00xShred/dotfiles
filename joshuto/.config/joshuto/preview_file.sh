@@ -73,12 +73,7 @@ case "$MIMETYPE" in
         fi
         ;;
     image/*)
-        if command -v chafa >/dev/null 2>&1; then
-            chafa -s "${PREVIEW_WIDTH}x${PREVIEW_HEIGHT}" "$FILE_PATH" && exit 0
-        fi
-        echo "=== Image ==="
-        file -b "$FILE_PATH"
-        exit 0
+        exit 1
         ;;
     video/*)
         cache="/tmp/joshuto-thumb-$(echo "$FILE_PATH" | md5sum | awk '{print $1}').png"
@@ -86,7 +81,7 @@ case "$MIMETYPE" in
             ffmpegthumbnailer -i "$FILE_PATH" -o "$cache" -s 0 -q 5 2>/dev/null || true
         fi
         if [ -f "$cache" ] && command -v chafa >/dev/null 2>&1; then
-            chafa -s "${PREVIEW_WIDTH}x${PREVIEW_HEIGHT}" "$cache" && exit 0
+            chafa --polite=on --probe=off -f symbols -s "${PREVIEW_WIDTH}x${PREVIEW_HEIGHT}" "$cache" && exit 0
         fi
         echo "=== Video ==="
         file -b "$FILE_PATH"
@@ -98,7 +93,7 @@ case "$MIMETYPE" in
             pdftoppm -png -f 1 -l 1 "$FILE_PATH" "$cache" 2>/dev/null || true
         fi
         if [ -f "${cache}-1.png" ] && command -v chafa >/dev/null 2>&1; then
-            chafa -s "${PREVIEW_WIDTH}x${PREVIEW_HEIGHT}" "${cache}-1.png" && exit 0
+            chafa --polite=on --probe=off -f symbols -s "${PREVIEW_WIDTH}x${PREVIEW_HEIGHT}" "${cache}-1.png" && exit 0
         fi
         echo "=== PDF Document ==="
         file -b "$FILE_PATH"

@@ -56,7 +56,8 @@ keymap = [
   { keys = ["l"], commands = ["open"] },
   { keys = ["g", "g"], commands = ["cursor_move_home"] },
   { keys = ["G"], commands = ["cursor_move_end"] },
-  { keys = ["r"], commands = ["open_with"] },
+  { keys = ["r"], commands = ["rename_append_base"] },
+  { keys = ["o"], commands = ["open_with"] },
 
   { keys = ["H"], commands = ["cursor_move_page_home"] },
   { keys = ["L"], commands = ["cursor_move_page_middle"] },
@@ -66,7 +67,11 @@ keymap = [
   { keys = ["]"], commands = ["parent_cursor_move_down"] },
 
   { keys = ["c", "d"], commands = [":cd "] },
-  { keys = ["d", "d"], commands = ["cut_files"] },
+  { keys = ["x"], commands = ["cut_files"] },
+  { keys = ["d"], commands = ["delete_files --noconfirm"] },
+  { keys = ["D"], commands = ["delete_files --permanently --noconfirm"] },
+  { keys = ["delete"], commands = ["delete_files --noconfirm"] },
+
   { keys = ["y", "y"], commands = ["copy_files"] },
   { keys = ["y", "n"], commands = ["copy_filename"] },
   { keys = ["y", "."], commands = ["copy_filename_without_extension"] },
@@ -77,16 +82,13 @@ keymap = [
   { keys = ["p", "l"], commands = ["symlink_files --relative=false"] },
   { keys = ["p", "L"], commands = ["symlink_files --relative=true"] },
 
-  { keys = ["delete"], commands = ["delete_files"] },
-  { keys = ["d", "D"], commands = ["delete_files"] },
-
   { keys = ["p", "p"], commands = ["paste_files"] },
   { keys = ["p", "o"], commands = ["paste_files --overwrite=true"] },
 
-  { keys = ["a"], commands = ["rename_append"] },
-  { keys = ["A"], commands = ["rename_prepend"] },
+  { keys = ["a"], commands = [":touch "] },
+  { keys = ["A"], commands = [":mkdir "] },
 
-  { keys = ["f", "t"], commands = [":touch "] },
+  { keys = ["f"], commands = [":search "] },
 
   { keys = [" "], commands = ["select --toggle=true"] },
   { keys = ["t"], commands = ["select --all=true --toggle=true"] },
@@ -171,4 +173,3 @@ keymap = [
   { keys = ["w"], commands = ["show_tasks"] },
   { keys = ["escape"], commands = ["show_tasks"] },
 ]
-

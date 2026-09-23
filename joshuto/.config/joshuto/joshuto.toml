@@ -30,7 +30,7 @@ directories_first = true
 reverse = false
 
 [preview]
-max_preview_size = "5MB"
+max_preview_size = "50MB"
 preview_script = "~/.config/joshuto/preview_file.sh"
 
 [search]
