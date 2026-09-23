@@ -31,18 +31,16 @@ alias nnn="n"
 # 3. joshuto (cd-on-quit)
 # ------------------------------------------------------------------------------
 joshutocd() {
-    ID="$$"
-    mkdir -p "/tmp/$USER" 2>/dev/null
-    OUTPUT_FILE="/tmp/$USER/joshuto-cwd-$ID"
-    command joshuto --output-file "$OUTPUT_FILE" "$@"
-    exit_code=$?
-    if [ -f "$OUTPUT_FILE" ]; then
-        OUTPUT_CWD=$(cat "$OUTPUT_FILE")
-        rm -f "$OUTPUT_FILE"
-        if [ -d "$OUTPUT_CWD" ] && [ "$OUTPUT_CWD" != "$PWD" ]; then
-            cd "$OUTPUT_CWD"
+    local tmp="$(mktemp -t "joshuto-cwd.XXXXXX")"
+    command joshuto --change-directory --output-file "$tmp" "$@"
+    local exit_code=$?
+    if [ -s "$tmp" ]; then
+        local output_cwd="$(cat -- "$tmp")"
+        if [ -d "$output_cwd" ] && [ "$output_cwd" != "$PWD" ]; then
+            cd -- "$output_cwd"
         fi
     fi
+    rm -f -- "$tmp"
     return $exit_code
 }
 alias joshuto="joshutocd"
