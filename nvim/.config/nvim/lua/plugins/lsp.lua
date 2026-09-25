@@ -1,19 +1,10 @@
 return {
-  -- LSP Config
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = {},
-    },
-  },
-
   -- Mason (Package Manager)
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {
         -- LSPs
-        "astro-language-server",
         "clangd",
         "pyright",
         "dockerfile-language-server",

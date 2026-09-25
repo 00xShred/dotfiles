@@ -20,7 +20,6 @@ return {
         "yaml",
         "c",
         "cpp",
-        "astro",
         "css",
         "dockerfile",
         "toml",
@@ -42,7 +41,6 @@ return {
       opts.formatters_by_ft = opts.formatters_by_ft or {}
 
       -- Web Stack
-      opts.formatters_by_ft.astro = { "prettier" }
       opts.formatters_by_ft.javascript = { "prettier" }
       opts.formatters_by_ft.typescript = { "prettier" }
       opts.formatters_by_ft.html = { "prettier" }

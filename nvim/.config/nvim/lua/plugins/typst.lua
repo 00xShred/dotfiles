@@ -1,5 +1,7 @@
 -- lua/plugins/typst.lua
 return {
+  { "chomosuke/typst-preview.nvim", enabled = false },
+
   -- Configure Tinymist LSP
   {
     "neovim/nvim-lspconfig",
@@ -12,16 +14,7 @@ return {
         },
       },
     },
-  },
-
-  -- Typst preview and keymaps
-  {
-    "chomosuke/typst-preview.nvim",
-    opts = {
-      dependencies_bin = {
-        tinymist = "tinymist",
-      },
-    },
+    -- PDF preview in Zathura; Tinymist exports the PDF on save.
     init = function()
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "typst",

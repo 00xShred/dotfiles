@@ -23,7 +23,7 @@ My daily driver on Arch + Sway. Everything is keyboard-driven, color-synced thro
 - **Multiplexers:** [Zellij](https://zellij.dev/) & [Tmux](https://github.com/tmux/tmux) — persistent sessions and workspace layouts
 - **Shell:** Zsh + [Starship](https://starship.rs/) prompt
 - **Editor & Agent:** [Neovim](https://neovim.io/) (LazyVim config with LSP and Treesitter) + [Pi](https://github.com/badlogic/pi-mono) coding agent
-- **Files:** [Thunar](https://docs.xfce.org/xfce/thunar/start) (GUI) / [lf](https://github.com/gokcehan/lf), [nnn](https://github.com/jarun/nnn), [joshuto](https://github.com/kamiyaa/joshuto) (terminal file managers with previews)
+- **Files:** [Thunar](https://docs.xfce.org/xfce/thunar/start) (GUI) / [lf](https://github.com/gokcehan/lf), [joshuto](https://github.com/kamiyaa/joshuto) (terminal file managers with previews)
 - **Documents:** [Zathura](https://pwmt.org/projects/zathura/) — PDF viewer with SyncTeX + Neovim integration
 - **Browser:** [Qutebrowser](https://qutebrowser.org/) (keyboard-driven daily) / [Zen Browser](https://zen-browser.app/)
 - **Bar:** swaybar with custom JSON status (`swaybar_status.sh`)
@@ -104,7 +104,6 @@ $HOME/dotfiles
 ├── kitty/         # GPU-accelerated terminal (fallback)
 ├── lazygit/       # Terminal UI for git
 ├── lf/            # LF terminal file manager with previews
-├── nnn/           # NNN terminal file manager and plugins
 ├── nvim/          # LazyVim Neovim configuration
 ├── nwg/           # nwg-displays and nwg-look settings
 ├── obs-studio/    # OBS Studio profiles and scenes

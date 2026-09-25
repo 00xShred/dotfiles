@@ -1,5 +1,6 @@
 return {
   -- Theme
+  { "catppuccin/nvim", enabled = false },
   {
     "RedsXDD/neopywal.nvim",
     name = "neopywal",
@@ -15,9 +16,6 @@ return {
       colorscheme = "neopywal-dark",
     },
   },
-
-  -- Dashboard (Disabled)
-  { "folke/alpha-nvim", enabled = false },
 
   -- Statusline
   {

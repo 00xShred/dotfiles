@@ -1,6 +1,4 @@
 return {
-  { import = "lazyvim.plugins.extras.lang.java" },
-
   {
     "stevearc/conform.nvim",
     optional = true,

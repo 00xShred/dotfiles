@@ -50,6 +50,14 @@ test("isGitMutation allows read-only git commands and blocks mutating ones", () 
 	assert.equal(isGitMutation("git remote add origin https://..."), true);
 	assert.equal(isGitMutation("git stash pop"), true);
 	assert.equal(isGitMutation("git stash drop"), true);
+
+	// rtk git mutating vs read-only
+	assert.equal(isGitMutation("rtk git commit -m foo"), true);
+	assert.equal(isGitMutation("rtk git push"), true);
+	assert.equal(isGitMutation("rtk git diff"), false);
+	assert.equal(isGitMutation("rtk git status"), false);
+	assert.equal(isGitMutation("rtk git log"), false);
+	assert.equal(isGitMutation("rtk git show"), false);
 });
 
 test("analyzeBashCommand allows safe pipelines and whitelisted commands without prompts", () => {
@@ -79,4 +87,16 @@ test("analyzeBashCommand allows safe pipelines and whitelisted commands without 
 
 	// User whitelist bypass
 	assert.equal(analyzeBashCommand("custom-command --inspect", ["custom-command"]), null);
+
+	// rtk safe commands and pipelines with and without whitelist
+	assert.equal(analyzeBashCommand("rtk git status", ["rtk git status"]), null);
+	assert.equal(analyzeBashCommand("rtk git diff | head -n 30", ["rtk git diff"]), null);
+	assert.equal(analyzeBashCommand("rtk --ultra-compact git status", ["rtk git status"]), null);
+	assert.equal(analyzeBashCommand("rtk ls -la | head -n 10", ["rtk ls"]), null);
+	assert.equal(analyzeBashCommand("rtk read src/index.ts", ["rtk read"]), null);
+
+	// rtk dangerous commands still prompt
+	const rtkRmRisk = analyzeBashCommand("rtk rm -rf foo", ["rtk ls"]);
+	assert.notEqual(rtkRmRisk, null);
+	assert.ok(rtkRmRisk!.reasons.some((r) => r.includes("file deletion")));
 });

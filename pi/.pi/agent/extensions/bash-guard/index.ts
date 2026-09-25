@@ -226,6 +226,24 @@ export function isSegmentSafe(args: string[], userWhitelist: string[] = []): boo
 	const cmd = args[0];
 	const rest = args.slice(1);
 
+	if (cmd === "rtk") {
+		let subIdx = 1;
+		while (subIdx < args.length && args[subIdx].startsWith("-")) {
+			subIdx++;
+		}
+		if (subIdx < args.length) {
+			const subArgs = args.slice(subIdx);
+			const unflaggedCmdLine = "rtk " + subArgs.join(" ");
+			for (const wl of userWhitelist) {
+				const trimmed = wl.trim();
+				if (trimmed && (unflaggedCmdLine === trimmed || unflaggedCmdLine.startsWith(trimmed + " "))) {
+					return true;
+				}
+			}
+			return isSegmentSafe(subArgs, userWhitelist);
+		}
+	}
+
 	if (cmd === "git") {
 		return !isGitSegmentMutation(args);
 	}
@@ -289,8 +307,19 @@ function analyzeSegment(seg: Token[]): Risk | null {
 	const args = tokensToStrings(seg);
 	if (args.length === 0) return null;
 
-	const cmd = args[0];
-	const rest = args.slice(1);
+	let effectiveArgs = args;
+	if (effectiveArgs[0] === "rtk") {
+		let subIdx = 1;
+		while (subIdx < effectiveArgs.length && effectiveArgs[subIdx].startsWith("-")) {
+			subIdx++;
+		}
+		if (subIdx < effectiveArgs.length) {
+			effectiveArgs = effectiveArgs.slice(subIdx);
+		}
+	}
+
+	const cmd = effectiveArgs[0];
+	const rest = effectiveArgs.slice(1);
 
 	// Shell redirection / pipes are handled on the whole command, but keep some segment checks too.
 	if (ops.includes("|") && (args.includes("sh") || args.includes("bash") || args.includes("zsh") || args.includes("fish"))) {
