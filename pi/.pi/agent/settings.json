@@ -133,5 +133,6 @@
       "rtk err",
       "rtk test"
     ]
-  }
+  },
+  "hideThinkingBlock": true
 }

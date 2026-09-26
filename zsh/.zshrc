@@ -120,6 +120,16 @@ bindkey -M vicmd "j" down-line-or-beginning-search
 [[ -f /opt/local/share/fzf/shell/key-bindings.zsh ]] && source /opt/local/share/fzf/shell/key-bindings.zsh
 [[ -f /opt/local/share/fzf/shell/completion.zsh ]] && source /opt/local/share/fzf/shell/completion.zsh 
 
+# Sanitize pasted text: strip \r (CRLF from browser/foot) and trailing spaces before newlines
+bracketed-paste() {
+    local content nl=$'\n'
+    zle .bracketed-paste content
+    content="${content//$'\r'/}"
+    content="${content//[[:blank:]]#$nl/$nl}"
+    LBUFFER+="$content"
+}
+zle -N bracketed-paste 
+
 # --- 6. ENVIRONMENT & PATHS ---
 export EDITOR='nvim'
 export VISUAL='nvim'
