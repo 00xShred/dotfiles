@@ -11,7 +11,7 @@ export const SUBAGENT_SPAWN_PROMPT_SNIPPET =
 /** Guides the parent model to delegate standalone tasks and avoid unnecessary blocking waits. */
 export const SUBAGENT_SPAWN_PROMPT_GUIDELINES = [
   "Use subagent_spawn to delegate self-contained tasks that can run in the background; give it a complete, standalone prompt.",
-  "Default to the 'claude' harness (with model 'sonnet' / 'claude-sonnet-5' and 'high' reasoning effort) unless another harness is requested or the task requires in-process pi tools.",
+  "Model and harness policy: by default, inherit or match the current dispatching model family (Claude → claude, OpenAI/Codex → codex, others → pi) and model tier. For heavy/critical tasks, upgrade to a higher tier (e.g. opus, gpt-5.6-sol) or higher reasoning effort. For light recon, quick lookups, or non-critical tasks, use a lighter/cheaper tier (e.g. haiku, gpt-5.6-luna) or lower reasoning effort.",
   "After subagent_spawn, keep working; results arrive automatically. Only call subagent_wait when you cannot proceed without the result.",
 ];
 
@@ -21,13 +21,13 @@ export const SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS = {
     "Task prompt for the subagent. Must be self-contained: include all needed context, file paths, and what to report back.",
   name: "Short human-readable name for this subagent, shown in listings and the UI",
   harness:
-    'Harness to run the subagent on: "claude" (Claude Code, preferred default), "pi" (in-process pi session), or "codex" (Codex CLI). Choose deliberately per task.',
+    'Harness to run the subagent on: "claude" (Claude Code), "pi" (in-process pi session), or "codex" (Codex CLI). If omitted, automatically defaults to the matching harness for the current session model family (Claude → claude, OpenAI/Codex → codex, others → pi).',
   workingDir:
     "Trusted working directory for the autonomous child (default: current working directory)",
   model:
-    'Model hint, interpreted by the chosen harness (claude: "sonnet" [default Sonnet 5], "opus", "fable"; pi: "provider/model-id"; codex: model slug). Omit for the harness default.',
+    'Model hint, interpreted by the chosen harness (claude: "sonnet", "opus", "haiku"; codex: "gpt-5.6-sol", "gpt-5.6-luna"; pi: "provider/model-id"). Omit to inherit or use the harness default.',
   reasoningEffort:
-    "Reasoning effort on a shared scale; the harness maps it to its nearest native equivalent (pi thinking level, codex reasoning effort, claude thinking budget). Omit for the harness default (pi inherits the current level).",
+    "Reasoning effort on a shared scale (off, minimal, low, medium, high, xhigh, max). Omit to inherit or use the harness default.",
 };
 
 /** Builds the subagent_spawn result that tells the parent model how to continue or inspect the child. */

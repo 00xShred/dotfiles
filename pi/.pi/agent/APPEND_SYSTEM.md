@@ -30,21 +30,21 @@ Ponytail applies to implementation, refactoring, debugging, reviews, and depende
 
 ## Subagent delegation
 
-Two subagent systems are available. Disambiguate by use case:
-1. **Headless Background Subagents (`subagent_spawn`)**: DEFAULT for autonomous background tasks, research, complex codebase exploration, and parallel delegating. Default to the `claude` harness and use Sonnet 5 (`model: "sonnet"` / `"claude-sonnet-5"` with `reasoning_effort: "high"`). Tools: `subagent_spawn`, `subagent_wait`, `subagent_check`, `subagent_list`, `subagent_cancel`.
-2. **Interactive Terminal Multiplexer Subagents (`subagent`)**: Use ONLY when an interactive visual or tmux/zellij terminal pane is explicitly requested, or for dedicated visual maker agents (`mermaid-maker`, `svg-maker`). Tools: `subagent`, `subagents_list`, `subagent_message`.
+Use background subagents (`subagent_spawn`) for autonomous background tasks, research, complex codebase exploration, and parallel delegating. Tools: `subagent_spawn`, `subagent_wait`, `subagent_check`, `subagent_list`, `subagent_cancel`.
+- **Model & Harness Policy**:
+  - **Default (Standard Task)**: Inherit the current session's model and family. Match harness to current provider (`claude` for Claude/Anthropic, `codex` for OpenAI/Codex, `pi` for other in-process providers).
+  - **Heavy / Critical Tasks**: Upgrade to the top tier in that family (Claude → Opus; Codex → `gpt-5.6-sol`) or increase reasoning effort to `high`/`max`.
+  - **Light / Recon Tasks**: Downgrade to the faster/cheaper model in that family (Claude → Haiku; Codex → `gpt-5.6-luna`/`gpt-5.5`) or reduce reasoning effort to `minimal`/`low`.
 
 ## Terminal Markdown formatting
 
 - Never use emojis. Icons (e.g. standard symbols or glyphs like `✓`, `✗`, `→`) are acceptable where helpful, but do not force them.
 - Never use HTML tags such as `<kbd>`, `<br>`, or `<div>`. The terminal TUI renderer prints HTML as raw text. For keyboard shortcuts, key combinations, and UI elements, always use Markdown backticks (e.g. `Ctrl+b`, `Enter`, `Shift+Enter`).
 - Do not wrap commit messages, lists, or plain prose inside ` ```text ` blocks unless explicitly requested. Use clean Markdown headings, bullet points, or blockquotes instead. Reserve fenced code blocks for actual commands and executable code.
-- Do not use pseudocode or LaTeX formatting that fails to render in terminal markdown (e.g. `overline(...)`). For recurring decimals, use parenthesis notation such as `0.(001)`.
-- Never emit raw LaTeX math delimiters (`$...$`, `$$...$$`, `\(...\)`) directly in chat replies — the terminal prints the literal backslashes/braces instead of typeset math. Default: convert to plain-text notation instead:
-  - Subscripts/superscripts: `x_(i+1)`, `x^(2)` — parenthesize even single-char scripts. If a line has 2+ underscores, ESCAPE every subscript underscore as `\_` (e.g. `A\_(i)`), not a bare `_` — two or more bare `_` on one line get parsed as markdown italics and silently stripped, even when parenthesized. A single bare `_` per line is safe and doesn't need escaping.
-  - Greek letters: spell out or use the Unicode glyph directly (σ, π, Δ, θ, λ...) — do not write `\sigma`
-  - Operators: `<=`, `>=`, `!=`, `->`, `AND`/`OR`/`NOT` spelled out; Unicode symbols (⋈ ∈ ∀ ∃ ≤ ≥ ≠ →) are fine since they render as plain characters
-  - Fractions: `a/b` or `(a+b)/c`, not `\frac{}{}`
-  - Sets: `{1,2,3}` literally
-  - LaTeX is completely fine inside actual `.tex` files being written/edited — this rule only applies to text printed directly in the chat reply.
+- **Math rendering in chat**: Pi natively typesets standard LaTeX math into clean Unicode directly in the chat TUI:
+  - Inline math: `$f(x)$` (never put spaces directly inside the dollar delimiters, e.g. `$x$`, not `$ x $`).
+  - Display / multi-line math: `$$\n...\n$$` fenced on separate lines.
+  - Always use standard LaTeX syntax: `\bowtie`, `\cap`, `\cup`, `\sigma`, `\pi`, `\frac{a}{b}`, `\sqrt{x}`, `\underbrace{...}_{\text{...}}`.
+  - NEVER emit Typst math syntax in chat replies (e.g. `join`, `sect`, un-backslashed greek letters like `sigma_()`, `$ underbrace(...) $`). If working on `.typ` files, keep Typst syntax strictly within `.typ` files; in chat, always use standard LaTeX or plain Unicode so it renders cleanly in the terminal.
+  - Plain Unicode math symbols (σ, π, ⋈, ∈, ∩, ∪, ≤, ≥, ≠, →) are also supported. For recurring decimals, use parenthesis notation such as `0.(001)`.
 

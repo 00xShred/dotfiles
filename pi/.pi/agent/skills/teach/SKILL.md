@@ -138,9 +138,10 @@ If you catch yourself asserting a fact he'd have to take on faith — foundation
 
 ## Formatting — math renders as LaTeX
 
-Everything written in a session is rendered to him through Obsidian, which renders LaTeX natively. So whenever math notation is involved — explanations, questions, quiz options and explanations, anything — write it in LaTeX instead of plain-text approximations:
+Pi natively renders standard LaTeX math directly in the chat terminal TUI (and into markdown logs). Whenever math notation is involved — explanations, questions, quiz options and explanations, anything — write it in standard LaTeX:
 
-- Inline math: `$f(x)$`
+- Inline math: `$f(x)$` (never put spaces directly after opening `$` or before closing `$`, e.g. `$x$`, not `$ x $`)
 - Centered display math: `$$` fenced on its own lines, e.g. `$$\n f(x) \n$$`
+- Always use standard LaTeX commands (`\bowtie`, `\cap`, `\cup`, `\sigma`, `\frac{a}{b}`, `\underbrace{...}_{\text{...}}`). Never use Typst math syntax (`sect`, `join`, un-backslashed greek letters) in chat replies.
 
-If LaTeX can be used, it should be. Write $f(x) = x^2$, not `f(x) = x^2`.
+Write $f(x) = x^2$, not `f(x) = x^2`.

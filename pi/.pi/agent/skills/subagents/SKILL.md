@@ -7,20 +7,20 @@ description: invoke this skill when the user asks you to use subagents
 
 Each subagent is headless, has its own context window, cannot see the parent conversation, cannot ask the user, and cannot spawn subagents or workflows. Give every child a self-contained prompt with paths, constraints, and the expected report.
 
-## Harness Hierarchy & Default Choice
+## Harness & Model Selection Strategy
 
-**Preferred Harness:** `claude` (Claude Code) is the primary default harness for delegated work. Use `pi` or `codex` only when explicitly asked or when a task requires in-process pi environment tools.
+**Default Policy:** By default, match or inherit the current session's model and family.
+- **Claude / Anthropic sessions:** Harness `claude` (or `pi`).
+- **OpenAI / Codex sessions:** Harness `codex` (or `pi`).
+- **Other sessions (DeepSeek, Kimi, Antigravity):** Harness `pi` (inherits directly).
 
-## Claude Code Harness (Default)
+### Task-Aware Model Tiers
 
-**Harness:** `claude`
-**Prompt nicknames:** “claude”, “Claude Code”, “claude agent”, “claude subagent”, "cc"
-**Best default:** use Sonnet 5 (`sonnet` / `claude-sonnet-5`) on high reasoning. Default to this model unless the user specifies otherwise.
-
-| Model hint                      | Model               | Recommended effort |
-| ------------------------------- | ------------------- | ------------------ |
-| `sonnet` or `claude-sonnet-5`   | Claude Sonnet 5     | `high`             |
-| `fable`                         | latest Claude Fable | `high`             |
+| Task Gravity | Claude Family (`claude`) | Codex Family (`codex`) | Other Pi Providers (`pi`) |
+|---|---|---|---|
+| **Critical / Heavy** (complex architecture, tough refactors) | `opus` (effort: `high`/`max`) | `gpt-5.6-sol` (effort: `high`/`max`) | Flagship tier (effort: `high`/`max`) |
+| **Standard / Default** | Current / `sonnet` (effort: `medium`/`high`) | Current / `gpt-5.6-sol` (effort: `medium`) | Inherited model & thinking |
+| **Light / Recon** (code search, file exploration, triage) | `haiku` (effort: `low`/`minimal`) | `gpt-5.6-luna` or `gpt-5.5` (effort: `minimal`) | Inherited model (effort: `low`/`minimal`) |
 
 **Thinking budgets:** `off`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`. The extension maps these to Claude thinking-token budgets: 0, 1,024, 4,096, 10,000, 16,000, 32,000, and 63,999 tokens respectively.
 

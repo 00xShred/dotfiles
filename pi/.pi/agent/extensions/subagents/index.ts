@@ -137,6 +137,15 @@ function resolveChildProjectTrust(options: {
   }
 }
 
+function resolveDefaultHarness(model?: { provider: string; id: string }): BackendName {
+  if (!model) return "pi";
+  const p = model.provider.toLowerCase();
+  const id = model.id.toLowerCase();
+  if (p === "anthropic" || id.includes("claude")) return "claude";
+  if (p === "openai-codex" || p === "openai" || id.includes("gpt")) return "codex";
+  return "pi";
+}
+
 export default function (pi: ExtensionAPI) {
   let runtime: SubagentRuntime | undefined;
   let managerPromise: Promise<SubagentManagerShape> | undefined;
@@ -277,9 +286,11 @@ export default function (pi: ExtensionAPI) {
       name: Type.String({
         description: SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS.name,
       }),
-      harness: StringEnum(BACKEND_NAMES, {
-        description: SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS.harness,
-      }),
+      harness: Type.Optional(
+        StringEnum(BACKEND_NAMES, {
+          description: SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS.harness,
+        }),
+      ),
       working_dir: Type.Optional(
         Type.String({
           description: SUBAGENT_SPAWN_PARAMETER_DESCRIPTIONS.workingDir,
@@ -298,7 +309,7 @@ export default function (pi: ExtensionAPI) {
     }),
     async execute(_toolCallId, params, signal, _onUpdate, ctx) {
       const manager = await getManager();
-      const harness = params.harness;
+      const harness = params.harness ?? resolveDefaultHarness(ctx.model);
 
       const cwd = path.resolve(ctx.cwd, params.working_dir ?? ".");
       if (!fs.existsSync(cwd) || !fs.statSync(cwd).isDirectory()) {

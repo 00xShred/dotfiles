@@ -9,6 +9,7 @@ import {
 	truncateToWidth,
 	wrapTextWithAnsi,
 } from "@earendil-works/pi-tui";
+import { typstToLatexMath } from "./markdown-cleaner.ts";
 import { Type } from "typebox";
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -248,8 +249,8 @@ function formatMathText(text: string): string {
 	// text with underscores, carets, or "&" (filenames, code, prose) must not
 	// be misread as math.
 	const out = text
-		.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderLatex(expr.trim(), { display: true }) ?? expr)
-		.replace(/\$([^$\n]+?)\$/g, (_, expr) => renderLatex(expr.trim()) ?? expr);
+		.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderLatex(typstToLatexMath(expr.trim()), { display: true }) ?? expr)
+		.replace(/\$([^$\n]+?)\$/g, (_, expr) => renderLatex(typstToLatexMath(expr.trim())) ?? expr);
 	// Anything left is plain text or a LaTeX command the author forgot to wrap
 	// in $...$ — best-effort cleanup so it doesn't print as raw noise.
 	return out
