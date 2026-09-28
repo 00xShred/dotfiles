@@ -88,13 +88,22 @@ case "$MIMETYPE" in
         exit 0
         ;;
     application/pdf)
+        # 1. Try text extraction first for clean, readable PDF preview
+        if command -v pdftotext >/dev/null 2>&1; then
+            pdf_text="$(pdftotext -l 5 -nopgbrk -q "$FILE_PATH" - 2>/dev/null | head -n "$PREVIEW_HEIGHT")"
+            if [ -n "$(printf "%s" "$pdf_text" | tr -d '[:space:]')" ]; then
+                printf "%s\n" "$pdf_text"
+                exit 0
+            fi
+        fi
+
+        # 2. Fallback to image rendering for scanned / image-only PDFs (using fine symbols, not solid blocks)
         cache="/tmp/joshuto-pdf-v2-$(echo "$FILE_PATH" | md5sum | awk '{print $1}')"
         if [ ! -f "${cache}-1.png" ]; then
-            # Render at a useful resolution; chafa will scale it to the preview pane.
-            pdftoppm -png -r 200 -f 1 -l 1 "$FILE_PATH" "$cache" 2>/dev/null || true
+            pdftoppm -png -r 150 -f 1 -l 1 "$FILE_PATH" "$cache" 2>/dev/null || true
         fi
         if [ -f "${cache}-1.png" ] && command -v chafa >/dev/null 2>&1; then
-            chafa --polite=on --probe=off -f symbols --symbols=solid --colors=full \
+            chafa --polite=on --probe=off -f symbols --symbols=all \
                 --scale=max -s "${PREVIEW_WIDTH}x${PREVIEW_HEIGHT}" "${cache}-1.png" && exit 0
         fi
         echo "=== PDF Document ==="

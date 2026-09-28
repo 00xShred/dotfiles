@@ -6,6 +6,7 @@ exec systemctl --user start sway-session.service
 
 set $mod Mod4
 set $term foot
+set $terminal kitty
 
 include ~/.cache/wal/colors-sway
 
@@ -38,8 +39,13 @@ input type:touchpad {
     natural_scroll enabled
 }
 
+input type:pointer {
+    events enabled
+}
+
 # Applications
 bindsym $mod+Return exec $term
+bindsym $mod+Shift+Return exec $terminal
 bindsym $mod+b exec qutebrowser --target window --untrusted-args about:blank
 bindsym $mod+Shift+b exec zen-browser
 bindsym $mod+Mod1+b exec ~/.scripts/qutebw.sh --target window --untrusted-args about:blank
