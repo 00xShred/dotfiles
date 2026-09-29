@@ -5,16 +5,16 @@ text_default = [
   { command = "nvim" },
 ]
 image_default = [
-  { command = "loupe", fork = true, silent = true },
+  { command = "setsid", args = ["-f", "loupe"], fork = true, silent = true },
 ]
 video_default = [
-  { command = "mpv", fork = true, silent = true },
+  { command = "setsid", args = ["-f", "mpv"], fork = true, silent = true },
 ]
 audio_default = [
-  { command = "mpv", fork = true, silent = true },
+  { command = "setsid", args = ["-f", "mpv"], fork = true, silent = true },
 ]
 reader_default = [
-  { command = "zathura", fork = true, silent = true },
+  { command = "setsid", args = ["-f", "zathura"], fork = true, silent = true },
 ]
 
 [extension]
