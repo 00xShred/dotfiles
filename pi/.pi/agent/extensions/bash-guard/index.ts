@@ -541,12 +541,12 @@ export function analyzeBashCommand(command: string, userWhitelist: string[] = []
 		return { severity: "medium", reasons: ["unparsed shell command (unable to analyze safely)"] };
 	}
 
-	// Fast-path: if every segment is safe and has no unsafe redirection or input redirect
+	// Fast-path: if every segment is safe and has no unsafe redirection
 	const allSegments = splitOnOps(tokens, ["&&", "||", ";", "|"]);
 	const allSegmentsSafe = allSegments.every((seg) => isSegmentSafe(tokensToStrings(seg), userWhitelist));
 	const hasUnsafeRedirect = hasFileOverwritingRedirection(tokens);
 
-	if (allSegmentsSafe && !hasUnsafeRedirect && !tokens.some((t) => isOpToken(t) && t.op === "<")) {
+	if (allSegmentsSafe && !hasUnsafeRedirect) {
 		return null;
 	}
 
@@ -559,7 +559,7 @@ export function analyzeBashCommand(command: string, userWhitelist: string[] = []
 		reasons.push("shell output redirection (can overwrite files)");
 		severity = severity === "high" ? "high" : "medium";
 	}
-	if (ops.includes("<")) {
+	if (ops.includes("<") && !allSegmentsSafe) {
 		reasons.push("shell input redirection (questionable)");
 	}
 	if (ops.includes("|")) {

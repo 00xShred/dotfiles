@@ -88,6 +88,26 @@ test("analyzeBashCommand allows safe pipelines and whitelisted commands without 
 	// User whitelist bypass
 	assert.equal(analyzeBashCommand("custom-command --inspect", ["custom-command"]), null);
 
+	// Whitelisted commands and safe commands with heredocs / input redirection should pass
+	assert.equal(
+		analyzeBashCommand(
+			"typst compile --root /home/0xShred/Documents/ZHAW - /tmp/test.pdf <<'EOF'\n#canvas({})\nEOF",
+			["typst"],
+		),
+		null,
+	);
+	assert.equal(analyzeBashCommand("cat <<EOF\nhello\nEOF"), null);
+	assert.equal(analyzeBashCommand("wc -l < test.txt"), null);
+
+	// Unsafe input redirect (untrusted command or output overwrite) should still prompt
+	const unknownRedirect = analyzeBashCommand("untrusted-cmd < input.txt");
+	assert.notEqual(unknownRedirect, null);
+	assert.ok(unknownRedirect!.reasons.some((r) => r.includes("input redirection")));
+
+	const heredocOverwrite = analyzeBashCommand("cat <<'EOF' > output.txt\nhello\nEOF");
+	assert.notEqual(heredocOverwrite, null);
+	assert.ok(heredocOverwrite!.reasons.some((r) => r.includes("output redirection")));
+
 	// rtk safe commands and pipelines with and without whitelist
 	assert.equal(analyzeBashCommand("rtk git status", ["rtk git status"]), null);
 	assert.equal(analyzeBashCommand("rtk git diff | head -n 30", ["rtk git diff"]), null);
