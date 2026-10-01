@@ -313,13 +313,17 @@ alias -s {md,txt,json,toml,yaml,yml,ini,conf,zsh,java}=nvim
 # Images/Documents -> Open in default viewer (xdg-open)
 alias -s {png,jpg,jpeg,gif,pdf,mp4,mkv}=xdg-open
 
+# Tokio database migrations (run from tokio-be)
+alias dbc='doppler run -p tokio-be -c stg -- sqlx migrate info --source crates/api/migrations && doppler run -p tokio-be -c dev -- sqlx migrate info --source crates/api/migrations'
+alias dba='doppler run -p tokio-be -c stg -- sqlx migrate run --source crates/api/migrations && doppler run -p tokio-be -c dev -- sqlx migrate run --source crates/api/migrations'
+
 # rustaceans, I summon you all!
 alias cb='cargo build'
 alias cr='cargo run'
 alias crq='cargo run --quiet'
 alias ct='cargo test'
 alias cf='cargo fmt --manifest-path Cargo.toml --all'
-alias fct='cargo fmt --all && cargo clippy --all-targets -- -D warnings && cargo test'
+alias fct='cargo fmt --all && cargo clippy --all-targets -- -D warnings && cargo nextest run && cargo test --doc'
 
 # java / prog1 workflow
 alias jclean='rm -f **/*.class(N)'
