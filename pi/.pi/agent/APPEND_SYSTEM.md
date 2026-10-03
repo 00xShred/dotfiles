@@ -48,3 +48,13 @@ Use background subagents (`subagent_spawn`) for autonomous background tasks, res
   - NEVER emit Typst math syntax in chat replies (e.g. `join`, `sect`, un-backslashed greek letters like `sigma_()`, `$ underbrace(...) $`). If working on `.typ` files, keep Typst syntax strictly within `.typ` files; in chat, always use standard LaTeX or plain Unicode so it renders cleanly in the terminal.
   - Plain Unicode math symbols (σ, π, ⋈, ∈, ∩, ∪, ≤, ≥, ≠, →) are also supported. For recurring decimals, use parenthesis notation such as `0.(001)`.
 
+## Rust development guidelines
+
+- **Tool Precedence for Rust**:
+  - **Definitions & References**: ALWAYS use `mcp__rust_analyzer__*` (`rust_analyzer_definition`, `rust_analyzer_references`, `rust_analyzer_hover`, `rust_analyzer_diagnostics`). NEVER use `rg` or manual `read` scans for symbol lookups.
+  - **Syntax & Patterns**: ALWAYS use `ast-grep` (`ast-grep run -p '<pattern>' -l rust`) for structural searches (functions, impls, structs, match arms). NEVER use `rg` for AST structures.
+  - **Text only**: Reserve `rg` strictly for string literals, comments, and config files.
+  - **Inspection**: Use `read` only for targeted line ranges around known edit sites.
+- **Cargo & RTK**: Standard commands (`cargo check`, `cargo test`, `cargo clippy`) are automatically tracked/compressed by RTK. Prefer standard cargo invocations (do not pass `--message-format=short`).
+- **Targeted testing**: Run targeted tests (`cargo test <test_name>`) rather than full workspace runs where possible.
+
