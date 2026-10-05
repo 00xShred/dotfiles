@@ -67,7 +67,7 @@ c.content.blocking.method = "adblock"
 c.content.javascript.clipboard = "access"
 c.content.pdfjs = False
 c.content.cookies.accept = "no-3rdparty"
-c.content.headers.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+c.content.headers.user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
 
 # Codeberg bypass
 config.set('content.headers.user_agent', 'Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0', 'https://codeberg.org/*')
