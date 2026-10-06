@@ -3,11 +3,14 @@
 // pi ships this compiled into a hashed dist/bundle/chunks/*.js file, so
 // `npm update -g` (new hash) or a fresh install wipes it every time.
 // Run this after any pi update: node ~/dotfiles/pi/.pi/agent/scripts/patch-model-picker-price.mjs
-import { execSync } from "node:child_process";
 import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { homedir } from "node:os";
 
-const root = execSync("npm root -g").toString().trim();
-const chunksDir = `${root}/@earendil-works/pi-coding-agent/dist/bundle/chunks`;
+// pi moved off `npm -g` to a self-managed install under ~/.pi/agent/install
+// (see bin/pi for the layout); resolve the active release directly.
+// ponytail: hardcodes the releases-v1 layout; revisit if pi ships v2.
+const version = readFileSync(`${homedir()}/.pi/agent/install/current-version`, "utf8").trim();
+const chunksDir = `${homedir()}/.pi/agent/install/releases/${version}/node_modules/@earendil-works/pi-coding-agent/dist/bundle/chunks`;
 
 // Minified anchor: the `line=` build-up right after `providerBadge=...` in the
 // /model picker's updateList(). Contains no helper fn call, so it's self-contained.

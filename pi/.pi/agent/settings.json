@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.0.3",
+  "lastChangelogVersion": "1.0.4",
   "theme": "pywal",
   "defaultProvider": "antigravity",
   "defaultModel": "gemini-3.8-flash",
@@ -38,8 +38,6 @@
     "anthropic/claude-opus-5",
     "anthropic/claude-opus-4-5",
     "claude-agent-sdk/claude-opus-4-7",
-    "github-copilot/gpt-4o",
-    "github-copilot/gpt-4o-mini",
     "commandcode/claude-sonnet-5",
     "commandcode/deepseek/deepseek-v4-pro",
     "commandcode/deepseek/deepseek-v4-flash",
