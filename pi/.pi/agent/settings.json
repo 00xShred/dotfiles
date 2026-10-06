@@ -1,8 +1,8 @@
 {
   "lastChangelogVersion": "1.0.4",
   "theme": "pywal",
-  "defaultProvider": "antigravity",
-  "defaultModel": "gemini-3.8-flash",
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-sonnet-5-5",
   "enabledModels": [
     "antigravity/claude-opus-4-6",
     "antigravity/claude-sonnet-4-6",
@@ -183,5 +183,6 @@
       "rtk test"
     ]
   },
-  "hideThinkingBlock": true
+  "hideThinkingBlock": true,
+  "deviceId": "139f3a19-72bd-44b8-8457-4a742916aba4"
 }

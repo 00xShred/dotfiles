@@ -5,26 +5,21 @@
  * instead of reimplementing their endpoints:
  * - antigravity: pi-antigravity fetchAccountUsage/formatUsageSummary
  * - commandcode: pi-commandcode-provider fetchCommandCodeQuota/formatQuota
- * - anthropic:   OAuth unified rate-limit headers, probed by a 1-token haiku
- *                request (no standalone quota endpoint exists) — used only
- *                when the anthropic provider is on OAuth, not an API key.
+ * - anthropic: `claude -p /usage` (Claude Code CLI)
+ * - deepseek / moonshotai: pay-per-token balance endpoints.
  */
 
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 // pi-antigravity / pi-commandcode-provider live in pi's npm dir
 // (~/.pi/agent/npm/node_modules). Extensions load through jiti without that on
 // their resolution paths, so import by absolute path via the home anchor.
+import { execFile } from "node:child_process";
 import { homedir } from "node:os";
 
 const npmMod = (spec: string) => `${homedir()}/.pi/agent/npm/node_modules/${spec}`;
 // ponytail: absolute-path imports break on nonstandard installs; move fetch
 // logic into a pi package if that ever matters.
 
-interface ModelRegistryLike {
-	getApiKeyForProvider(provider: string): Promise<string | undefined>;
-	getProviderAuth(provider: string): Promise<{ auth: { apiKey?: string } } | undefined>;
-	isUsingOAuth?(provider: string): boolean;
-}
 const {
 	fetchAccountUsage,
 	formatUsageSummary,
@@ -44,70 +39,25 @@ async function maybeSection(name: string, fn: () => Promise<string>): Promise<st
 	}
 }
 
-function formatReset(seconds: string | undefined): string {
-	if (!seconds) return "n/a";
-	const delta = Number(seconds) * 1000 - Date.now();
-	if (!Number.isFinite(delta)) return "n/a";
-	if (delta <= 0) return "now";
-	const mins = Math.round(delta / 60000);
-	const h = Math.floor(mins / 60);
-	const m = mins % 60;
-	return h > 0 ? `${h}h${m}m` : `${m}m`;
+const fmtReset = (ts: number | null) => {
+	if (!ts) return "";
+	const m = Math.max(0, Math.round((ts * 1000 - Date.now()) / 60000));
+	return ` · resets ${m >= 1440 ? `${Math.floor(m / 1440)}d ${Math.floor((m % 1440) / 60)}h` : `${Math.floor(m / 60)}h ${m % 60}m`}`;
+};
+
+async function getJson(url: string, key: string): Promise<any> {
+	const res = await fetch(url, { headers: { Authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(10000) });
+	if (!res.ok) throw new Error(`HTTP ${res.status}`);
+	return res.json();
 }
 
-interface AnthropicLimits {
-	fiveHour?: { used: number; reset: string };
-	sevenDay?: { used: number; reset: string };
-	status?: string;
-}
-
-/** Anthropic only exposes subscription limits as response headers on a real
- *  inference call; a 1-token haiku request is the cheapest probe. */
-async function fetchAnthropicLimits(token: string): Promise<AnthropicLimits> {
-	const res = await fetch("https://api.anthropic.com/v1/messages", {
-		method: "POST",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			"anthropic-version": "2023-06-01",
-			"content-type": "application/json",
-			"User-Agent": "claude-cli/2.1.0 (external, cli)",
-			"anthropic-beta": "oauth-2025-04-20",
-		},
-		body: JSON.stringify({
-			model: "claude-haiku-4-5",
-			max_tokens: 1,
-			messages: [{ role: "user", content: "hi" }],
-		}),
-	});
-	// consume body so the socket is released
-	await res.text();
-	const h = (name: string) => res.headers.get(`anthropic-ratelimit-unified-${name}`) ?? undefined;
-	if (!h("status") && !h("5h-utilization")) {
-		throw new Error(`no ratelimit headers (status ${res.status}); API-key auth?`);
-	}
-	const pct = (v?: string) => (v === undefined ? undefined : Math.round(Number(v) * 100));
-	return {
-		status: h("status"),
-		fiveHour: h("5h-utilization")
-			? { used: pct(h("5h-utilization")) ?? 0, reset: h("5h-reset") ?? "" }
-			: undefined,
-		sevenDay: h("7d-utilization")
-			? { used: pct(h("7d-utilization")) ?? 0, reset: h("7d-reset") ?? "" }
-			: undefined,
-	};
-}
-
-function bar(usedPercent: number, width = 20): string {
-	const filled = Math.max(0, Math.min(width, Math.round((usedPercent / 100) * width)));
-	return `[${"#".repeat(filled)}${"-".repeat(width - filled)}] ${String(usedPercent).padStart(3)}% used`;
-}
-
-function formatAnthropic(l: AnthropicLimits): string {
-	const lines = [`status: ${l.status ?? "?"}`];
-	if (l.fiveHour) lines.push(`  5h   ${bar(l.fiveHour.used)}  resets ${formatReset(l.fiveHour.reset)}`);
-	if (l.sevenDay) lines.push(`  7d   ${bar(l.sevenDay.used)}  resets ${formatReset(l.sevenDay.reset)}`);
-	return lines.join("\n");
-}
+/** `claude -p /usage` is answered locally by Claude Code (no model call). */
+const claudeUsage = () =>
+	new Promise<string>((resolve, reject) =>
+		execFile("claude", ["-p", "/usage"], { timeout: 30000, cwd: homedir() }, (err, out) =>
+			err ? reject(err) : resolve(out.split("\n").filter((l) => /^Current .*used/.test(l)).map((l) => "  " + l).join("\n")),
+		),
+	);
 
 export default function (pi: ExtensionAPI) {
 	pi.registerCommand("quotas", {
@@ -125,7 +75,6 @@ export default function (pi: ExtensionAPI) {
 				}),
 			);
 
-			// commandcode reuses pi-commandcode-provider's fetcher + formatter
 			parts.push(
 				await maybeSection("commandcode", async () => {
 					const registryKey = await ctx.modelRegistry.getApiKeyForProvider("commandcode");
@@ -133,24 +82,34 @@ export default function (pi: ExtensionAPI) {
 					if (!apiKey) return "no credentials";
 					const result = await fetchCommandCodeQuota({ apiKey });
 					if (!result.ok) return `unavailable: ${result.error.message}`;
-					return formatQuota(result.quota);
+					const { credits: c, summary: u } = result.quota;
+					const names = { fiveHour: "5h    ", weekly: "Weekly" };
+					const lines = (c?.windowLimits ?? []).map(
+						(w: any) => `  ${names[w.window as "fiveHour"]} $${w.used.toFixed(2)} / $${w.cap.toFixed(2)}${fmtReset(w.resetAt)}`,
+					);
+					if (c) lines.push(`  Credits $${c.remainingCredits.toFixed(2)} left`);
+					if (u) lines.push(`  Period  $${u.totalCost.toFixed(2)} · ${u.totalCount} req`);
+					return lines.join("\n");
 				}),
 			);
 
-			// anthropic: only meaningful for subscription OAuth; skip on API key
-			parts.push(
-				await maybeSection("anthropic", async () => {
-					const reg = ctx.modelRegistry as ModelRegistryLike;
-					if (reg.isUsingOAuth && !reg.isUsingOAuth("anthropic")) {
-						return "API-key auth: pay-per-token, no subscription quota";
-					}
-					// OAuth toAuth yields the access token as apiKey
-					const auth = await reg.getProviderAuth("anthropic");
-					const token = auth?.auth.apiKey;
-					if (!token) return "no OAuth credentials";
-					const limits = await fetchAnthropicLimits(token);
-					return formatAnthropic(limits);
-				}),
+			parts.push(await maybeSection("anthropic", claudeUsage));
+
+			// pay-per-token API balances
+			const balance = async (name: string, url: string, fmt: (j: any) => string) =>
+				parts.push(
+					await maybeSection(name, async () => {
+						const key = await ctx.modelRegistry.getApiKeyForProvider(name);
+						return key ? "  " + fmt(await getJson(url, key)) : "";
+					}),
+				);
+			await balance("deepseek", "https://api.deepseek.com/user/balance", (j) =>
+				j.balance_infos.map((b: any) => `${b.total_balance} ${b.currency}`).join(" · ") +
+				(j.is_available ? "" : " (unavailable)"),
+			);
+			await balance("moonshotai", "https://api.moonshot.ai/v1/users/me/balance", (j) =>
+				`$${j.data.available_balance.toFixed(2)} available` +
+				(j.data.cash_balance !== j.data.available_balance ? ` (cash ${j.data.cash_balance.toFixed(2)})` : ""),
 			);
 
 			const text = parts.filter(Boolean).join("\n\n");
