@@ -1,8 +1,8 @@
 {
-  "lastChangelogVersion": "1.0.4",
+  "lastChangelogVersion": "1.1.0",
   "theme": "pywal",
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-sonnet-5-5",
+  "defaultProvider": "antigravity",
+  "defaultModel": "gemini-3.8-flash",
   "enabledModels": [
     "antigravity/claude-opus-4-6",
     "antigravity/claude-sonnet-4-6",
@@ -19,9 +19,7 @@
     "claude-agent-sdk/claude-sonnet-5",
     "claude-agent-sdk/claude-opus-4-6",
     "claude-agent-sdk/claude-haiku-4-5",
-    "deepseek/deepseek-flash",
     "deepseek/deepseek-v4-pro",
-    "github-copilot/gpt-4.1",
     "moonshotai/kimi-k2.6",
     "moonshotai/kimi-k2.7-code",
     "moonshotai/kimi-k2.7-code-highspeed",
