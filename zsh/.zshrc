@@ -283,7 +283,7 @@ pi() {
 }
 alias ip="ip -c"
 alias open="xdg-open"
-alias kiri="/home/0xShred/programming/codeberg/kiroku/target/debug/kiroku"
+alias kiri="/home/0xShred/.cache/cargo-target/debug/kiroku"
 alias homelab="ssh gabriel@100.65.145.50"
 alias proxmox='ssh pve'
 alias vm='ssh k3s01'
