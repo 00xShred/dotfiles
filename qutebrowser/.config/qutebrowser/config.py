@@ -66,8 +66,8 @@ c.content.blocking.enabled = True
 c.content.blocking.method = "adblock"
 c.content.javascript.clipboard = "access"
 c.content.pdfjs = False
-c.content.cookies.accept = "no-3rdparty"
-c.content.headers.user_agent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+c.content.cookies.accept = "all"  # Cloudflare challenge needs 3rd-party cookies
+# UA left at default: spoofed UA mismatches real Chromium and trips Cloudflare
 
 # Codeberg bypass
 config.set('content.headers.user_agent', 'Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0', 'https://codeberg.org/*')
@@ -77,6 +77,7 @@ c.content.blocking.adblock.lists = [
     "https://secure.fanboy.co.nz/fanboy-annoyance.txt",
 ]
 c.content.headers.referer = "same-domain"
+config.set("content.blocking.enabled", False, "*://challenges.cloudflare.com/*")
 c.content.headers.do_not_track = True
 
 # --- Search Engines ---
@@ -156,3 +157,4 @@ c.qt.args = [
     "ignore-gpu-blocklist",
     "num-raster-threads=4",
 ]
+config.bind(",c", "spawn chromium {url}")  # fallback for Cloudflare-protected sites
