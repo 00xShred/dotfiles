@@ -37,6 +37,7 @@ c.fonts.statusbar = "11pt JetBrainsMono Nerd Font Mono"
 c.colors.webpage.preferred_color_scheme = "dark"
 c.colors.webpage.darkmode.enabled = True
 c.colors.webpage.darkmode.policy.images = "never"
+c.colors.webpage.darkmode.algorithm = "lightness-cielab"
 
 # --- UI Behaviour ---
 
@@ -61,24 +62,43 @@ c.downloads.remove_finished = 2000
 c.hints.leave_on_load = True
 c.hints.scatter = True
 
+# Input ergonomics
+c.input.insert_mode.auto_load = True
+c.input.insert_mode.leave_on_load = True
+c.input.forward_unbound_keys = "auto"
+
 # --- Content & Privacy ---
 c.content.blocking.enabled = True
 c.content.blocking.method = "adblock"
 c.content.javascript.clipboard = "access"
 c.content.pdfjs = False
 c.content.cookies.accept = "all"  # Cloudflare challenge needs 3rd-party cookies
-# UA left at default: spoofed UA mismatches real Chromium and trips Cloudflare
 
-# Codeberg bypass
-config.set('content.headers.user_agent', 'Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0', 'https://codeberg.org/*')
+# Adblocking & Filters (brave/rust adblock engine)
 c.content.blocking.adblock.lists = [
     "https://easylist.to/easylist/easylist.txt",
     "https://easylist.to/easylist/easyprivacy.txt",
     "https://secure.fanboy.co.nz/fanboy-annoyance.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/quick-fixes.txt",
 ]
-c.content.headers.referer = "same-domain"
+
+# Referer: 'always' is standard browser default, prevents auth/redirect breakages
+c.content.headers.referer = "always"
+c.content.headers.do_not_track = False
+
+# WebRTC & Media Permissions
+c.content.webrtc_ip_handling_policy = "default-public-interface-only"
+c.content.media.audio_capture = "ask"
+c.content.media.video_capture = "ask"
+c.content.media.audio_video_capture = "ask"
+c.content.desktop_capture = "ask"
+
+# Cloudflare bypass rule
 config.set("content.blocking.enabled", False, "*://challenges.cloudflare.com/*")
-c.content.headers.do_not_track = True
+config.set("content.headers.user_agent", "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0", "https://codeberg.org/*")
 
 # --- Search Engines ---
 c.url.searchengines = {
@@ -122,10 +142,12 @@ config.bind(";m", "spawn mpv --force-window=immediate {url}")
 config.bind("M", "hint links spawn mpv --force-window=immediate {hint-url}")
 config.bind("v", "spawn mpv --force-window=immediate {url}")
 
-# 3. Toggles
+# 3. Toggles & Passthrough
 config.bind("td", "config-cycle colors.webpage.darkmode.enabled true false")
 config.bind("ta", "config-cycle content.blocking.enabled true false")
 config.bind("ts", "config-cycle statusbar.show always never")
+config.bind("<Ctrl-z>", "mode-enter passthrough")
+config.bind("<Shift-Escape>", "mode-leave", mode="passthrough")
 
 # 4. Zoom
 config.bind("+", "zoom-in")
@@ -157,4 +179,6 @@ c.qt.args = [
     "ignore-gpu-blocklist",
     "num-raster-threads=4",
 ]
-config.bind(",c", "spawn chromium {url}")  # fallback for Cloudflare-protected sites
+config.bind(",c", "spawn brave {url}")
+config.bind(",C", "hint links spawn brave {hint-url}")
+config.bind(",p", "spawn brave --incognito {url}")
