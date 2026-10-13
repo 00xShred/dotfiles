@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.1.0",
+  "lastChangelogVersion": "1.2.0",
   "theme": "pywal",
   "defaultProvider": "antigravity",
   "defaultModel": "gemini-3.8-flash",
