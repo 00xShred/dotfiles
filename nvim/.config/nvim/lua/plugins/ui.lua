@@ -29,4 +29,22 @@ return {
       })
     end,
   },
+
+  -- Smooth scroll tuning (faster animation, snappy response)
+  {
+    "folke/snacks.nvim",
+    opts = {
+      scroll = {
+        animate = {
+          duration = { step = 4, total = 80 },
+          easing = "outQuad",
+        },
+        animate_repeat = {
+          delay = 50,
+          duration = { step = 3, total = 30 },
+          easing = "linear",
+        },
+      },
+    },
+  },
 }
