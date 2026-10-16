@@ -1,0 +1,5 @@
+# Soft Monochrome Dark (non-harsh)
+set recolor-lightcolor "#181818"
+set recolor-darkcolor  "#dedede"
+set default-bg         "#101010"
+set recolor            "true"

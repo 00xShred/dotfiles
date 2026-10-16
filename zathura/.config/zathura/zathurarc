@@ -2,10 +2,11 @@
 # ZATHURA CONFIGURATION
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# --- 1. PYWAL INTEGRATION ---
-include "/home/gabriel/.cache/wal/zathurarc"
+# --- 1. THEMES & COLOR ---
+include "theme-sepia"
 set recolor "false"
 set recolor-keephue "true"
+set recolor-reverse-video "true"
 
 # --- 2. LOOK & FEEL ---
 set font "JetBrains Mono Nerd Font 11"
@@ -23,7 +24,6 @@ set selection-clipboard clipboard
 
 # --- 4. BEHAVIOR ---
 set scroll-page-aware "true"
-set smooth-scroll "true"
 set scroll-full-overlap 0.01
 set scroll-step 100
 set adjust-open "best-fit"
@@ -42,7 +42,11 @@ set synctex-editor-command "nvim --server $NVIM --remote-send '<C-\><C-N>:%l<CR>
 map + zoom in
 map - zoom out
 
-map d recolor
 map b toggle_statusbar
+map r rotate rotate-cw
 map R reload
-map <Tab> index
+map <Tab> toggle_index
+
+# Themes: d beige, c black, D original pdf colors
+map d exec "/home/0xShred/.config/zathura/theme.sh beige"
+map D exec "/home/0xShred/.config/zathura/theme.sh orig"

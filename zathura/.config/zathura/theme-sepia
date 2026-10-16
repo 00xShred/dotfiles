@@ -1,0 +1,5 @@
+# Darker Warm Beige / Sepia Paper
+set recolor-lightcolor "#dfd2b5"
+set recolor-darkcolor  "#1c1a17"
+set default-bg         "#cfc1a0"
+set recolor "true"
