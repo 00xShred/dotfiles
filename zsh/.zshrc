@@ -183,13 +183,8 @@ alias c="clear"
 
 # Common directories
 
-alias docs="cd ~/Documents"
 alias idocs="cd OneDrive/Documents/DocsImportantes"
-alias down="cd ~/Downloads"
 alias config="cd ~/.config"
-alias ideas="cd Documents/ideas" 
-alias gith="cd $HOME/programming/gith"
-alias vis="cd $HOME/programming/vis/"
 
 # Replacements (Modern Tools)
 # Note: 'eza' is the maintained version of 'exa'
@@ -205,7 +200,6 @@ alias install="sudo pacman -S"
 alias remove="sudo pacman -Rs"
 alias search="pacman -Ss"
 alias update="sudo pacman -Syu"
-alias cleanup="sudo pacman -Rns \$(pacman -Qtdq)"
 alias yays="yay -S"
 
 # Git
@@ -231,6 +225,8 @@ alias gcl="git clone"
 alias gb="git branch"
 alias gba="git branch -a"
 alias gpu="git push -u origin"
+alias gfp="git fetch --prune"
+alias gpl="git pull"
 
 # zsh
 alias zshc="$EDITOR ~/.zshrc && source ~/.zshrc"
@@ -670,3 +666,4 @@ for plugin in \
 do
     if [[ -f "$plugin" ]]; then source "$plugin"; break; fi
 done
+export ZEPHYR_TOOLCHAIN_VARIANT=zephyr
