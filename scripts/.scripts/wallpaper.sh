@@ -87,6 +87,9 @@ if [ -x "$HOME/.local/bin/somebar" ]; then
 fi
 
 # Update Apps
+if [ -x "$HOME/.pi/agent/scripts/pi-pywal-theme.mjs" ]; then
+    "$HOME/.pi/agent/scripts/pi-pywal-theme.mjs" &>/dev/null &
+fi
 nvr --remote-send ":colorscheme neopywal<CR>" &>/dev/null & # Run nvr in background
 pywalfox update &>/dev/null
 
