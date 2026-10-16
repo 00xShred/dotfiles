@@ -28,6 +28,7 @@ When resolving issues from `priority.md` or an issue tracker, execute this seque
    - Delete the issue plan in `docs/plans/` (e.g. `rm docs/plans/<plan-file>.md`).
    - Remove the issue entry from `priority.md`.
 8. **Git / PR Hand-off**:
-   - Provide a single copy-pasteable terminal bash snippet with branch creation, commit, push, PR creation, squash merge, branch deletion, and issue closing.
-9. **Repeat**:
-   - Once user confirms merge, pull main and advance to the next issue in `priority.md`.
+   - Provide a single copy-pasteable terminal bash snippet with branch creation, commit, push, PR creation, squash merge, branch deletion, issue closing, and release execution (`./scripts/release-local.sh`).
+9. **Release & Advance**:
+   - Run `./scripts/release-local.sh` (or verify it completed via hand-off snippet) to automate `release-please` version bump, changelog update, and GitHub release tagging.
+   - Sync local main (`git pull origin main --tags`) and advance to the next issue in `priority.md`.
