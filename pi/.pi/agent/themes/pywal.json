@@ -2,26 +2,26 @@
   "$schema": "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
   "name": "pywal",
   "vars": {
-    "bg": "#101519",
-    "fg": "#c3c4c5",
-    "cursor": "#c3c4c5",
-    "black": "#101519",
-    "red": "#A3916D",
-    "green": "#2C7296",
-    "yellow": "#4E7A8E",
-    "magenta": "#8D7E83",
-    "blue": "#518C9E",
-    "pink": "#A2B1A1",
-    "white": "#c3c4c5",
-    "gray": "#5b6670",
-    "brightRed": "#A3916D",
-    "brightGreen": "#2C7296",
-    "brightYellow": "#4E7A8E",
-    "brightMagenta": "#8D7E83",
-    "brightBlue": "#518C9E",
-    "brightPink": "#A2B1A1",
-    "brightWhite": "#c3c4c5",
-    "userMsgBg": "#282d39",
+    "bg": "#080a13",
+    "fg": "#c1c1c4",
+    "cursor": "#c1c1c4",
+    "black": "#080a13",
+    "red": "#A11B4D",
+    "green": "#C1A554",
+    "yellow": "#09599B",
+    "magenta": "#3A5AA7",
+    "blue": "#B661A5",
+    "pink": "#2B9FDE",
+    "white": "#c1c1c4",
+    "gray": "#575a6b",
+    "brightRed": "#A11B4D",
+    "brightGreen": "#C1A554",
+    "brightYellow": "#09599B",
+    "brightMagenta": "#3A5AA7",
+    "brightBlue": "#B661A5",
+    "brightPink": "#2B9FDE",
+    "brightWhite": "#c1c1c4",
+    "userMsgBg": "#202233",
     "userMsgText": "#ffffff"
   },
   "colors": {
@@ -82,8 +82,8 @@
     "bashMode": "yellow"
   },
   "export": {
-    "pageBg": "#101519",
-    "cardBg": "#101519",
-    "infoBg": "#A3916D"
+    "pageBg": "#080a13",
+    "cardBg": "#080a13",
+    "infoBg": "#A11B4D"
   }
 }

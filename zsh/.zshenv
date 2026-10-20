@@ -3,3 +3,4 @@ export VISUAL='nvim'
 export GIT_EDITOR='nvim'
 export SUDO_EDITOR='nvim'
 export FCEDIT='nvim'
+. "$HOME/.cargo/env"
