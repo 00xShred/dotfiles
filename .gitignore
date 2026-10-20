@@ -15,6 +15,10 @@ obs-studio/.config/obs-studio/logs/
 obs-studio/.config/obs-studio/profiler_data/
 obs-studio/.config/obs-studio/basic/scenes/*.bak
 
+# Herdr
+herdr/.config/herdr/*
+!herdr/.config/herdr/config.toml
+
 # Backup files
 *.bak
 

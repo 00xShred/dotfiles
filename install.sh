@@ -31,7 +31,7 @@ case "$(uname -s)" in
     link_config "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
     link_config "$DOTFILES_DIR/zsh/.config/zshrc.d" "$HOME/.config/zshrc.d"
     link_config "$DOTFILES_DIR/nvim/.config/nvim" "$HOME/.config/nvim"
-    link_config "$DOTFILES_DIR/tmux/.config/tmux" "$HOME/.config/tmux"
+    link_config "$DOTFILES_DIR/herdr/.config/herdr/config.toml" "$HOME/.config/herdr/config.toml"
     link_config "$DOTFILES_DIR/yazi/.config/yazi" "$HOME/.config/yazi"
     link_config "$DOTFILES_DIR/lazygit/.config/lazygit" "$HOME/.config/lazygit"
     link_config "$DOTFILES_DIR/kitty/.config/kitty" "$HOME/.config/kitty"

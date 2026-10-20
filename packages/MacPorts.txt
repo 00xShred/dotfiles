@@ -17,7 +17,6 @@ shfmt
 tree-sitter-cli
 ImageMagick7
 py312-neovim
-tmux
 yazi
 zoxide
 nodejs22

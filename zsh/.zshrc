@@ -240,43 +240,6 @@ alias k="kubectl"
 alias bitwarden='bitwarden --enable-features=UseOzonePlatform --ozone-platform=wayland --disable-gpu'
 alias extract='dtrx'
 
-# Pi Coding Agent (use -t/--tmux to start inside tmux for side-by-side leaf preview & subagents)
-pi() {
-    # Only use tmux flow if -t/--tmux is requested, we're in an interactive terminal, and not already inside tmux
-    local want_tmux=0
-    local -a args=()
-    for arg in "$@"; do
-        if [[ "$arg" == "-t" || "$arg" == "--tmux" ]]; then
-            want_tmux=1
-        else
-            args+=("$arg")
-        fi
-    done
-
-    if [[ "$want_tmux" -eq 0 || -n "$TMUX" || ! -t 0 || ! -t 1 ]]; then
-        command pi "${args[@]}"
-        return
-    fi
-
-    local pi_bin="${commands[pi]:-$(whence -p pi 2>/dev/null || which pi 2>/dev/null || echo pi)}"
-    local dir_slug="$(basename "$PWD" | tr -cs '[:alnum:]_-' '-' | sed 's/^-//;s/-$//')"
-    [[ -z "$dir_slug" ]] && dir_slug="main"
-    local sname="pi-${dir_slug}"
-
-    # If this directory's session exists and is detached, reattach to it
-    if tmux has-session -t "$sname" 2>/dev/null; then
-        local attached
-        attached="$(tmux list-sessions -F '#{session_name} #{session_attached}' | awk -v s="$sname" '$1 == s { print $2 }')"
-        if [[ "$attached" == "0" ]]; then
-            tmux attach-session -t "$sname"
-            return
-        fi
-        # If already attached in another terminal, launch a distinct session
-        sname="${sname}-$$"
-    fi
-
-    tmux new-session -s "$sname" -c "$PWD" "$pi_bin" "${args[@]}"
-}
 alias ip="ip -c"
 alias open="xdg-open"
 alias kiri="/home/0xShred/.cache/cargo-target/debug/kiroku"
@@ -344,8 +307,6 @@ alias pi-patch-prices='node ~/dotfiles/pi/.pi/agent/scripts/patch-model-picker-p
 # audio
 alias audio='wpctl'
 
-# Zellij (Auto-attach or Create)
-alias zlj='zellij attach --index 0 || zellij'
 
 # conect to headphones
 alias headphones='wpctl set-default $(wpctl status | sed -n "/Sinks:/,/Sources:/p" | grep "Nothing Ear" | grep -Eo "[0-9]+" | head -n 1)'
@@ -358,6 +319,25 @@ alias gamma='gammastep -m wayland -O 6500 -g 1.3'
 
 # reaper low latency when sharing browsers output
 alias reaper-lowlat='PIPEWIRE_LATENCY=128/48000 pw-jack reaper'
+
+# zephyr nm
+alias zephyr-nm='/home/0xShred/zephyr-sdk-0.17.4/arm-zephyr-eabi/bin/arm-zephyr-eabi-nm'
+
+# esp export
+alias get_idf="export PYENV_VERSION=3.12.14 && . \$HOME/esp/esp-idf/export.sh"         
+
+# kanshi display profiles
+alias kdocked='kanshictl switch Docked'
+alias ktriple='kanshictl switch Triple'
+alias klaptop='kanshictl switch Laptop'
+alias kstatus='kanshictl status'
+alias kreload='kanshictl reload'
+
+# herdr
+alias hsl='herdr session list'
+alias hsa='herdr session attach'
+alias hss='herdr session stop'
+alias hsd='herdr session delete'
 
 # --- 8. FUNCTIONS ---
 
@@ -616,24 +596,6 @@ sysmaintian() {
     sysmaintain "$@"
 }
 
-
-# --- 9. SSH AGENT  ---
-export SSH_ASKPASS=/usr/bin/qt4-ssh-askpass
-AGENT_ENV_FILE="${HOME}/.ssh/ssh-agent-env"
-
-if [ -f "$AGENT_ENV_FILE" ]; then
-    source "$AGENT_ENV_FILE" > /dev/null 2>&1
-    if ! kill -0 "$SSH_AGENT_PID" 2>/dev/null; then
-        rm -f "$AGENT_ENV_FILE"
-        unset SSH_AGENT_PID
-    fi
-fi
-
-if [ -z "$SSH_AGENT_PID" ]; then
-    eval "$(ssh-agent -s)" > /dev/null 2>&1
-    echo "SSH_AGENT_PID=$SSH_AGENT_PID" > "$AGENT_ENV_FILE"
-    echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> "$AGENT_ENV_FILE"
-fi
 
 # --- 10. TOOL INTEGRATIONS & PROMPT ---
 # Starship prompt

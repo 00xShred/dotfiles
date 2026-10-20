@@ -1,0 +1,93 @@
+onboarding = false
+
+[theme]
+name = "dracula"
+auto_switch = false
+
+[terminal]
+new_cwd = "follow"
+kitty_graphics = true
+
+[worktrees]
+directory = "~/.herdr/worktrees"
+
+[ui]
+mouse_capture = true
+copy_on_select = true
+status_indicators = "symbols"
+show_agent_labels_on_pane_borders = true
+pane_borders = "auto"
+pane_gaps = true
+tab_bar_position = "top"
+tab_bar_right = [{ type = "zoom" }, { type = "hostname" }, { type = "datetime", format = "%H:%M" }]
+tab_bar_right_separator = " · "
+window_title = "{hostname}: {workspace}"
+
+[ui.toast]
+delivery = "system"
+delay_seconds = 1
+
+[session]
+resume_agents_on_restore = true
+startup_per_agent_delay_ms = 100
+
+[keys]
+prefix = "ctrl+b"
+
+# Splits (Herdr defaults + tmux muscle memory)
+split_vertical = ["prefix+v", "prefix+%"]
+split_horizontal = ["prefix+minus", "prefix+\""]
+
+# Navigation (vi keys + prefix-free ctrl+alt chords)
+focus_pane_left = ["prefix+h", "ctrl+alt+h"]
+focus_pane_down = ["prefix+j", "ctrl+alt+j"]
+focus_pane_up = ["prefix+k", "ctrl+alt+k"]
+focus_pane_right = ["prefix+l", "ctrl+alt+l"]
+
+# Tabs & Workspaces
+new_tab = ["prefix+c", "ctrl+alt+c"]
+previous_tab = ["prefix+p", "ctrl+alt+["]
+next_tab = ["prefix+n", "ctrl+alt+]"]
+switch_tab = "prefix+1..9"
+switch_workspace = "prefix+shift+1..9"
+close_tab = "prefix+shift+x"
+
+# Pane lifecycle
+zoom = ["prefix+z", "ctrl+alt+z"]
+close_pane = "prefix+x"
+resize_mode = "prefix+r"
+toggle_sidebar = "prefix+b"
+goto = "prefix+g"
+workspace_picker = "prefix+w"
+new_workspace = "prefix+shift+n"
+new_worktree = "prefix+shift+g"
+reload_config = ["prefix+shift+r", "prefix+shift+c"]
+edit_scrollback = "prefix+e"
+
+# Custom popup modals (non-destructive overlay)
+[[keys.command]]
+key = "prefix+alt+g"
+type = "popup"
+command = "lazygit"
+description = "lazygit"
+width = "85%"
+height = "85%"
+
+[[keys.command]]
+key = "prefix+alt+b"
+type = "popup"
+command = "btop"
+description = "btop process monitor"
+width = "85%"
+height = "85%"
+
+[[keys.command]]
+key = "prefix+alt+enter"
+type = "popup"
+command = "exec \"${SHELL:-zsh}\""
+description = "scratchpad terminal"
+width = "80%"
+height = "80%"
+
+[ui.sound]
+enabled = false

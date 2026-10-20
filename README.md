@@ -20,7 +20,7 @@ My daily driver on Arch + Sway. Everything is keyboard-driven, color-synced thro
 
 - **WM:** [Sway](https://swaywm.org/)
 - **Terminal:** [Foot](https://codeberg.org/dnkl/foot) — lightweight Wayland terminal with Pywal colors / [Kitty](https://sw.kovidgoyal.net/kitty/) (fallback)
-- **Multiplexers:** [Zellij](https://zellij.dev/) & [Tmux](https://github.com/tmux/tmux) — persistent sessions and workspace layouts
+- **Multiplexer:** [Herdr](https://herdr.dev/) — terminal workspace manager for coding agents
 - **Shell:** Zsh + [Starship](https://starship.rs/) prompt
 - **Editor & Agent:** [Neovim](https://neovim.io/) (LazyVim config with LSP and Treesitter) + [Pi](https://github.com/badlogic/pi-mono) coding agent
 - **Files:** [Thunar](https://docs.xfce.org/xfce/thunar/start) (GUI) / [lf](https://github.com/gokcehan/lf), [joshuto](https://github.com/kamiyaa/joshuto) (terminal file managers with previews)
@@ -113,14 +113,13 @@ $HOME/dotfiles
 ├── qutebrowser/   # Keyboard-driven browser config & quickmarks
 ├── rofi/          # Rofi theme config
 ├── scripts/       # Custom shell & Wayland scripts (~/.scripts)
+├── herdr/         # Herdr workspace manager configuration
 ├── starship/      # Starship prompt configuration
 ├── sway/          # Sway window manager configuration
 ├── swaylock/      # Lock screen config
-├── tmux/          # Tmux configuration
 ├── wal/           # Pywal templates & color themes
 ├── wpg/           # Wpgtk color scheme templates
 ├── zathura/       # PDF / document viewer configuration
-├── zellij/        # Zellij multiplexer layouts & settings
 ├── zen-browser/   # Zen browser integration
 ├── zsh/           # Zsh shell configs (.zshrc, .zshenv, zshrc.d)
 └── install.sh     # Cross-platform system bootstrap
@@ -128,7 +127,7 @@ $HOME/dotfiles
 
 ## macOS
 
-The macOS layer reuses the shell, Kitty, Neovim, tmux, Yazi, Lazygit, Starship,
+The macOS layer reuses the shell, Kitty, Neovim, Herdr, Yazi, Lazygit, Starship,
 and colors from the shared configuration. Linux-only Sway/Wayland components
 are skipped. On Intel/MacPorts, yabai + skhd provide the Sway-style Option+h/j/k/l and
 Option+1-9 workflow. SketchyBar is intentionally disabled so macOS keeps its
