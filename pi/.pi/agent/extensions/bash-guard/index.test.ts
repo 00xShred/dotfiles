@@ -69,6 +69,15 @@ test("analyzeBashCommand allows safe pipelines and whitelisted commands without 
 	assert.equal(analyzeBashCommand("git status 2>/dev/null"), null);
 	assert.equal(analyzeBashCommand("cargo check"), null);
 	assert.equal(analyzeBashCommand("cargo test"), null);
+	assert.equal(analyzeBashCommand("cargo fmt --all"), null);
+	assert.equal(analyzeBashCommand("cargo nextest run 2>&1 | tail -30"), null);
+	assert.equal(analyzeBashCommand("cargo llvm-cov --summary-only"), null);
+
+	// Mutating cargo commands still prompt
+	const clippyFixRisk = analyzeBashCommand("cargo clippy --fix 2>&1 | tail -5");
+	assert.notEqual(clippyFixRisk, null);
+	assert.ok(clippyFixRisk!.reasons.some((r) => r.includes("rewrites source files")));
+	assert.notEqual(analyzeBashCommand("cargo fix"), null);
 
 	// Redirection to file should prompt
 	const redirectRisk = analyzeBashCommand("git diff > patch.diff");

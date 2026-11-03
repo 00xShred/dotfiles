@@ -262,7 +262,11 @@ export function isSegmentSafe(args: string[], userWhitelist: string[] = []): boo
 
 	if (cmd === "cargo") {
 		const sub = rest[0];
-		if (["check", "test", "clippy", "status", "metadata", "tree", "verify-project", "version", "--version"].includes(sub)) {
+		// mutating subs must not take the fast path; a danger rule below prompts for them
+		if (sub === "fix" || (sub === "clippy" && rest.includes("--fix"))) {
+			return false;
+		}
+		if (["check", "test", "clippy", "fmt", "build", "doc", "nextest", "llvm-cov", "status", "metadata", "tree", "verify-project", "version", "--version"].includes(sub)) {
 			return true;
 		}
 	}
@@ -526,6 +530,12 @@ function analyzeSegment(seg: Token[]): Risk | null {
 	if (cmd === "gcloud" && rest.includes("delete")) {
 		severity = "high";
 		reasons.push("gcloud delete (resource deletion)");
+	}
+
+	// Rust source mutations
+	if (cmd === "cargo" && (rest[0] === "fix" || (rest[0] === "clippy" && rest.includes("--fix")))) {
+		severity = "medium";
+		reasons.push("cargo fix / clippy --fix (rewrites source files)");
 	}
 
 	if (reasons.length === 0) return null;

@@ -9,18 +9,18 @@ Each subagent is headless, has its own context window, cannot see the parent con
 
 ## Harness & Model Selection Strategy
 
-**Default Policy:** By default, match or inherit the current session's model and family.
-- **Claude / Anthropic sessions:** Harness `claude` (or `pi`).
-- **OpenAI / Codex sessions:** Harness `codex` (or `pi`).
+**Default Policy:** Omit model and harness to inherit the exact active chat model and provider through `pi`. Explicit tier changes must stay in the same model family and provider and use the latest available generation. This includes GLM and all other families, not just Claude/GPT. Never guess model IDs or use hardcoded version fallbacks. Unverified tier availability → inherit; adjust reasoning effort instead. The `subagent-model-policy` extension enforces this at tool execution.
+- **Claude / Anthropic sessions:** Harness `claude` (or `pi`), using current generation.
+- **OpenAI / Codex sessions:** Harness `codex` (or `pi`), using current generation.
 - **Other sessions (DeepSeek, Kimi, Antigravity):** Harness `pi` (inherits directly).
 
 ### Task-Aware Model Tiers
 
 | Task Gravity | Claude Family (`claude`) | Codex Family (`codex`) | Other Pi Providers (`pi`) |
 |---|---|---|---|
-| **Critical / Heavy** (complex architecture, tough refactors) | `opus` (effort: `high`/`max`) | `gpt-5.6-sol` (effort: `high`/`max`) | Flagship tier (effort: `high`/`max`) |
-| **Standard / Default** | Current / `sonnet` (effort: `medium`/`high`) | Current / `gpt-5.6-sol` (effort: `medium`) | Inherited model & thinking |
-| **Light / Recon** (code search, file exploration, triage) | `haiku` (effort: `low`/`minimal`) | `gpt-5.6-luna` or `gpt-5.5` (effort: `minimal`) | Inherited model (effort: `low`/`minimal`) |
+| **Critical / Heavy** (complex architecture, tough refactors) | Current-generation flagship (effort: `high`/`max`) | Current-generation flagship (effort: `high`/`max`) | Inherit exact parent model (effort: `high`/`max`) |
+| **Standard / Default** | Current-generation model (effort: `medium`/`high`) | Current-generation model (effort: `medium`) | Inherit exact parent model & thinking |
+| **Light / Recon** (code search, file exploration, triage) | Current-generation fast model (effort: `low`/`minimal`) | Current-generation fast model (effort: `minimal`) | Inherit exact parent model (effort: `low`/`minimal`) |
 
 **Thinking budgets:** `off`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`. The extension maps these to Claude thinking-token budgets: 0, 1,024, 4,096, 10,000, 16,000, 32,000, and 63,999 tokens respectively.
 
@@ -40,13 +40,7 @@ Requires Claude Code to be installed and authenticated.
 
 **Harness:** `codex`
 **Prompt nicknames:** “codex”, “Codex CLI”, “codex agent”, “codex subagent”
-**Best default:** `gpt-5.6-sol` with `high` effort for coding work. Do not use anything other than sol unless the user specifically asks for it.
-
-| Model           | Recommended effort |
-| --------------- | ------------------ |
-| `gpt-5.6-sol`   | `high`             |
-| `gpt-5.6-terra` | `high`             |
-| `gpt-5.6-luna`  | `high`             |
+**Best default:** Current-generation Codex model, matching parent generation. Prefer `pi` with model omitted when model generation cannot be reliably determined. Never pin a specific older model ID.
 
 **Thinking budgets accepted by the extension:** `off`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`. Codex maps these to the nearest effort supported by the selected model; `off`/`minimal` become `minimal`, while `max` becomes the highest extension-supported Codex effort.
 
