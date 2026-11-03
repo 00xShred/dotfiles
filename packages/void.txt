@@ -1,0 +1,33 @@
+# Void packages (xbps)
+base-devel git curl wget sudo dracut stow
+dbus elogind polkit rtkit
+NetworkManager network-manager-applet NetworkManager-openconnect openconnect iwd wireless-regdb
+bluez blueman libspa-bluetooth
+pipewire wireplumber alsa-pipewire libpulseaudio pulseaudio-utils alsa-utils alsa-plugins-pulseaudio pavucontrol wiremix qpwgraph
+mesa-dri mesa-vulkan-radeon mesa-vaapi vulkan-loader libva-utils xf86-video-amdgpu
+linux-firmware-amd linux-firmware-qualcomm linux-firmware-network sof-firmware
+zramen power-profiles-daemon snooze cronie
+chrony ufw iptables tailscale
+flatpak xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-wlr xdg-user-dirs xdg-utils
+docker docker-compose podman libvirt virt-manager qemu swtpm edk2-ovmf dnsmasq
+cups cups-filters cups-pdf system-config-printer avahi nss-mdns gutenprint foomatic-db foomatic-db-engine hplip
+input-remapper geoclue2 efibootmgr dosfstools exfatprogs ntfs-3g mtools smartmontools
+# session
+sway swaylock swayidle swaybg kanshi dunst fuzzel wmenu foot kitty cliphist wl-clipboard wtype grim slurp swappy wf-recorder
+brightnessctl gammastep wlr-randr xorg-server-xwayland xwayland-satellite gtklock wlogout
+nwg-look kvantum qt5ct qt6ct qt5-wayland qt6-wayland papirus-icon-theme breeze-gtk kde-gtk-config
+tuigreet greetd seahorse gnome-keyring Thunar gvfs gvfs-mtp ffmpegthumbnailer
+# dwl build deps (wlroots0.19 must match dwl branch)
+wlroots0.19-devel wayland-devel wayland-protocols libxkbcommon-devel pixman-devel libinput-devel libdrm-devel xcb-util-wm-devel fcft-devel tllist
+# cli / dev
+zsh zsh-autosuggestions zsh-completions zsh-syntax-highlighting starship zoxide fzf direnv
+neovim vim nano lazygit github-cli delta jq yq-go ripgrep fd bat eza btop htop ncdu tree fastfetch tealdeer
+translate-shell chafa glow lf ouch 7zip zip unzip dtrx pastel psmisc man-db man-pages bc rhash
+rustup go zig zls cmake ccache gdb perf fio umockdev sparse shfmt bash-language-server tinymist typst zola
+nodejs yarn python3-pip python3-pipx uv openjdk21 openjdk25 apache-maven gradle
+kubectl helm k9s postgresql-client dbeaver
+mpv yt-dlp gimp loupe zathura zathura-pdf-mupdf anki obs android-tools arduino-cli dfu-util
+can-utils tio evtest wev openbsd-netcat openvpn
+tesseract-ocr tesseract-ocr-eng leptonica libvpx glfw
+# fonts
+noto-fonts-ttf noto-fonts-cjk noto-fonts-emoji font-awesome6 font-firacode font-adobe-source-code-pro font-material-design-icons-ttf nerd-fonts-ttf

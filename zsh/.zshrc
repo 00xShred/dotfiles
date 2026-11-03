@@ -41,7 +41,9 @@ done
 # --- 3. COMPLETION & FZF-TAB SETTINGS ---
 zstyle ':completion:*:*' list-colors "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --icons --color=always $realpath'
+zstyle ':fzf-tab:complete:((cat|bat|nvim|vim|nano|code):*|*:*)' fzf-preview \
+    'if [[ -d $realpath ]]; then eza --tree --level=1 --icons --color=always $realpath; elif [[ -f $realpath ]]; then bat --style=numbers --color=always --line-range=:100 $realpath 2>/dev/null || cat $realpath; fi'
 zstyle ':fzf-tab:complete:__git_checkout:*' fzf-preview 'git log --color=always --oneline --graph --date=short --pretty="format:%C(auto)%cd %h%d %s" $word'
 zstyle ':completion:*:*:*:*:processes' command "ps -u $USER -o pid,user,%cpu,%mem,comm -w -w"
 zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
@@ -140,7 +142,7 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export GROFF_NO_SGR=1
 export KUBECONFIG=~/.kube/config-k3s
 export BUN_INSTALL="$HOME/.bun"
-export PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+export PUPPETEER_EXECUTABLE_PATH="$HOME/.cache/puppeteer/chrome/linux-148.0.7778.97/chrome-linux64/chrome"
 
 # Unique, consolidated PATH
 typeset -U path PATH
@@ -170,6 +172,22 @@ command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh --cmd cd)" # Replac
 # Import Colors (wal)
 [ -f ~/.cache/wal/colors.sh ] && source ~/.cache/wal/colors.sh
 
+# Modern FZF styling with Nerd Font glyphs (retains pywal colors)
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+    --height 45% \
+    --layout=reverse \
+    --border=rounded \
+    --prompt='󰍉 ' \
+    --pointer='󰁕 ' \
+    --marker='󰄲 ' \
+    --info=inline-right \
+    --bind='ctrl-/:toggle-preview'"
+export FZF_CTRL_T_OPTS="--preview '(bat --style=numbers --color=always {} 2>/dev/null || eza --tree --level=2 --icons --color=always {} 2>/dev/null || cat {}) | head -200'"
+export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 --icons --color=always {} | head -200'"
+
+# Bat adheres to dynamic pywal terminal theme
+export BAT_THEME="base16"
+
 # --- 7. ALIASES ---
 
 # Navigation 
@@ -189,18 +207,28 @@ alias config="cd ~/.config"
 # Replacements (Modern Tools)
 # Note: 'eza' is the maintained version of 'exa'
 alias ls="eza --icons --group-directories-first"
+alias l="eza -lhF --icons --group-directories-first --git"
 alias ll="eza -l --icons --group-directories-first --git"
 alias la="eza -la --icons --group-directories-first --git"
+alias ldot="eza -ld .* --icons --group-directories-first"
 alias lt="eza --tree --icons --level=2"
-alias cat="bat"
+alias cat="bat --paging=never"
 alias v="nvim"
+alias fetch="fastfetch"
 
-# Pacman / Arch
+# Package manager (Arch: pacman/yay, Void: xbps)
+if command -v xbps-install >/dev/null 2>&1; then
+alias install="sudo xbps-install -S"
+alias remove="sudo xbps-remove -R"
+alias search="xbps-query -Rs"
+alias update="sudo xbps-install -Su"
+else
 alias install="sudo pacman -S"
 alias remove="sudo pacman -Rs"
 alias search="pacman -Ss"
 alias update="sudo pacman -Syu"
 alias yays="yay -S"
+fi
 
 # Git
 alias gs="git status"
@@ -208,6 +236,7 @@ alias ga="git add"
 alias gc="git commit -m"
 alias gp="git push"
 alias gl="git log --oneline --graph --decorate"
+alias glog="git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gd="git diff"
 alias gds="git diff --stat"
 alias gco="git checkout"
@@ -232,8 +261,13 @@ alias gpl="git pull"
 alias zshc="$EDITOR ~/.zshrc && source ~/.zshrc"
 
 # System
-alias reboot="systemctl reboot"
-alias shutdown="systemctl poweroff"
+if [ -d /run/systemd/system ]; then
+  alias reboot="systemctl reboot"
+  alias shutdown="systemctl poweroff"
+else
+  alias reboot="loginctl reboot"
+  alias shutdown="loginctl poweroff"
+fi
 
 # Utils
 alias k="kubectl"
@@ -246,16 +280,6 @@ alias kiri="/home/0xShred/.cache/cargo-target/debug/kiroku"
 alias homelab="ssh gabriel@100.65.145.50"
 alias proxmox='ssh pve'
 alias vm='ssh k3s01'
-
-# Resize images to 700px width (defaults to assets/*.png)
-rzimg() {
-    if [ $# -eq 0 ]; then
-        magick mogrify -resize 700x assets/*.png 2>/dev/null && echo "Normalized assets/*.png to 700px width"
-    else
-        magick mogrify -resize 700x "$@" && echo "Normalized $@ to 700px width"
-    fi
-}
-alias img700='rzimg'
 
 # Clipboard History
 alias cl="cliphist list | fzf | cliphist decode | wl-copy"
@@ -306,7 +330,6 @@ alias pi-patch-prices='node ~/dotfiles/pi/.pi/agent/scripts/patch-model-picker-p
 
 # audio
 alias audio='wpctl'
-
 
 # conect to headphones
 alias headphones='wpctl set-default $(wpctl status | sed -n "/Sinks:/,/Sources:/p" | grep "Nothing Ear" | grep -Eo "[0-9]+" | head -n 1)'
@@ -438,7 +461,7 @@ function mr-refresh() {
     rm -f ~/.mrconfig
     # We use ( ) to run this in a subshell so we don't change your current directory
     (cd ~/programming/gith && find . -mindepth 1 -maxdepth 1 -type d -exec mr register {} \;)
-    echo "✅ mr configuration refreshed!"
+    echo "󰄬 mr configuration refreshed!"
 }
 
 # magic-enter
@@ -501,12 +524,6 @@ vf() {
     [ -n "$file" ] && nvim "$file"
 }
 
-# Create directory and enter it
-mkcd() {
-    mkdir -p "$1" && cd "$1"
-}
-
-
 # Run any file by extension
 run() {
     if [[ -z "$1" ]]; then
@@ -554,7 +571,7 @@ function gclone() {
     # Note: This assumes you added the mr-refresh function from my previous reply
     mr-refresh
 
-    echo "🚀 Repo cloned and registered!"
+    echo "Repo cloned and registered!"
 }
 
 # System Maintenance 
@@ -562,7 +579,19 @@ function gclone() {
 sysmaintain() {
     sudo -v || return 1
 
-    echo -e "\n\033[1;34m[1/5] 📦 Updating System...\033[0m"
+    if command -v xbps-install >/dev/null 2>&1; then
+        echo -e "\n\033[1;34m[1/4] Updating System (xbps)...\033[0m"
+        sudo xbps-install -Su xbps && sudo xbps-install -Su || return 1
+        flatpak update && flatpak uninstall --unused
+        echo -e "\n\033[1;34m[3/4] Cleaning...\033[0m"
+        sudo xbps-remove -oO
+        sudo vkpurge rm all
+        echo -e "\n\033[1;34m[4/4] Service status...\033[0m"
+        sudo sv status /var/service/* | grep -v '^run:' || true
+        return 0
+    fi
+
+    echo -e "\n\033[1;34m[1/5] 󰏖 Updating System...\033[0m"
     if ! grep -Eq '^[[:space:]]*Server[[:space:]]*=' /etc/pacman.d/mirrorlist; then
         echo "No active pacman mirrors in /etc/pacman.d/mirrorlist"
         echo "Uncomment at least one Server line, then rerun sysmaintain."
@@ -572,24 +601,31 @@ sysmaintain() {
     sudo pacman-db-upgrade
     yay -Syu
 
-    echo -e "\n\033[1;34m[2/5] 📦 Updating Flatpaks...\033[0m"
+    echo -e "\n\033[1;34m[2/5] 󰏖 Updating Flatpaks...\033[0m"
     flatpak update
     flatpak uninstall --unused
 
-    echo -e "\n\033[1;34m[3/5] 🧹 Cleaning Orphans & Cache...\033[0m"
+    echo -e "\n\033[1;34m[2.5/5] 󱓚 Updating Craft apps...\033[0m"
+    if command -v update-craftapps >/dev/null 2>&1; then
+        update-craftapps
+    else
+        echo "update-craftapps not found in PATH"
+    fi
+
+    echo -e "\n\033[1;34m[3/5] 󰃢 Cleaning Orphans & Cache...\033[0m"
     orphans=$(pacman -Qtdq)
     [[ -n "$orphans" ]] && sudo pacman -Rns $orphans
     sudo paccache -rk2
     sudo paccache -ruk0
 
-    echo -e "\n\033[1;34m[4/5] 🧩 Checking Config Diffs...\033[0m"
+    echo -e "\n\033[1;34m[4/5] 󰅩 Checking Config Diffs...\033[0m"
     sudo pacdiff
 
-    echo -e "\n\033[1;34m[5/5] 🚑 Checking Errors...\033[0m"
+    echo -e "\n\033[1;34m[5/5] 󰚌 Checking Errors...\033[0m"
     systemctl --failed
     journalctl -p 3 -xb --no-pager | grep -Ev 'virt/tdx: TDX not supported|multicast RX registrations are not supported' || true
 
-    echo -e "\n\033[1;32m✅ Maintenance Complete.\033[0m"
+    echo -e "\n\033[1;32m󰄬 Maintenance Complete.\033[0m"
 }
 
 sysmaintian() {
@@ -620,6 +656,12 @@ if [ -d ~/.config/zshrc.d ]; then
     done
 fi
 
+export ZEPHYR_TOOLCHAIN_VARIANT=zephyr
+
+# kill stuck tauri dev (incl. stopped procs) + webkit + nuxt dev
+alias tkill="pkill -9 -f 'tauri dev|WebKitWebProcess|WebKitNetworkProcess|nuxt.*dev'"
+source /home/0xShred/.local/share/leaf/completions/_leaf
+
 # Syntax highlighting (MUST be loaded at the very end)
 for plugin in \
     /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
@@ -628,4 +670,3 @@ for plugin in \
 do
     if [[ -f "$plugin" ]]; then source "$plugin"; break; fi
 done
-export ZEPHYR_TOOLCHAIN_VARIANT=zephyr
