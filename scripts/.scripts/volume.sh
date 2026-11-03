@@ -1,9 +1,12 @@
 #!/bin/bash
 
+# shellcheck source=lib/log.sh
+. "${0%/*}/lib/log.sh" 2>/dev/null || . "$HOME/.scripts/lib/log.sh"
+
 STEP=5
 SINK="@DEFAULT_AUDIO_SINK@"
 
-case "$1" in
+case "${1:-}" in
 up)
   wpctl set-mute "$SINK" 0
   wpctl set-volume -l 1.5 "$SINK" "${STEP}%+"
@@ -15,6 +18,7 @@ mute)
   wpctl set-mute "$SINK" toggle
   ;;
 *)
+  log_err "Usage: $0 {up|down|mute}"
   exit 2
   ;;
 esac
@@ -22,6 +26,7 @@ esac
 out=$(wpctl get-volume "$SINK") || exit 0
 
 if printf '%s' "$out" | grep -q MUTED; then
+  log_info "Volume muted"
   dunstify -a "volume" \
     -h string:x-dunst-stack-tag:volume \
     -i audio-volume-muted \
@@ -31,6 +36,8 @@ fi
 
 volume=$(printf '%s' "$out" | awk '{ for (i = 1; i <= NF; i++) if ($i ~ /^[0-9.]+$/) { printf "%d", ($i * 100) + 0.5; exit } }')
 [ -n "$volume" ] || exit 0
+
+log_info "Volume: ${volume}%"
 
 if [ "$volume" -ge 100 ]; then
   icon="audio-volume-high"

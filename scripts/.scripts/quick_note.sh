@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# shellcheck source=lib/log.sh
+. "${0%/*}/lib/log.sh" 2>/dev/null || . "$HOME/.scripts/lib/log.sh"
+
 # Directory setup
 NOTE_DIR="$HOME/Documents/Notes/quick"
 mkdir -p "$NOTE_DIR"
@@ -16,6 +19,9 @@ else
 fi
 
 FILE_PATH="$NOTE_DIR/note_$NEXT_NUM.md"
+
+log_ok "Created note: note_$NEXT_NUM.md"
+log_info "Launching editor for $FILE_PATH"
 
 dunstify -a notes -u low \
     -h string:x-dunst-stack-tag:notes \

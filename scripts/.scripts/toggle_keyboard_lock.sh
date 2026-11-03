@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck source=lib/log.sh
+. "${0%/*}/lib/log.sh" 2>/dev/null || . "$HOME/.scripts/lib/log.sh"
+
 state="${XDG_RUNTIME_DIR:-/tmp}/sway-keyboard-lock"
 timeout="${KEYBOARD_LOCK_TIMEOUT:-30}"
 
@@ -10,6 +13,7 @@ notify() {
 unlock() {
     swaymsg input type:keyboard events enabled >/dev/null
     rm -f "$state"
+    log_ok "Keyboard unlocked"
     notify "Keyboard unlocked" ""
 }
 
@@ -20,6 +24,7 @@ fi
 
 : >"$state"
 swaymsg input type:keyboard events disabled >/dev/null
+log_warn "Keyboard locked (auto-unlock in ${timeout}s)"
 notify "Keyboard locked" "Auto-unlocks in ${timeout}s"
 
 (

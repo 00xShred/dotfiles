@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# shellcheck source=lib/log.sh
+. "${0%/*}/lib/log.sh" 2>/dev/null || . "$HOME/.scripts/lib/log.sh"
+
 # 1. VARIABLES
 DIR="$HOME/Pictures/Wallpapers"
 
@@ -55,14 +58,14 @@ case "$KEY" in
 esac
 
 # 3. APPLY WALLPAPER
-echo "Applying: $WALLPAPER ($BACKEND)"
+log_step "Applying wallpaper: $WALLPAPER ($BACKEND)"
 dunstify -a wallpaper -u low \
     -h string:x-dunst-stack-tag:wallpaper \
     -i preferences-desktop-wallpaper "Applying wallpaper" "$(basename "$WALLPAPER") [$BACKEND]" 2>/dev/null || true
 
 # Generate colors with fallback if colorz fails
 if ! wal -i "$WALLPAPER" --backend "$BACKEND"; then
-    echo "Backend $BACKEND failed, falling back to colorthief..."
+    log_warn "Backend $BACKEND failed, falling back to colorthief..."
     wal -i "$WALLPAPER" --backend colorthief || true
 fi
 
@@ -95,9 +98,12 @@ pywalfox update &>/dev/null
 
 qutebrowser ':config-source' &>/dev/null &
 
+# Reload dunst with new pywal palette
+pkill -x dunst 2>/dev/null || true
+
 dunstify -a wallpaper -u normal \
     -h string:x-dunst-stack-tag:wallpaper \
     -i preferences-desktop-wallpaper "Wallpaper applied" "$(basename "$WALLPAPER")" 2>/dev/null || true
 
-echo "Done!"
+log_ok "Wallpaper & theme reloaded"
 exit 0

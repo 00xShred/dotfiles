@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# shellcheck source=lib/log.sh
+. "${0%/*}/lib/log.sh" 2>/dev/null || . "$HOME/.scripts/lib/log.sh"
+
 if [ -r "$HOME/.cache/wal/colors.sh" ]; then
     . "$HOME/.cache/wal/colors.sh"
 fi
@@ -16,8 +19,8 @@ if command -v fuzzel >/dev/null 2>&1; then
     exec fuzzel \
         --font "$launcher_font" \
         --use-bold \
-        --prompt "" \
-        --placeholder "Search" \
+        --prompt "󰍉  " \
+        --placeholder "Type to search..." \
         --anchor center \
         --y-margin 0 \
         --width "$launcher_width" \
@@ -78,5 +81,5 @@ if command -v wmenu >/dev/null 2>&1; then
     esac
 fi
 
-printf '%s\n' "app_launcher.sh: install fuzzel or wmenu" >&2
+log_err "Missing launcher: install fuzzel or wmenu"
 exit 1

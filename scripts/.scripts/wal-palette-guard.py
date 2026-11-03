@@ -75,10 +75,10 @@ def apply_guard(force=False):
     lacking = is_lacking_accents(data)
 
     if not lacking and not force:
-        print("[wal-palette-guard] Palette has healthy accents. No adjustment needed.")
+        print("\033[38;2;137;180;250m󰋼\033[0m  [palette-guard] Palette has healthy accents. No adjustment needed.")
         return False
 
-    print("[wal-palette-guard] Dark/monochrome palette detected! Injecting brightAlleyJap accents...")
+    print("\033[38;2;249;226;175m󰀪\033[0m  [palette-guard] Low-contrast palette detected — injecting vibrant accents...")
 
     # Preserve background (color0 & special.background) and foreground
     # Update accent colors 1..6, 8, 9..14
@@ -101,7 +101,7 @@ def apply_guard(force=False):
     # Re-export all templates and send terminal sequences
     export.every(data)
     sequences.send(data)
-    print("[wal-palette-guard] Successfully refreshed templates and terminal colors.")
+    print("\033[38;2;166;227;161m󰄲\033[0m  [palette-guard] Refreshed templates and terminal colors.")
     return True
 
 if __name__ == "__main__":
