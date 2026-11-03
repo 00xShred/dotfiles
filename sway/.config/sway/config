@@ -1,8 +1,8 @@
 # Minimal personal Sway config.
 
 # Import environment variables into systemd and D-Bus
-exec dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway
-exec systemctl --user start sway-session.service
+exec sh -c 'if [ -d /run/systemd/system ]; then dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway; systemctl --user start sway-session.service; else dbus-update-activation-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP=sway; fi'
+exec ~/.scripts/start_audio.sh
 
 set $mod Mod4
 set $term foot

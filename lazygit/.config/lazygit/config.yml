@@ -1,3 +1,8 @@
+gui:
+  nerdFontsVersion: "3"
+  showIcons: true
+  showFileTree: true
+
 git:
   diffRenderers:
     - command: delta --{{colorScheme}} --paging=never --line-numbers --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"

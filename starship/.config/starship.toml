@@ -32,7 +32,7 @@ style = "bold cyan"
 format = "[$path]($style) "
 truncation_length = 3
 truncation_symbol = "…/"
-home_symbol = " ~"
+home_symbol = "󰋜 ~"
 
 [git_branch]
 symbol = " "
@@ -64,7 +64,7 @@ format = "took [$duration]($style) "
 
 # --- Languages ---
 [rust]
-symbol = "🦀 "
+symbol = " "
 style = "bold red"
 
 [nodejs]
@@ -76,7 +76,7 @@ symbol = " "
 style = "bold yellow"
 
 [python]
-symbol = " "
+symbol = " "
 style = "bold yellow"
 
 [golang]
