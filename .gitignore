@@ -34,3 +34,4 @@ pi/.pi/agent/skills/.system/
 pi/.pi/agent/skills/synced/
 pi/.pi/agent/skills/**/__pycache__/
 pi/.pi/agent/skills/.trash/
+pi/.pi/agent/extensions/browser/.profile/
