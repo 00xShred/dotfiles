@@ -28,7 +28,11 @@ When resolving issues from `priority.md` or an issue tracker, execute this seque
    - Delete the issue plan in `docs/plans/` (e.g. `rm docs/plans/<plan-file>.md`).
    - Remove the issue entry from `priority.md`.
 8. **Git / PR Hand-off**:
-   - Provide a single copy-pasteable terminal bash snippet with branch creation, commit, push, PR creation, squash merge, branch deletion, issue closing, and release execution (`./scripts/release-local.sh`).
+   - Provide a single copy-pasteable terminal bash snippet with branch creation, commit, push, and PR creation — stop there.
+   - The user merges PRs manually in the GitHub UI after watching CI pass. NEVER merge, squash, or close PRs from the CLI (`gh pr merge` is forbidden), and never delete branches or auto-close issues in the snippet. Let the PR body's `Closes #<id>` handle issue closing.
+   - Never mention or invoke a `scripts/release-local.sh` — it does not exist. Releases are automated by the `release-please` GitHub Action (`.github/workflows/release.yml`) on push to `main`.
+   - Never run release-please manually and never hand-edit `Cargo.lock` version entries — the workflow owns them.
 9. **Release & Advance**:
-   - Run `./scripts/release-local.sh` (or verify it completed via hand-off snippet) to automate `release-please` version bump, changelog update, and GitHub release tagging.
-   - Sync local main (`git pull origin main --tags`) and advance to the next issue in `priority.md`.
+   - No local release step. After the user merges to `main` in the UI, the release-please Action bumps the version, updates the changelog, and tags the GitHub release automatically.
+   - Optionally offer `gh pr checks <num> --watch` so the user can watch CI from the terminal while still merging in the UI.
+   - After the user confirms the merge: sync local main (`git pull origin main --tags`), verify the issue closed, and advance to the next issue in `priority.md`.

@@ -27,7 +27,7 @@ const {
 } = await import(npmMod("pi-antigravity/src/usage/usage.ts"));
 const { fetchCommandCodeQuota } = await import(npmMod("pi-commandcode-provider/src/quota.ts"));
 const { formatQuota } = await import(npmMod("pi-commandcode-provider/src/quota-format.ts"));
-const { pickCommandCodeApiKey } = await import(npmMod("pi-commandcode-provider/src/converters.ts"));
+const { pickCommandCodeApiKey } = await import(npmMod("pi-commandcode-provider/src/api-key.ts"));
 
 async function maybeSection(name: string, fn: () => Promise<string>): Promise<string> {
 	try {

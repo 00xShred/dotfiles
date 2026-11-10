@@ -160,16 +160,23 @@ export function cleanMarkdown(markdown: string): string {
 		const trimmed = inner.trim();
 		if (!trimmed) return match;
 
-		const isTypst = /(?:join|sect|union|sigma|pi|underbrace|overbrace|implies|iff|subset|supset|\b(alpha|beta|gamma|delta|epsilon|theta|lambda|mu|pi|sigma|phi|omega)\b)/.test(trimmed);
+		// Typst-style multi-char scripts are invalid LaTeX (3^(n-1) would superscript only "("),
+		// so normalize them for ALL inline math, not just Typst-looking ones.
+		const normalized = trimmed
+			.replace(/_\(([^)]+)\)/g, "_{$1}")
+			.replace(/\^\(([^)]+)\)/g, "^{$1}")
+			.replace(/\^([0-9a-zA-Z]{2,})/g, "^{$1}");
+
+		const isTypst = /(?:join|sect|union|sigma|pi|underbrace|overbrace|implies|iff|subset|supset|\b(alpha|beta|gamma|delta|epsilon|theta|lambda|mu|pi|sigma|phi|omega)\b)/.test(normalized);
 		if (isTypst) {
-			const converted = typstToLatexMath(trimmed);
+			const converted = typstToLatexMath(normalized);
 			if (/\\(underbrace|overbrace)/.test(converted)) {
 				return `\n\n$$\n${converted}\n$$\n\n`;
 			}
 			return `$${converted}$`;
 		}
 		// Normal LaTeX with possible leading/trailing spaces ($ \sigma $)
-		return `$${trimmed}$`;
+		return `$${normalized}$`;
 	});
 
 	text = text.replace(/\x00CODE(\d+)\x00/g, (_, idx) => codeBlocks[Number(idx)]);
