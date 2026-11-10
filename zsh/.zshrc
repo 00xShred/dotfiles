@@ -82,6 +82,8 @@ bindkey '^?' backward-delete-char # Backspace works past insert point
 # Fix Delete, Ctrl+Arrows, Home, End in Vi mode
 bindkey "^[[3~" delete-char
 bindkey -M vicmd "^[[3~" delete-char
+bindkey "^[[3;5~" kill-word
+bindkey -M vicmd "^[[3;5~" kill-word
 bindkey "^[[1;5D" backward-word
 bindkey "^[[1;5C" forward-word
 bindkey "^[[5D" backward-word
