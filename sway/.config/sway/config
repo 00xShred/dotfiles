@@ -5,8 +5,8 @@ exec sh -c 'if [ -d /run/systemd/system ]; then dbus-update-activation-environme
 exec ~/.scripts/start_audio.sh
 
 set $mod Mod4
-set $term foot
-set $terminal kitty
+set $term kitty
+set $terminal footclient
 
 include ~/.cache/wal/colors-sway
 
@@ -55,6 +55,7 @@ bindsym $mod+e exec thunar
 bindsym $mod+Alt+d exec nwg-displays
 bindsym $mod+w exec foot -w 900x600 -a wallpaper_selector -e ~/.scripts/wallpaper.sh
 bindsym $mod+p exec ~/.scripts/powermenu.sh
+bindsym $mod+Shift+p exec ~/.scripts/power-mode.sh
 bindsym $mod+n exec ~/.scripts/quick_note.sh
 bindsym $mod+Shift+n exec foot -a floating_note ~/.scripts/qn_search.sh
 bindsym $mod+c exec ~/.scripts/clip_to_note.sh
@@ -102,6 +103,7 @@ bindsym $mod+6 workspace number 6
 bindsym $mod+7 workspace number 7
 bindsym $mod+8 workspace number 8
 bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
 bindsym $mod+Tab workspace back_and_forth
 
 bindsym $mod+Shift+1 move container to workspace number 1
@@ -113,6 +115,7 @@ bindsym $mod+Shift+6 move container to workspace number 6
 bindsym $mod+Shift+7 move container to workspace number 7
 bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
 
 # Focus
 bindsym $mod+h focus left
