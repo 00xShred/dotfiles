@@ -26,15 +26,12 @@ return {
             end
 
             local pdf_path = typ_path:gsub("%.typ$", ".pdf")
-            -- If PDF does not exist yet, compile it now
-            if vim.fn.filereadable(pdf_path) == 0 then
-              vim.notify("Compiling PDF...", vim.log.levels.INFO)
-              local root = vim.fs.root(typ_path, { ".git", "typst.toml" }) or vim.fn.fnamemodify(typ_path, ":p:h")
-              local res = vim.system({ "typst", "compile", "--root", root, typ_path, pdf_path }):wait()
-              if res.code ~= 0 then
-                vim.notify("Typst compile error: " .. (res.stderr or ""), vim.log.levels.ERROR)
-                return
-              end
+            -- Compile on demand, mirroring VimTeX's \ll (compile + view)
+            local root = vim.fs.root(typ_path, { ".git", "typst.toml" }) or vim.fn.fnamemodify(typ_path, ":p:h")
+            local res = vim.system({ "typst", "compile", "--root", root, typ_path, pdf_path }):wait()
+            if res.code ~= 0 then
+              vim.notify("Typst compile error: " .. (res.stderr or ""), vim.log.levels.ERROR)
+              return
             end
 
             -- Check if Zathura is already running for this PDF
