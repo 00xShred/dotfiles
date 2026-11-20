@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles}"
-STOW_FOLDERS="btop cava dunst environment foot fuzzel gtk herdr joshuto kanshi kitty lazygit lf nwg obs-studio onlyoffice pi qt qutebrowser rofi scripts starship sway swaylock wal wpg zathura zen-browser zsh"
+STOW_FOLDERS="btop dunst environment foot fuzzel gtk herdr joshuto kanshi kitty lazygit lf nwg pi qt qutebrowser scripts starship sway swaylock wal zathura zen-browser zsh"
 SERVICES="dbus elogind polkitd NetworkManager bluetoothd zramen crond chronyd cupsd avahi-daemon tailscaled ufw docker libvirtd virtlogd virtlockd power-profiles-daemon input-remapper"
 GROUPS_="wheel audio video input network bluetooth docker libvirt kvm lp scanner"
 
