@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.5.2",
+  "lastChangelogVersion": "1.6.0",
   "theme": "pywal",
   "defaultProvider": "zai",
   "defaultModel": "glm-5.3-flash",
@@ -121,6 +121,6 @@
     "moonshotai/*"
   ],
   "extensionChangelogVersions": {
-    "{\"source\":\"npm:pi-commandcode-provider\",\"scope\":\"user\"}": "0.8.1"
+    "{\"source\":\"npm:pi-commandcode-provider\",\"scope\":\"user\"}": "0.8.7"
   }
 }

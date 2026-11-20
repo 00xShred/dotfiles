@@ -217,6 +217,7 @@ const LATEX_SYMBOLS: Record<string, string> = {
 	times: "×",
 	cdot: "·",
 	neq: "≠",
+	ne: "≠",
 	leq: "≤",
 	le: "≤",
 	geq: "≥",
@@ -227,10 +228,17 @@ const LATEX_SYMBOLS: Record<string, string> = {
 	rightarrow: "→",
 	Rightarrow: "⇒",
 	leftrightarrow: "↔",
+	iff: "⟺",
+	Leftrightarrow: "⟺",
+	mapsto: "↦",
 	in: "∈",
+	notin: "∉",
 	forall: "∀",
 	exists: "∃",
+	nexists: "∄",
 	approx: "≈",
+	sim: "∼",
+	equiv: "≡",
 	sum: "Σ",
 	pi: "π",
 	alpha: "α",
@@ -239,26 +247,71 @@ const LATEX_SYMBOLS: Record<string, string> = {
 	delta: "δ",
 	theta: "θ",
 	lambda: "λ",
+	mid: "∣",
+	circ: "∘",
+	oplus: "⊕",
+	ominus: "⊖",
+	otimes: "⊗",
+	cap: "∩",
+	cup: "∪",
+	wedge: "∧",
+	vee: "∨",
+	neg: "¬",
+	subseteq: "⊆",
+	nsubseteq: "⊄",
+	subset: "⊂",
+	supseteq: "⊇",
+	supset: "⊃",
+	setminus: "\\",
+	emptyset: "∅",
+	varnothing: "∅",
+	ldots: "…",
+	dots: "…",
+	cdots: "⋯",
+	vdots: "⋮",
+	langle: "⟨",
+	rangle: "⟩",
+	aleph: "ℵ",
+	prec: "≺",
+	preceq: "⪯",
+	succ: "≻",
+	succeq: "⪰",
 };
 
-function formatMathText(text: string): string {
+// Fallback for \mathbb{X} when the span never reaches renderLatex.
+const BLACKBOARD: Record<string, string> = {
+	N: "ℕ",
+	Z: "ℤ",
+	Q: "ℚ",
+	R: "ℝ",
+	C: "ℂ",
+	E: "𝔼",
+	F: "𝔽",
+	P: "ℙ",
+	H: "ℍ",
+};
+
+function formatMathText(text: string, display = false): string {
 	// Real math spans get the exact LaTeX-to-Unicode renderer normal chat
 	// markdown uses (pi-tui's renderLatex), so \oplus, \overline{}, subscripts,
 	// etc. become proper Unicode instead of being hand-translated/stripped.
 	// Scoped to $...$/$$...$$ delimiters only (never the whole string) — plain
 	// text with underscores, carets, or "&" (filenames, code, prose) must not
-	// be misread as math.
+	// be misread as math. Spans may cross newlines (renderLatex handles them);
+	// an unpaired $ simply never matches, so nothing gets swallowed.
 	const out = text
-		.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderLatex(typstToLatexMath(expr.trim()), { display: true }) ?? expr)
-		.replace(/\$([^$\n]+?)\$/g, (_, expr) => renderLatex(typstToLatexMath(expr.trim())) ?? expr);
+		.replace(/\$\$([\s\S]+?)\$\$/g, (_, expr) => renderLatex(typstToLatexMath(expr.trim()), { display }) ?? expr)
+		.replace(/\$([^$]+?)\$/g, (_, expr) => renderLatex(typstToLatexMath(expr.trim())) ?? expr);
 	// Anything left is plain text or a LaTeX command the author forgot to wrap
 	// in $...$ — best-effort cleanup so it doesn't print as raw noise.
 	return out
 		.replace(/\\text\{([^{}]*)\}/g, "$1") // \text{foo} -> foo
+		.replace(/\\operatorname\s*\{([^{}]*)\}/g, "$1") // \operatorname{mod} -> mod
 		.replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, "($1/$2)") // \frac{a}{b} -> (a/b)
 		.replace(/\\sqrt\{([^{}]*)\}/g, "√$1") // \sqrt{x} -> √x
+		.replace(/\\mathbb\s*\{?([A-Za-z])\}?/g, (_, letter) => BLACKBOARD[letter] ?? letter) // \mathbb N -> ℕ
 		.replace(/\\([a-zA-Z]+)/g, (_, cmd) => LATEX_SYMBOLS[cmd] ?? cmd) // known symbols, else drop backslash
-		.replace(/\\[[\]]/g, "") // stray \[ \]
+		.replace(/\\[[\]{}]/g, "") // stray \[ \] \{ \}
 		.replace(/[{}]/g, ""); // leftover grouping braces
 }
 
@@ -957,9 +1010,12 @@ export default function quiz(pi: ExtensionAPI) {
 		parameters: QuizParams,
 
 		async execute(_toolCallId, params, signal, onUpdate, ctx) {
-			const question = formatMathText(params.question.trim());
-			const context = params.details?.trim() ? formatMathText(params.details.trim()) : undefined;
-			const explanation = formatMathText(params.explanation.trim());
+			// display=true only here: a $$...$$ block may stack (e.g. a sum with
+			// limits) and addWrapped renders those lines fine — but never inside an
+			// option row, so normalizeOptions stays inline.
+			const question = formatMathText(params.question.trim(), true);
+			const context = params.details?.trim() ? formatMathText(params.details.trim(), true) : undefined;
+			const explanation = formatMathText(params.explanation.trim(), true);
 			const mode: QuizMode = params.multiSelect ? "multi-select" : "single-select";
 
 			let options: QuizOption[];
