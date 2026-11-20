@@ -93,7 +93,6 @@ chmod +x install.sh
 ```
 $HOME/dotfiles
 ├── btop/          # System monitor config & themes
-├── cava/          # Audio visualizer config
 ├── dunst/         # Notification daemon config
 ├── environment/   # Session & default environment variables
 ├── foot/          # Foot Wayland terminal configuration
@@ -106,38 +105,19 @@ $HOME/dotfiles
 ├── lf/            # LF terminal file manager with previews
 ├── nvim/          # LazyVim Neovim configuration
 ├── nwg/           # nwg-displays and nwg-look settings
-├── obs-studio/    # OBS Studio profiles and scenes
 ├── onlyoffice/    # Document editor config
 ├── pi/            # Pi coding agent extensions, skills, settings
 ├── qt/            # Qt5ct and Qt6ct style settings
 ├── qutebrowser/   # Keyboard-driven browser config & quickmarks
-├── rofi/          # Rofi theme config
 ├── scripts/       # Custom shell & Wayland scripts (~/.scripts)
 ├── herdr/         # Herdr workspace manager configuration
 ├── starship/      # Starship prompt configuration
 ├── sway/          # Sway window manager configuration
 ├── swaylock/      # Lock screen config
 ├── wal/           # Pywal templates & color themes
-├── wpg/           # Wpgtk color scheme templates
 ├── zathura/       # PDF / document viewer configuration
 ├── zen-browser/   # Zen browser integration
 ├── zsh/           # Zsh shell configs (.zshrc, .zshenv, zshrc.d)
-└── install.sh     # Cross-platform system bootstrap
+└── install.sh     # Linux (Arch) bootstrap
 ```
-
-## macOS
-
-The macOS layer reuses the shell, Kitty, Neovim, Herdr, Yazi, Lazygit, Starship,
-and colors from the shared configuration. Linux-only Sway/Wayland components
-are skipped. On Intel/MacPorts, yabai + skhd provide the Sway-style Option+h/j/k/l and
-Option+1-9 workflow. SketchyBar is intentionally disabled so macOS keeps its
-native menu bar only.
-
-On macOS, install Homebrew and the Xcode Command Line Tools first, then run:
-
-```sh
-./install.sh
-``` 
-
-The reproducible package manifest is `packages/Brewfile`.
 
