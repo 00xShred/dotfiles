@@ -337,7 +337,7 @@ alias audio='wpctl'
 alias headphones='wpctl set-default $(wpctl status | sed -n "/Sinks:/,/Sources:/p" | grep "Nothing Ear" | grep -Eo "[0-9]+" | head -n 1)'
 
 # clean logs 
-alias cleanroot='sudo pacman -Scc && sudo journalctl --vacuum-size=100M && sudo timeshift --check'
+alias cleanroot='sudo pacman -Scc; sudo rm -rf /var/cache/pacman/pkg/download-*; sudo journalctl --vacuum-size=100M && sudo timeshift --check'
 
 # increase constrast
 alias gamma='gammastep -m wayland -O 6500 -g 1.3'
