@@ -39,6 +39,9 @@ c.colors.webpage.darkmode.enabled = True
 c.colors.webpage.darkmode.policy.images = "never"
 c.colors.webpage.darkmode.algorithm = "lightness-cielab"
 
+# Smooth scrolling (animated j/k/d/u, like Firefox/Zen)
+c.scrolling.smooth = True
+
 # --- UI Behaviour ---
 
 # tabs
@@ -132,7 +135,7 @@ c.aliases = {
 # 1. Bitwarden
 config.bind(
     ",b",
-    'spawn --userscript qute-bitwarden --password-prompt "wofi --dmenu -p Password:"',
+    'spawn --userscript qute-bitwarden --dmenu-invocation "fuzzel --dmenu -i -p Bitwarden" --password-prompt "fuzzel --dmenu -p Password:"',
 )
 config.bind(",o", "spawn --userscript qute-bitwarden --totp-only")
 config.bind(",t", "spawn --userscript qute-bitwarden --totp")
@@ -157,6 +160,9 @@ config.bind("zz", "zoom")
 # 5. Tab navigation
 config.bind("J", "tab-next")
 config.bind("K", "tab-prev")
+# MRU tab cycling (recency order instead of positional order)
+config.bind("<Ctrl-Tab>", "tab-focus stack-prev")
+config.bind("<Ctrl-Shift-Tab>", "tab-focus stack-next")
 config.bind("alt-1", "tab-focus 1")
 config.bind("alt-2", "tab-focus 2")
 config.bind("alt-3", "tab-focus 3")
