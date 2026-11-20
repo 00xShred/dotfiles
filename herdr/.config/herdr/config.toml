@@ -44,17 +44,28 @@ focus_pane_down = ["prefix+j", "ctrl+alt+j"]
 focus_pane_up = ["prefix+k", "ctrl+alt+k"]
 focus_pane_right = ["prefix+l", "ctrl+alt+l"]
 
-# Tabs & Workspaces
-new_tab = ["prefix+c", "ctrl+alt+c"]
+# Resize (sway mod+ctrl+hjkl)
+resize_pane_left = "prefix+ctrl+h"
+resize_pane_down = "prefix+ctrl+j"
+resize_pane_up = "prefix+ctrl+k"
+resize_pane_right = "prefix+ctrl+l"
+
+# Pane cycling (sway alt+Tab focus next/prev) — prefix+Tab is now previous_workspace
+cycle_pane_next = "prefix+alt+tab"
+cycle_pane_previous = "prefix+alt+shift+tab"
+
+# Tabs & Workspaces (sway: numbers = workspaces, mod+Tab = back_and_forth)
+new_tab = ["prefix+c", "prefix+return", "ctrl+alt+c"]
 previous_tab = ["prefix+p", "ctrl+alt+["]
 next_tab = ["prefix+n", "ctrl+alt+]"]
 switch_tab = "prefix+1..9"
-switch_workspace = "prefix+shift+1..9"
+switch_workspace = "prefix+shift+1..9"   # or prefix+w, then pick with numbers in the picker
+previous_workspace = "prefix+tab"
 close_tab = "prefix+shift+x"
 
 # Pane lifecycle
-zoom = ["prefix+z", "ctrl+alt+z"]
-close_pane = "prefix+x"
+zoom = ["prefix+z", "prefix+f", "ctrl+alt+z"]
+close_pane = ["prefix+x", "prefix+q"]
 resize_mode = "prefix+r"
 toggle_sidebar = "prefix+b"
 goto = "prefix+g"
