@@ -26,7 +26,7 @@ translate-shell chafa glow lf ouch 7zip zip unzip dtrx pastel psmisc man-db man-
 rustup go zig zls cmake ccache gdb perf fio umockdev sparse shfmt bash-language-server tinymist typst zola
 nodejs yarn python3-pip python3-pipx uv openjdk21 openjdk25 apache-maven gradle
 kubectl helm k9s postgresql-client dbeaver
-mpv yt-dlp gimp loupe zathura zathura-pdf-mupdf anki obs android-tools arduino-cli dfu-util
+mpv yt-dlp gimp loupe zathura zathura-pdf-mupdf anki android-tools arduino-cli dfu-util
 can-utils tio evtest wev openbsd-netcat openvpn
 tesseract-ocr tesseract-ocr-eng leptonica libvpx glfw
 # fonts
