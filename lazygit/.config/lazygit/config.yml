@@ -2,6 +2,8 @@ gui:
   nerdFontsVersion: "3"
   showIcons: true
   showFileTree: true
+  screenMode: normal
+  mainPanelSplitMode: vertical
 
 git:
   diffRenderers:
