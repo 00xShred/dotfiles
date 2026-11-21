@@ -114,6 +114,7 @@ c.url.searchengines = {
     "!so": "https://stackoverflow.com/search?q={}",
     "!gem": "https://gemini.google.com/app?q={}",
     "!a": "https://www.amazon.com/s?k={}",
+    "!rd": "https://duckduckgo.com/?q=site%3Adoc.rust-lang.org+{}",
     "!w": "https://en.wikipedia.org/wiki/{}",
 }
 
