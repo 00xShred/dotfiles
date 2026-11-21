@@ -56,7 +56,7 @@ return {
 
       -- Scripting
       opts.formatters_by_ft.lua = { "stylua" }
-      opts.formatters_by_ft.python = { "black" }
+      opts.formatters_by_ft.python = { "ruff_format" } -- reads each project's ruff.toml; default = black-compatible
 
       opts.format_on_save = function(bufnr)
         local ft = vim.bo[bufnr].filetype

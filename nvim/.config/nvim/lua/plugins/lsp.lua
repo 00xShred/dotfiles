@@ -13,7 +13,7 @@ return {
         "prettier",
         "stylua",
         "clang-format",
-        "black",
+        "ruff",
         "shfmt",
 
         -- Linters
