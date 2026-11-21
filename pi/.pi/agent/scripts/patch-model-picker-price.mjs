@@ -15,11 +15,11 @@ const chunksDir = `${homedir()}/.pi/agent/install/releases/${version}/node_modul
 // Minified anchor: the `line=` build-up right after `providerBadge=...` in the
 // /model picker's updateList(). Contains no helper fn call, so it's self-contained.
 const anchor =
-	'providerBadge=theme.fg("muted",`[${item.provider}]`),line=`${cursor}${currentMarker}${modelText} ${providerBadge}${defaultBadge}`;';
+	'providerBadge=theme.fg("muted",`[${item.provider}]`),line=`${cursor}${currentMarker}${modelText}${nameText} ${providerBadge}${defaultBadge}`;';
 const patched =
 	'providerBadge=theme.fg("muted",`[${item.provider}]`),' +
 	"price=item.model.cost?theme.fg(\"muted\",` · $${item.model.cost.input}/$${item.model.cost.output} per 1M · ctx ${item.model.contextWindow>=1e6?(item.model.contextWindow/1e6).toFixed(1)+\"M\":Math.round(item.model.contextWindow/1e3)+\"k\"}`):\"\"," +
-	'line=`${cursor}${currentMarker}${modelText} ${providerBadge}${price}${defaultBadge}`;';
+	'line=`${cursor}${currentMarker}${modelText}${nameText} ${providerBadge}${price}${defaultBadge}`;';
 
 let applied = 0;
 for (const name of readdirSync(chunksDir)) {

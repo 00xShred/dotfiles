@@ -2,7 +2,7 @@
   "name": "pi-extensions",
   "private": true,
   "dependencies": {
-    "pi-antigravity": "^0.14.0",
+    "pi-antigravity": "^0.15.0",
     "pi-commandcode-provider": "^0.8.7"
   }
 }

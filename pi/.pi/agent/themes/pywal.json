@@ -2,17 +2,17 @@
   "$schema": "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
   "name": "pywal",
   "vars": {
-    "bg": "#0b0404",
-    "fg": "#c2c0c0",
-    "cursor": "#c2c0c0",
-    "black": "#0b0404",
+    "bg": "#080a13",
+    "fg": "#c1c1c4",
+    "cursor": "#c1c1c4",
+    "black": "#080a13",
     "red": "#A11B4D",
     "green": "#C1A554",
     "yellow": "#09599B",
     "magenta": "#3A5AA7",
     "blue": "#B661A5",
     "pink": "#2B9FDE",
-    "white": "#c2c0c0",
+    "white": "#c1c1c4",
     "gray": "#575a6b",
     "brightRed": "#A11B4D",
     "brightGreen": "#C1A554",
@@ -20,8 +20,8 @@
     "brightMagenta": "#3A5AA7",
     "brightBlue": "#B661A5",
     "brightPink": "#2B9FDE",
-    "brightWhite": "#c2c0c0",
-    "userMsgBg": "#231c24",
+    "brightWhite": "#c1c1c4",
+    "userMsgBg": "#202233",
     "userMsgText": "#ffffff"
   },
   "colors": {
@@ -82,8 +82,8 @@
     "bashMode": "yellow"
   },
   "export": {
-    "pageBg": "#0b0404",
-    "cardBg": "#0b0404",
+    "pageBg": "#080a13",
+    "cardBg": "#080a13",
     "infoBg": "#A11B4D"
   }
 }
