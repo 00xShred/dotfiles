@@ -4,6 +4,11 @@ gui:
   showFileTree: true
   screenMode: normal
   mainPanelSplitMode: vertical
+  shrinkSidePanelsToContent: true
+  sidePanels:
+    - [files, worktrees, submodules]
+    - [branches, remotes, tags]
+    - [commits, reflog]
 
 git:
   diffRenderers:
